@@ -1,0 +1,39 @@
+# Ignore build outputs
+target/
+!target/*.jar
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+*.temp
+~*
+
+# Ignore Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore documentation
+*.md
+docs/
+
+# Ignore test files that aren't needed in build
+src/test/
