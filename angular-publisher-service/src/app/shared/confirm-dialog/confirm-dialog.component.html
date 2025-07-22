@@ -1,0 +1,9 @@
+<p-dialog [(visible)]="visible" [modal]="true" [closable]="false" [dismissableMask]="true" header="Confirmation">
+  <div class="p-d-flex p-ai-center p-jc-center" style="min-width: 200px;">
+    <span>{{ message }}</span>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Yes" (click)="onAccept()" class="p-button-danger"></button>
+    <button pButton type="button" label="No" (click)="onReject()" class="p-button-secondary"></button>
+  </ng-template>
+</p-dialog> 
