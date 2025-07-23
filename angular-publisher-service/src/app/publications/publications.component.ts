@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-publications',
@@ -38,15 +39,30 @@ export class PublicationsComponent implements OnInit {
 
   form: Partial<Publication> = { title: '', publicationDate: '' };
 
-  constructor(private publicationService: PublicationService) {}
+  constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.loadPublications();
+    this.route.queryParams.subscribe(params => {
+      const title = params['title'];
+      if (title) {
+        this.searchPublicationsByTitle(title);
+      } else {
+        this.loadPublications();
+      }
+    });
   }
 
   loadPublications() {
     this.loading = true;
     this.publicationService.getAll().then(res => {
+      this.publications = res.data?.content || res.data || [];
+      this.loading = false;
+    }).catch(() => this.loading = false);
+  }
+
+  searchPublicationsByTitle(title: string) {
+    this.loading = true;
+    this.publicationService.searchByTitle(title).then(res => {
       this.publications = res.data?.content || res.data || [];
       this.loading = false;
     }).catch(() => this.loading = false);

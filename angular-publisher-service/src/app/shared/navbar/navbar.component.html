@@ -1,1 +1,8 @@
-<p-menubar [model]="items"></p-menubar> 
+<p-menubar [model]="items">
+  <ng-template pTemplate="end">
+    <form (ngSubmit)="onSearch()" class="navbar-search-form">
+      <input type="text" pInputText [(ngModel)]="searchTitle" name="searchTitle" placeholder="Search Publications..." style="margin-right: 0.5rem;" />
+      <button pButton type="submit" icon="pi pi-search" label="Search"></button>
+    </form>
+  </ng-template>
+</p-menubar> 

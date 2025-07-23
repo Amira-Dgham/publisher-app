@@ -27,4 +27,11 @@ export class PublicationService {
   delete(id: number) {
     return this.api.delete(`${this.baseUrl}/${id}`);
   }
+
+  searchByTitle(title: string, page: number = 0, size: number = 10, sort: 'ASC' | 'DESC' = 'DESC') {
+    return this.api.get<any>(
+      `${this.baseUrl}/search/title`,
+      { params: { title, page, size, sort } }
+    );
+  }
 } 

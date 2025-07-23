@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from "primeng/button";
 import { NavbarComponent } from './shared/navbar/navbar.component';
 
@@ -12,4 +12,13 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 })
 export class AppComponent {
   title = 'angular-publisher-service';
+
+  constructor(private router: Router) {}
+
+  onSearchPublication(title: string) {
+    if (title) {
+      this.router.navigate(['/publications'], { queryParams: { title } });
+    }
+  }
 }
+ 
