@@ -9,6 +9,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { MagazinePageData } from '../types/magazine-page.model';
 
 @Component({
   selector: 'app-magazines',
@@ -22,7 +24,8 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
     ButtonModule,
     InputTextModule,
     SharedModule,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PaginatorModule
   ],
   styleUrls: ['./magazines.component.css'],
 })
@@ -34,6 +37,10 @@ export class MagazinesComponent implements OnInit {
   confirmDelete = false;
   magazineToDelete: Magazine | null = null;
   loading = false;
+  page = 0;
+  pageSize = 10;
+  totalRecords = 0;
+  sort: 'ASC' | 'DESC' = 'DESC';
 
   form: MagazineCreateRequest = { title: '', publicationDate: '', issueNumber: 0, authorIds: [] };
 
@@ -45,8 +52,10 @@ export class MagazinesComponent implements OnInit {
 
   loadMagazines() {
     this.loading = true;
-    this.magazineService.getAll().then(res => {
-      this.magazines = res.data?.content || res.data || [];
+    this.magazineService.getAll(this.page, this.pageSize, this.sort).then(res => {
+      const pageData: MagazinePageData = res.data.data;
+      this.magazines = pageData?.content || [];
+      this.totalRecords = pageData?.totalElements || 0;
       this.loading = false;
     }).catch(() => this.loading = false);
   }
@@ -99,5 +108,11 @@ export class MagazinesComponent implements OnInit {
         this.magazineToDelete = null;
       });
     }
+  }
+
+  onPageChange(event: any) {
+    this.page = event.page;
+    this.pageSize = event.rows;
+    this.loadMagazines();
   }
 } 

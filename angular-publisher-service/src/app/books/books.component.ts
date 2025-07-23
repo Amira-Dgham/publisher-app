@@ -7,6 +7,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { BookPageData } from '../types/book-page.model';
+import { MessageService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-books',
@@ -19,7 +23,8 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
     ButtonModule,
     InputTextModule,
     FormsModule,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PaginatorModule
   ]
 })
 export class BooksComponent implements OnInit {
@@ -38,7 +43,12 @@ export class BooksComponent implements OnInit {
     authorId: 0 
   };
 
-  constructor(private bookService: BookService) {}
+  page = 0;
+  pageSize = 10;
+  totalRecords = 0;
+  sort: 'ASC' | 'DESC' = 'DESC';
+
+  constructor(private bookService: BookService,private messageService: MessageService) {}
 
   ngOnInit() {
     this.loadBooks();
@@ -46,12 +56,18 @@ export class BooksComponent implements OnInit {
 
   loadBooks() {
     this.loading = true;
-    this.bookService.getAll()
-      .then(res => {
-        this.books = res.data.data?.content || res.data || [];
-        this.loading = false;
-      })
-      .catch(() => this.loading = false);
+    this.bookService.getAll(this.page, this.pageSize, this.sort).then(res => {
+      const pageData: BookPageData = res.data.data;
+      this.books = pageData?.content || [];
+      this.totalRecords = pageData?.totalElements || 0;
+      this.loading = false;
+    }).catch(() => this.loading = false);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.page;
+    this.pageSize = event.rows;
+    this.loadBooks();
   }
 
   openNew() {
@@ -89,8 +105,16 @@ export class BooksComponent implements OnInit {
         .then(() => {
           this.loadBooks();
           this.displayDialog = false;
-        });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Book created successfully' });
+
+        }).catch((error:Error)=>{
+          console.log("amiraaaaa"+error);
+
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error saving book'});
+        })
     }
+  
+ 
   }
 
   confirmDeleteBook(book: Book) {
@@ -109,3 +133,4 @@ export class BooksComponent implements OnInit {
     }
   }
 }
+

@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 import { ActivatedRoute } from '@angular/router';
+import { PaginatorModule } from "primeng/paginator";
 
 @Component({
   selector: 'app-publications',
@@ -22,9 +23,9 @@ import { ActivatedRoute } from '@angular/router';
     ButtonModule,
     InputTextModule,
     SharedModule,
-    ConfirmDialogComponent
-
-  ],
+    ConfirmDialogComponent,
+    PaginatorModule
+],
   templateUrl: './publications.component.html',
   styleUrls: ['./publications.component.css']
 })
@@ -38,6 +39,11 @@ export class PublicationsComponent implements OnInit {
   loading = false;
 
   form: Partial<Publication> = { title: '', publicationDate: '' };
+
+  page = 0;
+  pageSize = 10;
+  totalRecords = 0;
+  sort: 'ASC' | 'DESC' = 'DESC';
 
   constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
 
@@ -54,16 +60,18 @@ export class PublicationsComponent implements OnInit {
 
   loadPublications() {
     this.loading = true;
-    this.publicationService.getAll().then(res => {
-      this.publications = res.data?.content || res.data || [];
+    this.publicationService.getAll(this.page, this.pageSize, this.sort).then(res => {
+      this.publications = res.data?.data.content || res.data || [];
+      this.totalRecords = res.data?.data.totalElements || 0;
       this.loading = false;
     }).catch(() => this.loading = false);
   }
 
   searchPublicationsByTitle(title: string) {
     this.loading = true;
-    this.publicationService.searchByTitle(title).then(res => {
-      this.publications = res.data?.content || res.data || [];
+    this.publicationService.searchByTitle(title, this.page, this.pageSize, this.sort).then(res => {
+      this.publications = res.data?.data.content || res.data || [];
+      this.totalRecords = res.data?.data.totalElements || 0;
       this.loading = false;
     }).catch(() => this.loading = false);
   }
@@ -108,5 +116,11 @@ export class PublicationsComponent implements OnInit {
         this.publicationToDelete = null;
       });
     }
+  }
+
+  onPageChange(event: any) {
+    this.page = event.page;
+    this.pageSize = event.rows;
+    this.loadPublications();
   }
 } 

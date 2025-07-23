@@ -9,6 +9,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { PaginatorModule } from 'primeng/paginator';
+import {  AuthorPageData } from '../types/author-page.model';
 
 @Component({
   selector: 'app-authors',
@@ -22,8 +24,8 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.
     ButtonModule,
     InputTextModule,
     SharedModule,
-    ConfirmDialogComponent
-
+    ConfirmDialogComponent,
+    PaginatorModule
   ],
   styleUrls: ['./authors.component.css']
 })
@@ -35,6 +37,10 @@ export class AuthorsComponent implements OnInit {
   confirmDelete = false;
   authorToDelete: Author | null = null;
   loading = false;
+  page = 0;
+  pageSize = 10;
+  totalRecords = 0;
+  sort: 'ASC' | 'DESC' = 'DESC';
 
   form: AuthorCreateRequest = { name: '', birthDate: '', nationality: '' };
 
@@ -46,10 +52,18 @@ export class AuthorsComponent implements OnInit {
 
   loadAuthors() {
     this.loading = true;
-    this.authorService.getAll().then(res => {
-      this.authors = res.data || [];
+    this.authorService.getAll(this.page, this.pageSize, this.sort).then(res => {
+      const pageData: AuthorPageData = res.data.data;
+      this.authors = pageData?.content || [];
+      this.totalRecords = pageData?.totalElements || 0;
       this.loading = false;
     }).catch(() => this.loading = false);
+  }
+
+  onPageChange(event: any) {
+    this.page = event.page;
+    this.pageSize = event.rows;
+    this.loadAuthors();
   }
 
   openNew() {

@@ -1,4 +1,5 @@
 export interface Book {
+  data: any;
   id: number;
   title: string;
   publicationDate: string;

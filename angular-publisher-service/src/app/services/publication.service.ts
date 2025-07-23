@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Publication } from '../models/publication.model';
+import { PublicationPageResponse } from '../types/publication-page.model';
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
@@ -8,8 +9,8 @@ export class PublicationService {
 
   constructor(private api: ApiService) {}
 
-  getAll(params?: any) {
-    return this.api.get<any>(this.baseUrl, { params });
+  getAll(page: number = 0, size: number = 10, sort: 'ASC' | 'DESC' = 'DESC') {
+    return this.api.get<PublicationPageResponse>(this.baseUrl, { params: { page, size, sort } });
   }
 
   getById(id: number) {
@@ -29,7 +30,7 @@ export class PublicationService {
   }
 
   searchByTitle(title: string, page: number = 0, size: number = 10, sort: 'ASC' | 'DESC' = 'DESC') {
-    return this.api.get<any>(
+    return this.api.get<PublicationPageResponse>(
       `${this.baseUrl}/search/title`,
       { params: { title, page, size, sort } }
     );

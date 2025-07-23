@@ -8,8 +8,8 @@ export class BookService {
 
   constructor(private api: ApiService) {}
 
-  getAll(params?: any) {
-    return this.api.get<any>(this.baseUrl, { params });
+  getAll(page: number = 0, size: number = 10, sort: 'ASC' | 'DESC' = 'DESC') {
+    return this.api.get<Book>(this.baseUrl, { params: { page, size, sort } });
   }
 
   getById(id: number) {

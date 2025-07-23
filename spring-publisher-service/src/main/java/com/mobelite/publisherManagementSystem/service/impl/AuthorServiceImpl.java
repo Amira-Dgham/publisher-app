@@ -10,6 +10,9 @@ import com.mobelite.publisherManagementSystem.repository.AuthorRepository;
 import com.mobelite.publisherManagementSystem.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -51,36 +54,41 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.toResponseDto(author);
     }
 
-     /**
-     * Get all authors with their books and magazines.
+    /**
+     * Get all authors with their books and magazines with pagination support.
      */
-     @Transactional(readOnly = true)
-     @Override
-     public List<AuthorResponseDto> getAllAuthors() {
-         try {
-             List<Author> authors = authorRepository.findAllWithMagazines();
+    @Transactional(readOnly = true)
+    @Override
+    public Page<AuthorResponseDto> getAllAuthors(Pageable pageable) {
+        try {
+            // Use pageable in repository call - you'll need to update your repository method
+            Page<Author> authorPage = authorRepository.findAllWithMagazines(pageable);
 
-             // Initialize books collection before any stream processing
-             for (Author author : authors) {
-                 author.getBooks().size();
-             }
+            // Initialize books collection for each author in the current page
+            for (Author author : authorPage.getContent()) {
+                author.getBooks().size();
+            }
 
-             return authors.stream()
-                     .map(author -> {
-                         try {
-                             return authorMapper.toResponseDto(author);
-                         } catch (Exception e) {
-                             log.error("Error mapping author with ID {}: {}", author.getId(), e.getMessage(), e);
-                             throw new RuntimeException("Failed to map author data for ID: " + author.getId(), e);
-                         }
-                     })
-                     .collect(Collectors.toList());
+            // Map authors to response DTOs
+            List<AuthorResponseDto> authorResponseDtos = authorPage.getContent().stream()
+                    .map(author -> {
+                        try {
+                            return authorMapper.toResponseDto(author);
+                        } catch (Exception e) {
+                            log.error("Error mapping author with ID {}: {}", author.getId(), e.getMessage(), e);
+                            throw new RuntimeException("Failed to map author data for ID: " + author.getId(), e);
+                        }
+                    })
+                    .collect(Collectors.toList());
 
-         } catch (Exception e) {
-             log.error("Error fetching authors: {}", e.getMessage(), e);
-             throw new RuntimeException("Failed to fetch authors", e);
-         }
-     }
+            // Return a new Page with mapped content
+            return new PageImpl<>(authorResponseDtos, pageable, authorPage.getTotalElements());
+
+        } catch (Exception e) {
+            log.error("Error fetching authors: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch authors", e);
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)

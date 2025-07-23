@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Magazine, MagazineCreateRequest } from '../models/magazine.model';
+import { MagazinePageResponse } from '../types/magazine-page.model';
 
 @Injectable({ providedIn: 'root' })
 export class MagazineService {
@@ -8,8 +9,8 @@ export class MagazineService {
 
   constructor(private api: ApiService) {}
 
-  getAll(params?: any) {
-    return this.api.get<any>(this.baseUrl, { params });
+  getAll(page: number = 0, size: number = 10, sort: 'ASC' | 'DESC' = 'DESC') {
+    return this.api.get<MagazinePageResponse>(this.baseUrl, { params: { page, size, sort } });
   }
 
   getById(id: number) {

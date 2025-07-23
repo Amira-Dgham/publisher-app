@@ -33,7 +33,7 @@ public interface AuthorService {
      */
     AuthorResponseDto getAuthorById(Long id);
 
-    List<AuthorResponseDto> getAllAuthors();
+    Page<AuthorResponseDto> getAllAuthors(Pageable pageable);
 
     /**
      * Check if an author exists by ID.

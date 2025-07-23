@@ -18,6 +18,13 @@
   </ng-template>
 </p-table>
 
+<p-paginator
+  [rows]="pageSize"
+  [totalRecords]="totalRecords"
+  [first]="page * pageSize"
+  (onPageChange)="onPageChange($event)">
+</p-paginator>
+
 <button pButton label="Add Publication" icon="pi pi-plus" (click)="openNew()"></button>
 
 <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Publication' : 'Add Publication' }}">

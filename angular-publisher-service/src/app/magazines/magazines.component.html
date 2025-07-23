@@ -23,6 +23,12 @@
     </tr>
   </ng-template>
 </p-table>
+<p-paginator
+  [rows]="pageSize"
+  [totalRecords]="totalRecords"
+  [first]="page * pageSize"
+  (onPageChange)="onPageChange($event)">
+</p-paginator>
 
 <button pButton label="Add Magazine" icon="pi pi-plus" (click)="openNew()"></button>
 
