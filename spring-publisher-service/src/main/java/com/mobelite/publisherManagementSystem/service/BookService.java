@@ -51,7 +51,7 @@ public interface BookService {
      * @param pageable Pagination information
      * @return Page of book summaries
      */
-    Page<BookSummaryResponseDto> getAllBooks(Pageable pageable);
+    Page<BookResponseDto> getAllBooks(Pageable pageable);
 
     /**
      * Get books by author ID.

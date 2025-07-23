@@ -111,10 +111,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookSummaryResponseDto> getAllBooks(Pageable pageable) {
+    public Page<BookResponseDto> getAllBooks(Pageable pageable) {
 
         return bookRepository.findAll(pageable)
-                .map(bookMapper::toSummaryResponse);
+                .map(bookMapper::toResponse);
     }
 
     @Override

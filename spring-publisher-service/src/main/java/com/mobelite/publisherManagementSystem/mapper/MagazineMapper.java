@@ -32,6 +32,7 @@ public interface MagazineMapper {
      */
     @Mapping(target = "title", source = "title")
     @Mapping(target = "issueNumber", source = "issueNumber")
+    @Mapping(target = "authors", source = "authors")
     MagazineSummaryResponseDto toSummaryDto(Magazine magazine);
 
     /**

@@ -417,7 +417,7 @@ class BookServiceImplTest {
             when(bookMapper.toSummaryResponse(testBook)).thenReturn(summaryResponseDto);
 
             // When
-            Page<BookSummaryResponseDto> result = bookService.getAllBooks(pageable);
+            Page<BookResponseDto> result = bookService.getAllBooks(pageable);
 
             // Then
             assertThat(result).isNotNull();
@@ -442,7 +442,7 @@ class BookServiceImplTest {
             when(bookRepository.findAll(pageable)).thenReturn(emptyPage);
 
             // When
-            Page<BookSummaryResponseDto> result = bookService.getAllBooks(pageable);
+            Page<BookResponseDto> result = bookService.getAllBooks(pageable);
 
             // Then
             assertThat(result).isNotNull();
@@ -536,7 +536,7 @@ class BookServiceImplTest {
             when(bookMapper.toSummaryResponse(book2)).thenReturn(summaryDto2);
 
             // When
-            Page<BookSummaryResponseDto> result = bookService.getAllBooks(pageable);
+            Page<BookResponseDto> result = bookService.getAllBooks(pageable);
 
             // Then
             assertThat(result).isNotNull();
@@ -544,10 +544,10 @@ class BookServiceImplTest {
             assertThat(result.getTotalElements()).isEqualTo(2);
 
             assertThat(result.getContent().get(0).getIsbn()).isEqualTo("978-0123456789");
-            assertThat(result.getContent().get(0).getAuthorName()).isEqualTo("Test Author");
+            assertThat(result.getContent().get(0).getAuthor().getName()).isEqualTo("Test Author");
 
             assertThat(result.getContent().get(1).getIsbn()).isEqualTo("978-9876543210");
-            assertThat(result.getContent().get(1).getAuthorName()).isEqualTo("Second Author");
+            assertThat(result.getContent().get(1).getAuthor().getName()).isEqualTo("Second Author");
 
             verify(bookRepository).findAll(pageable);
             verify(bookMapper).toSummaryResponse(book1);

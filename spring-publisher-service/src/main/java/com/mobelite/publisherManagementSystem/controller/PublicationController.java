@@ -1,31 +1,23 @@
 package com.mobelite.publisherManagementSystem.controller;
 
-// Jakarta/Javax imports
+import com.mobelite.publisherManagementSystem.dto.response.ApiResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.publication.GroupedPublicationsResponse;
+import com.mobelite.publisherManagementSystem.dto.response.publication.PublicationResponseDto;
+import com.mobelite.publisherManagementSystem.dto.response.publication.PublicationSummaryResponseDto;
+import com.mobelite.publisherManagementSystem.service.PublicationService;
 
-// Lombok imports
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// Spring Framework imports
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-// Swagger/OpenAPI imports
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-// Application DTO imports
-
-import com.mobelite.publisherManagementSystem.dto.response.publication.PublicationResponseDto;
-import com.mobelite.publisherManagementSystem.dto.response.publication.PublicationSummaryResponseDto;
-
-// Application service imports
-import com.mobelite.publisherManagementSystem.service.PublicationService;
 
 /**
  * REST Controller for Publication entity operations.
@@ -40,87 +32,59 @@ public class PublicationController {
 
     private final PublicationService publicationService;
 
-    /**
-     * Get a publication by ID.
-     * @param id The publication ID
-     * @return The publication response
-     */
     @GetMapping("/{id}")
     @Operation(summary = "Get publication by ID", description = "Retrieves a publication by its ID")
-    public ResponseEntity<PublicationResponseDto> getPublicationById(@Parameter(description = "Publication ID") @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto<PublicationResponseDto>> getPublicationById(
+            @Parameter(description = "Publication ID") @PathVariable Long id) {
         PublicationResponseDto response = publicationService.getPublicationById(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponseDto.success(response));
     }
 
-    /**
-     * Get all publications with pagination.
-     * @param pageable Pagination information
-     * @return Page of publication summaries
-     */
     @GetMapping
     @Operation(summary = "Get all publications", description = "Retrieves all publications with pagination")
-    public ResponseEntity<Page<PublicationSummaryResponseDto>> getAllPublications(
+    public ResponseEntity<ApiResponseDto<Page<PublicationSummaryResponseDto>>> getAllPublications(
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
         Page<PublicationSummaryResponseDto> response = publicationService.getAllPublications(pageable);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponseDto.success(response));
     }
 
-    @Operation(summary = "Get all publications", description = "Retrieves all publications grouped by book or magazine")
     @GetMapping("/grouped")
-    public ResponseEntity<GroupedPublicationsResponse> getAllPublicationsGroupedByType() {
-        return ResponseEntity.ok(publicationService.getAllPublicationsGroupedByType());
+    @Operation(summary = "Get grouped publications", description = "Retrieves all publications grouped by type (book or magazine)")
+    public ResponseEntity<ApiResponseDto<GroupedPublicationsResponse>> getAllPublicationsGroupedByType() {
+        GroupedPublicationsResponse response = publicationService.getAllPublicationsGroupedByType();
+        return ResponseEntity.ok(ApiResponseDto.success(response));
     }
 
-    /**
-     * Search publications by title.
-     * @param title The title to search for
-     * @param pageable Pagination information
-     * @return Page of publication summaries
-     */
     @GetMapping("/search/title")
     @Operation(summary = "Search publications by title", description = "Searches publications by title (case-insensitive)")
-    public ResponseEntity<Page<PublicationSummaryResponseDto>> searchPublicationsByTitle(
+    public ResponseEntity<ApiResponseDto<Page<PublicationSummaryResponseDto>>> searchPublicationsByTitle(
             @Parameter(description = "Title to search for") @RequestParam String title,
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
         Page<PublicationSummaryResponseDto> response = publicationService.searchPublicationsByTitle(title, pageable);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponseDto.success(response));
     }
 
-    /**
-     * Delete a publication by ID.
-     * @param id The publication ID
-     * @return No content response
-     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a publication", description = "Deletes a publication by its ID")
-    public ResponseEntity<Void> deletePublication(@Parameter(description = "Publication ID") @PathVariable Long id) {
+    public ResponseEntity<Void> deletePublication(
+            @Parameter(description = "Publication ID") @PathVariable Long id) {
         publicationService.deletePublication(id);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Check if a publication exists by ID.
-     * @param id The publication ID
-     * @return Boolean response
-     */
     @GetMapping("/{id}/exists")
     @Operation(summary = "Check if publication exists", description = "Checks if a publication exists by its ID")
-    public ResponseEntity<Boolean> existsById(@Parameter(description = "Publication ID") @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto<Boolean>> existsById(
+            @Parameter(description = "Publication ID") @PathVariable Long id) {
         boolean exists = publicationService.existsById(id);
-        return ResponseEntity.ok(exists);
+        return ResponseEntity.ok(ApiResponseDto.success(exists));
     }
 
-    /**
-     * Check if a publication exists by title.
-     * @param title The publication title
-     * @return Boolean response
-     */
     @GetMapping("/title/{title}/exists")
     @Operation(summary = "Check if publication exists by title", description = "Checks if a publication exists by its title")
-    public ResponseEntity<Boolean> existsByTitle(@Parameter(description = "Publication title") @PathVariable String title) {
+    public ResponseEntity<ApiResponseDto<Boolean>> existsByTitle(
+            @Parameter(description = "Publication title") @PathVariable String title) {
         boolean exists = publicationService.existsByTitle(title);
-        return ResponseEntity.ok(exists);
+        return ResponseEntity.ok(ApiResponseDto.success(exists));
     }
-
-
 }

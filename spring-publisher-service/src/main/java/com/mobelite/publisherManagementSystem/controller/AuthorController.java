@@ -1,6 +1,7 @@
 package com.mobelite.publisherManagementSystem.controller;
 
 // Jakarta/Javax imports
+import com.mobelite.publisherManagementSystem.dto.response.book.BookResponseDto;
 import jakarta.validation.Valid;
 
 // Lombok imports
@@ -75,15 +76,11 @@ public class AuthorController {
 
     @Operation(summary = "Get all authors", description = "Retrieves all authors without pagination")
     @GetMapping
-    public ResponseEntity<ApiResponseDto<List<AuthorResponseDto>>> getAllAuthors() {
-        List<AuthorResponseDto> authors = authorService.getAllAuthors();
+    public ResponseEntity<ApiResponseDto<Page<AuthorResponseDto>>> getAllAuthors(
+            @PageableDefault(size = 20, sort = "name") Pageable pageable
+    ) {
+        Page<AuthorResponseDto> response = authorService.getAllAuthors(pageable);
 
-        ApiResponseDto<List<AuthorResponseDto>> response = ApiResponseDto.<List<AuthorResponseDto>>builder()
-                .success(true)
-                .message("Authors retrieved successfully")
-                .data(authors)
-                .build();
-
-        return ResponseEntity.ok(response);
+        return  ResponseEntity.ok(ApiResponseDto.success(response));
     }
 }
