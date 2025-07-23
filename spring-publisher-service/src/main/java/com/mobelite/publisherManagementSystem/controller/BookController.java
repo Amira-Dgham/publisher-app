@@ -107,9 +107,9 @@ public class BookController {
      */
     @GetMapping
     @Operation(summary = "Get all books", description = "Retrieves all books with pagination")
-    public ResponseEntity<ApiResponseDto<Page<BookSummaryResponseDto>>> getAllBooks(
+    public ResponseEntity<ApiResponseDto<Page<BookResponseDto>>> getAllBooks(
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
-        Page<BookSummaryResponseDto> response = bookService.getAllBooks(pageable);
+        Page<BookResponseDto> response = bookService.getAllBooks(pageable);
         return ResponseEntity.ok(ApiResponseDto.success(response));
     }
 

@@ -1,0 +1,74 @@
+<p-table [value]="magazines" [loading]="loading" dataKey="id">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Title</th>
+      <th>Issue #</th>
+      <th>Publication Date</th>
+      <th>Authors</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-magazine>
+    <tr>
+      <td>{{ magazine.title }}</td>
+      <td>{{ magazine.issueNumber }}</td>
+      <td>{{ magazine.publicationDate }}</td>
+      <td>
+        <span *ngFor="let author of magazine.authors; let last = last">{{ author.name }}<span *ngIf="!last">, </span></span>
+      </td>
+      <td>
+        <button pButton icon="pi pi-pencil" (click)="openEdit(magazine)" class="p-button-text"></button>
+        <button pButton icon="pi pi-trash" (click)="confirmDeleteMagazine(magazine)" class="p-button-text p-button-danger"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<button pButton label="Add Magazine" icon="pi pi-plus" (click)="openNew()"></button>
+
+<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Magazine' : 'Add Magazine' }}">
+  <form (ngSubmit)="save()" #magazineForm="ngForm">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="title">Title</label>
+        <input id="title" type="text" pInputText [(ngModel)]="form.title" name="title" required minlength="2" maxlength="200" #title="ngModel" />
+        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="p-error">
+          <div *ngIf="title.errors?.['required']">Title is required.</div>
+          <div *ngIf="title.errors?.['minlength']">Title must be at least 2 characters.</div>
+          <div *ngIf="title.errors?.['maxlength']">Title cannot exceed 200 characters.</div>
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="issueNumber">Issue Number</label>
+        <input id="issueNumber" type="number" pInputText [(ngModel)]="form.issueNumber" name="issueNumber" required min="1" max="99999" #issueNumber="ngModel" />
+        <div *ngIf="issueNumber.invalid && (issueNumber.dirty || issueNumber.touched)" class="p-error">
+          <div *ngIf="issueNumber.errors?.['required']">Issue number is required.</div>
+          <div *ngIf="issueNumber.errors?.['min']">Minimum is 1.</div>
+          <div *ngIf="issueNumber.errors?.['max']">Maximum is 99999.</div>
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="publicationDate">Publication Date</label>
+        <input id="publicationDate" type="date" pInputText [(ngModel)]="form.publicationDate" name="publicationDate" required #publicationDate="ngModel" />
+        <div *ngIf="publicationDate.invalid && (publicationDate.dirty || publicationDate.touched)" class="p-error">
+          <div *ngIf="publicationDate.errors?.['required']">Publication date is required.</div>
+        </div>
+      </div>
+      <div class="p-field">
+        <label for="authorIds">Author IDs (comma separated)</label>
+        <input id="authorIds" type="text" pInputText [(ngModel)]="form.authorIds" name="authorIds" required pattern="^([0-9]+,)*[0-9]+$" #authorIds="ngModel" />
+        <small>Enter author IDs separated by commas (e.g. 1,2,3)</small>
+        <div *ngIf="authorIds.invalid && (authorIds.dirty || authorIds.touched)" class="p-error">
+          <div *ngIf="authorIds.errors?.['required']">Author IDs are required.</div>
+          <div *ngIf="authorIds.errors?.['pattern']">Format: 1,2,3</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-d-flex p-jc-end">
+      <button pButton type="submit" label="Save" [disabled]="magazineForm.invalid"></button>
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this magazine?" (accept)="deleteMagazine()" (reject)="confirmDelete = false"></app-confirm-dialog> 

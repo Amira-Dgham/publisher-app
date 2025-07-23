@@ -13,7 +13,7 @@
       <td>{{ book.title }}</td>
       <td>{{ book.isbn }}</td>
       <td>{{ book.publicationDate }}</td>
-      <td>{{ book.authorName }}</td>
+      <td>{{ book.author.name }}</td>
       <td>
         <button pButton icon="pi pi-pencil" (click)="openEdit(book)" class="p-button-text"></button>
         <button pButton icon="pi pi-trash" (click)="confirmDeleteBook(book)" class="p-button-text p-button-danger"></button>
