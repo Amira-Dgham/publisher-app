@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Magazine, MagazineCreateRequest } from '../models/magazine.model';
-import { MagazineService } from '../services/magazine.service';
+import { Magazine, MagazineCreateRequest } from '../../core/models/magazine.model';
+import { MagazineService } from '../../core/services/magazine.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
@@ -8,9 +8,9 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PaginatorModule } from 'primeng/paginator';
-import { MagazinePageData } from '../types/magazine-page.model';
+import { MagazinePageData } from '../../core/types/magazine-page.model';
 
 @Component({
   selector: 'app-magazines',

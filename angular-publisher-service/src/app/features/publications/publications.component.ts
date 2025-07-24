@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Publication } from '../models/publication.model';
-import { PublicationService } from '../services/publication.service';
+import { Publication } from '../../core/models/publication.model';
+import { PublicationService } from '../../core/services/publication.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatorModule } from "primeng/paginator";
 

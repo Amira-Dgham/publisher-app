@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Book, BookCreateRequest } from '../models/book.model';
-import { BookService } from '../services/book.service';
+import { Book, BookCreateRequest } from '../../core/models/book.model';
+import { BookService } from '../../core/services/book.service';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PaginatorModule } from 'primeng/paginator';
-import { BookPageData } from '../types/book-page.model';
+import { BookPageData } from '../../core/types/book-page.model';
 import { MessageService } from 'primeng/api';
 
 
