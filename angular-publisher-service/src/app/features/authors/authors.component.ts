@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Author, AuthorCreateRequest } from '../models/author.model';
-import { AuthorService } from '../services/author.service';
+import { Author, AuthorCreateRequest } from '../../core/models/author.model';
+import { AuthorService } from '../../core/services/author.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
@@ -8,9 +8,9 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PaginatorModule } from 'primeng/paginator';
-import {  AuthorPageData } from '../types/author-page.model';
+import {  AuthorPageData } from '../../core/types/author-page.model';
 
 @Component({
   selector: 'app-authors',

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { BooksComponent } from './books/books.component';
-import { MagazinesComponent } from './magazines/magazines.component';
-import { AuthorsComponent } from './authors/authors.component';
-import { PublicationsComponent } from './publications/publications.component';
+import { BooksComponent } from './features/books/books.component';
+import { MagazinesComponent } from './features/magazines/magazines.component';
+import { AuthorsComponent } from './features/authors/authors.component';
+import { PublicationsComponent } from './features/publications/publications.component';
 
 export const routes: Routes = [
   { path: 'books', component: BooksComponent },

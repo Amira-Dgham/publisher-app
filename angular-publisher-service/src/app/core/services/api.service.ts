@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -13,7 +13,6 @@ export class ApiService {
         'Content-Type': 'application/json',
       },
     });
-    // Optionally add interceptors here
   }
 
   public get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
