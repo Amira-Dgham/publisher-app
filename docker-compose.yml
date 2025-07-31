@@ -3,17 +3,9 @@ services:
   spring-publisher-service:
     build:
       context: ./spring-publisher-service
-      dockerfile: Dockerfile
-      args:
-        ENV: ${ENV:-dev}
-        MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-      target: production
       cache_from:
         - maven:3.9.6-eclipse-temurin-17
         - eclipse-temurin:17-jre-alpine
-      x-bake:
-        cache-to: type=inline
-        cache-from: type=registry,ref=publisher-service:cache
     image: publisher-service:${ENV:-dev}-${BUILD_VERSION:-latest}
     container_name: spring-publisher-service-${ENV:-dev}
     restart: unless-stopped
@@ -23,14 +15,6 @@ services:
 
     env_file:
       - ./spring-publisher-service/config/.env.${ENV:-dev}
-
-    # Enhanced environment variables
-    environment:
-      - SPRING_PROFILES_ACTIVE=${ENV:-dev}
-      - ENV=${ENV:-dev}
-      - JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xmx512m -Xms256m
-      # JVM optimizations for faster startup
-      - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:+UseStringDeduplication
 
     depends_on:
       db-publisher-service:
@@ -70,15 +54,6 @@ services:
     networks:
       - publisher-network
 
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '1.0'
-        reservations:
-          memory: 512M
-          cpus: '0.5'
-
   angular-publisher-service:
       build:
         context: ./angular-publisher-service 
@@ -94,14 +69,6 @@ services:
       ports:
         # For development: 4200, for production: 80
         - "${ANGULAR_PORT:-4200}:${ANGULAR_INTERNAL_PORT:-4200}"
-
-      environment:
-        - NODE_ENV=${NODE_ENV:-development}
-        - NG_ENV=${ANGULAR_ENV:-dev}
-        - CHOKIDAR_USEPOLLING=true
-        - ENV=${ENV:-dev}
-        # Add API URL for runtime configuration if needed
-        - API_BASE_URL=${API_BASE_URL:-http://localhost:8080/api/v1}
 
       depends_on:
         spring-publisher-service:
@@ -137,16 +104,7 @@ services:
 
       networks:
         - publisher-network
-        
-      deploy:
-        resources:
-          limits:
-            memory: 1G
-            cpus: '1.0'
-          reservations:
-            memory: 512M
-            cpus: '0.5'
-
+      
 
 
   db-publisher-service:
@@ -191,10 +149,6 @@ services:
       angular-publisher-service:
         condition: service_healthy
     
-    # Load environment-specific configuration
-    env_file:
-      - ./config/.env.${ENV:-dev}
-    
     environment:
       - ENV=${ENV:-dev}
       - API_BASE_URL=http://spring-publisher-service:8080
@@ -224,8 +178,6 @@ services:
           memory: 1G
           cpus: '0.5'
     
-    profiles:
-      - testing
 
 networks:
   publisher-network:

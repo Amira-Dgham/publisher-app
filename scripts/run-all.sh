@@ -81,7 +81,7 @@ case "$ACTION" in
       ;;
 
   logs)
-      echo "Showing logs for all services..."
+      echo "📋 Showing logs for all services..."
       if [[ "$3" == "angular" ]]; then
           "$RUN_ANGULAR_SCRIPT" "$ENV" logs
       elif [[ "$3" == "spring" ]]; then
@@ -110,6 +110,26 @@ case "$ACTION" in
       "$RUN_ANGULAR_SCRIPT" "$ENV" clean
       "$RUN_SPRING_SCRIPT" "$ENV" clean
       echo "Cleanup completed!"
+      ;;
+
+  shell)
+      local service=${3:-spring}
+      echo "Opening shell in $service container..."
+      case "$service" in
+          angular)
+              "$RUN_ANGULAR_SCRIPT" "$ENV" shell
+              ;;
+          spring)
+              "$RUN_SPRING_SCRIPT" "$ENV" shell
+              ;;
+          db)
+              "$RUN_SPRING_SCRIPT" "$ENV" shell
+              ;;
+          *)
+              echo "Invalid service: $service. Use angular, spring, or db"
+              exit 1
+              ;;
+      esac
       ;;
 
   test)
