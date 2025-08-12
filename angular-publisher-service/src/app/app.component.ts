@@ -4,12 +4,13 @@ import { ButtonModule } from "primeng/button";
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { LoaderComponent } from './shared/loader/loader.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, NavbarComponent,ToastModule
+  imports: [RouterOutlet, ButtonModule, NavbarComponent, ToastModule, LoaderComponent
   ],
   styleUrl: './app.component.css',
   providers: [MessageService]

@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PaginatorModule } from 'primeng/paginator';
 import {  AuthorPageData } from '../../core/types/author-page.model';
+import { TEST_IDS } from '../../core/constants/test-ids.constants';
 
 @Component({
   selector: 'app-authors',
@@ -43,6 +44,7 @@ export class AuthorsComponent implements OnInit {
   sort: 'ASC' | 'DESC' = 'DESC';
 
   form: AuthorCreateRequest = { name: '', birthDate: '', nationality: '' };
+  TEST_IDS = TEST_IDS;
 
   constructor(private authorService: AuthorService) {}
 
