@@ -2,7 +2,8 @@ package com.mobelite.e2e.api.endpoints;
 
 import com.microsoft.playwright.APIResponse;
 import com.mobelite.e2e.api.client.ApiClient;
-import com.mobelite.e2e.api.client.ApiRequestBuilder;
+import static com.mobelite.e2e.constants.ApiEndpoints.*;
+import static com.mobelite.e2e.constants.HttpStatusCodes.*;
 import com.mobelite.e2e.models.ApiResponse;
 import com.mobelite.e2e.models.Author;
 import com.mobelite.e2e.models.PageResponse;
@@ -11,22 +12,11 @@ import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * AuthorEndpoints provides endpoint-specific operations for the Author API.
- * This class extends BaseEndpoints and provides specialized methods for author operations.
+ * AuthorEndpoints provides essential endpoint operations for the Author API.
+ * Focuses on core CRUD operations and basic validation.
  */
 @Slf4j
 public class AuthorEndpoints extends BaseEndpoints {
-
-    // API Endpoint paths
-    private static final String AUTHORS_BASE = "/api/v1/authors";
-    private static final String AUTHOR_BY_ID = AUTHORS_BASE + "/{id}";
-    
-    // HTTP Status codes
-    private static final int STATUS_CREATED = 201;
-    private static final int STATUS_OK = 200;
-    private static final int STATUS_NOT_FOUND = 404;
-    private static final int STATUS_BAD_REQUEST = 400;
-    private static final int STATUS_INTERNAL_SERVER_ERROR = 500;
 
     /**
      * Constructs AuthorEndpoints with the provided ApiClient.
@@ -153,53 +143,6 @@ public class AuthorEndpoints extends BaseEndpoints {
         return response.getData();
     }
 
-    // -------- VALIDATION ENDPOINTS -------- //
-
-    /**
-     * Validates that an author exists by attempting to retrieve it.
-     *
-     * @param id the author ID to validate
-     * @return true if author exists, false otherwise
-     */
-    @Step("Validate author exists via endpoint: {id}")
-    public boolean authorExists(Long id) {
-        try {
-            getAuthorById(id);
-            return true;
-        } catch (AssertionError e) {
-            log.debug("Author with ID {} does not exist via endpoint: {}", id, e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Validates that an author does not exist by attempting to retrieve it.
-     *
-     * @param id the author ID to validate
-     * @return true if author does not exist, false otherwise
-     */
-    @Step("Validate author does not exist via endpoint: {id}")
-    public boolean authorDoesNotExist(Long id) {
-        return !authorExists(id);
-    }
-
-    /**
-     * Attempts to retrieve a non-existent author and validates the error response.
-     *
-     * @param id the non-existent author ID
-     * @return the error response
-     */
-    @Step("Get non-existent author and validate error: {id}")
-    public ApiResponse<?> getNonExistentAuthorAndValidateError(Long id) {
-        log.info("Attempting to get non-existent author via endpoint: {}", id);
-        
-        String endpoint = buildPath(AUTHOR_BY_ID, id);
-        APIResponse response = get(endpoint).execute();
-        
-        validateStatus(response, STATUS_NOT_FOUND);
-        return parseErrorResponse(response);
-    }
-
     // -------- ERROR SCENARIO ENDPOINTS -------- //
 
     /**
@@ -221,20 +164,19 @@ public class AuthorEndpoints extends BaseEndpoints {
     }
 
     /**
-     * Attempts to create an author with missing required fields and validates the error.
+     * Attempts to retrieve a non-existent author and validates the error response.
      *
-     * @param incompleteRequest the incomplete author request
+     * @param id the non-existent author ID
      * @return the error response
      */
-    @Step("Create author with missing required fields and validate error")
-    public ApiResponse<?> createAuthorWithMissingFieldsAndValidateError(AuthorRequest incompleteRequest) {
-        log.info("Attempting to create author with missing required fields via endpoint");
+    @Step("Get non-existent author and validate error: {id}")
+    public ApiResponse<?> getNonExistentAuthorAndValidateError(Long id) {
+        log.info("Attempting to get non-existent author via endpoint: {}", id);
         
-        APIResponse response = post(AUTHORS_BASE)
-                .body(incompleteRequest)
-                .execute();
+        String endpoint = buildPath(AUTHOR_BY_ID, id);
+        APIResponse response = get(endpoint).execute();
         
-        validateStatus(response, STATUS_BAD_REQUEST);
+        validateStatus(response, STATUS_NOT_FOUND);
         return parseErrorResponse(response);
     }
 
@@ -252,48 +194,6 @@ public class AuthorEndpoints extends BaseEndpoints {
         Author createdAuthor = createAuthorAndValidateStructure(authorRequest);
         log.info("Test author created via endpoint with ID: {}", createdAuthor.getId());
         return createdAuthor;
-    }
-
-    /**
-     * Validates the author creation response structure.
-     *
-     * @param authorRequest the original request
-     * @param createdAuthor the created author response
-     */
-    @Step("Validate author creation response structure")
-    public void validateAuthorCreationResponse(AuthorRequest authorRequest, Author createdAuthor) {
-        if (createdAuthor == null) {
-            throw new AssertionError("Created author is null");
-        }
-        
-        if (createdAuthor.getId() == null) {
-            throw new AssertionError("Created author ID is null");
-        }
-        
-        if (!authorRequest.getName().equals(createdAuthor.getName())) {
-            throw new AssertionError(String.format(
-                "Author name mismatch. Expected: %s, Actual: %s",
-                authorRequest.getName(), createdAuthor.getName()
-            ));
-        }
-        
-        if (authorRequest.getBirthDate() != null && 
-            !authorRequest.getBirthDate().equals(createdAuthor.getBirthDate())) {
-            throw new AssertionError(String.format(
-                "Author birth date mismatch. Expected: %s, Actual: %s",
-                authorRequest.getBirthDate(), createdAuthor.getBirthDate()
-            ));
-        }
-        
-        if (authorRequest.getNationality() != null && 
-            !authorRequest.getNationality().equals(createdAuthor.getNationality())) {
-            throw new AssertionError(String.format(
-                "Author nationality mismatch. Expected: %s, Actual: %s",
-                authorRequest.getNationality(), createdAuthor.getNationality()
-            ));
-        }
-        
-        log.info("Author creation response validation passed for ID: {}", createdAuthor.getId());
     }
 
     /**

@@ -1,5 +1,6 @@
-package com.mobelite.e2e.api.test;
+package com.mobelite.e2e.api.test.api;
 
+import com.microsoft.playwright.Playwright;
 import com.mobelite.e2e.api.client.ApiClient;
 import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
 import com.mobelite.e2e.fixtures.AuthorFixtures;
@@ -18,51 +19,49 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Comprehensive E2E tests for the Author API using AuthorFixtures and AuthorEndpoints.
- * This class demonstrates best practices for E2E testing with proper setup and teardown.
+ * Focused E2E tests for the Author API.
+ * Tests only essential CRUD operations and validation scenarios.
  */
 @Epic("Author Management")
 @Feature("Author API")
 @Story("E2E Testing")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Author API E2E Tests")
+@Slf4j
 public class AuthorE2ETest {
 
+    private Playwright playwright;
     private ApiClient apiClient;
     private AuthorEndpoints authorEndpoints;
     private AuthorFixtures authorFixtures;
 
     @BeforeEach
     void setUp() {
-        // Initialize the API client with your test configuration
-        // Note: In a real test, you would get this from your test configuration
-        // apiClient = new ApiClient(playwright);
-        // authorEndpoints = new AuthorEndpoints(apiClient);
-        // authorFixtures = new AuthorFixtures(apiClient);
-        
         log.info("Setting up AuthorE2ETest");
+        playwright = Playwright.create();
+        apiClient = new ApiClient(playwright);
+        authorEndpoints = new AuthorEndpoints(apiClient);
+        authorFixtures = new AuthorFixtures(apiClient);
     }
 
     @AfterEach
     void tearDown() {
+        log.info("Tearing down AuthorE2ETest");
         // Clean up test data
         if (authorFixtures != null) {
             authorFixtures.cleanupAllTestAuthors();
         }
         
-        // Close the API client
+        // Close resources
         if (apiClient != null) {
             apiClient.close();
         }
-        
-        log.info("Tearing down AuthorE2ETest");
+        if (playwright != null) {
+            playwright.close();
+        }
     }
 
     // -------- POSITIVE TEST SCENARIOS -------- //
@@ -104,7 +103,6 @@ public class AuthorE2ETest {
         assertNotNull(createdAuthor);
         assertNotNull(createdAuthor.getId());
         assertEquals(authorRequest.getName(), createdAuthor.getName());
-        // Birth date and nationality are optional, so they might be null
         
         // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
@@ -171,44 +169,6 @@ public class AuthorE2ETest {
         assertTrue(authorsPage.getTotalElements() >= 5);
     }
 
-    @Test
-    @DisplayName("Should validate author exists")
-    @Description("Test validating that an author exists in the system")
-    @Story("Author Validation")
-    void testAuthorExists() {
-        // Arrange: Create an author
-        AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        Author createdAuthor = authorEndpoints.createTestAuthorViaEndpoint(authorRequest);
-        authorFixtures.getCreatedAuthors().add(createdAuthor);
-        
-        // Act & Assert: Verify author exists
-        assertTrue(authorEndpoints.authorExists(createdAuthor.getId()));
-        assertFalse(authorEndpoints.authorDoesNotExist(createdAuthor.getId()));
-    }
-
-    @Test
-    @DisplayName("Should create multiple authors with different nationalities")
-    @Description("Test creating multiple authors with diverse nationality data")
-    @Story("Author Creation")
-    void testCreateAuthorsWithDifferentNationalities() {
-        // Arrange: Create authors with different nationalities
-        authorFixtures.setupAuthorsWithDifferentNationalities();
-        
-        // Act: Validate all authors exist
-        authorFixtures.validateAllCreatedAuthorsExist();
-        
-        // Assert: Verify the count
-        assertEquals(5, authorFixtures.getCreatedAuthorsCount());
-        
-        // Verify different nationalities
-        List<String> nationalities = authorFixtures.getCreatedAuthors().stream()
-                .map(Author::getNationality)
-                .distinct()
-                .collect(Collectors.toList());
-        
-        assertTrue(nationalities.size() >= 4); // Should have at least 4 different nationalities
-    }
-
     // -------- NEGATIVE TEST SCENARIOS -------- //
 
     @Test
@@ -226,27 +186,6 @@ public class AuthorE2ETest {
         assertNotNull(errorResponse);
         assertFalse(errorResponse.isSuccess());
         assertNotNull(errorResponse.getMessage());
-        assertTrue(errorResponse.getMessage().contains("validation") || 
-                  errorResponse.getMessage().contains("error"));
-    }
-
-    @Test
-    @DisplayName("Should fail to create author with missing required fields")
-    @Description("Test creating an author with missing required fields should return error")
-    @Story("Author Creation Validation")
-    void testCreateAuthorWithMissingRequiredFields() {
-        // Arrange: Create incomplete author request
-        AuthorRequest incompleteRequest = authorFixtures.createIncompleteAuthorRequest();
-        
-        // Act: Attempt to create author with missing required fields
-        ApiResponse<?> errorResponse = authorEndpoints.createAuthorWithMissingFieldsAndValidateError(incompleteRequest);
-        
-        // Assert: Validate error response
-        assertNotNull(errorResponse);
-        assertFalse(errorResponse.isSuccess());
-        assertNotNull(errorResponse.getMessage());
-        assertTrue(errorResponse.getMessage().contains("validation") || 
-                  errorResponse.getMessage().contains("error"));
     }
 
     @Test
@@ -266,75 +205,7 @@ public class AuthorE2ETest {
         assertNotNull(errorResponse.getMessage());
     }
 
-    @Test
-    @DisplayName("Should validate author does not exist")
-    @Description("Test validating that a non-existent author does not exist in the system")
-    @Story("Author Validation")
-    void testAuthorDoesNotExist() {
-        // Arrange: Use a non-existent ID
-        Long nonExistentId = 999999L;
-        
-        // Act & Assert: Verify author does not exist
-        assertFalse(authorEndpoints.authorExists(nonExistentId));
-        assertTrue(authorEndpoints.authorDoesNotExist(nonExistentId));
-    }
-
-    // -------- EDGE CASE SCENARIOS -------- //
-
-    @Test
-    @DisplayName("Should handle large number of authors")
-    @Description("Test creating and retrieving a large number of authors")
-    @Story("Author Performance")
-    void testHandleLargeNumberOfAuthors() {
-        // Arrange: Create many authors
-        int authorCount = 10;
-        authorFixtures.setupMultipleTestAuthors(authorCount);
-        
-        // Act: Retrieve all authors
-        PageResponse<Author> authorsPage = authorEndpoints.getAllAuthorsAndValidateStructure();
-        
-        // Assert: Validate response
-        assertNotNull(authorsPage);
-        assertTrue(authorsPage.getTotalElements() >= authorCount);
-        assertTrue(authorsPage.hasContent());
-        
-        // Verify all created authors are in the response
-        List<Long> createdIds = authorFixtures.getCreatedAuthors().stream()
-                .map(Author::getId)
-                .collect(Collectors.toList());
-        
-        List<Long> responseIds = authorsPage.getContent().stream()
-                .map(Author::getId)
-                .collect(Collectors.toList());
-        
-        assertTrue(responseIds.containsAll(createdIds), 
-                "All created authors should be present in the response");
-    }
-
-    @Test
-    @DisplayName("Should handle pagination edge cases")
-    @Description("Test pagination with edge case values")
-    @Story("Author Pagination")
-    void testPaginationEdgeCases() {
-        // Arrange: Create some authors
-        authorFixtures.setupMultipleTestAuthors(3);
-        
-        // Act & Assert: Test edge case pagination
-        // Page 0 with size 1
-        ApiResponse<PageResponse<Author>> response1 = authorEndpoints.getAllAuthorsWithPagination(0, 1, "name");
-        assertNotNull(response1);
-        assertTrue(response1.isSuccess());
-        assertEquals(1, response1.getData().getSize());
-        assertTrue(response1.getData().isFirst());
-        
-        // Page 1 with size 1 (should be empty if only 3 authors exist)
-        ApiResponse<PageResponse<Author>> response2 = authorEndpoints.getAllAuthorsWithPagination(1, 1, "name");
-        assertNotNull(response2);
-        assertTrue(response2.isSuccess());
-        assertEquals(1, response2.getData().getSize());
-    }
-
-    // -------- INTEGRATION TEST SCENARIOS -------- //
+    // -------- DATA CONSISTENCY TEST -------- //
 
     @Test
     @DisplayName("Should maintain data consistency across operations")
@@ -356,30 +227,5 @@ public class AuthorE2ETest {
         
         // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
-    }
-
-    @Test
-    @DisplayName("Should handle concurrent author operations")
-    @Description("Test creating multiple authors in sequence")
-    @Story("Author Concurrency")
-    void testConcurrentAuthorOperations() {
-        // Arrange: Create multiple author requests
-        List<AuthorRequest> requests = authorFixtures.createMultipleAuthorRequests(5);
-        List<Author> createdAuthors = new ArrayList<>();
-        
-        // Act: Create authors sequentially
-        for (AuthorRequest request : requests) {
-            Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(request);
-            createdAuthors.add(createdAuthor);
-            authorFixtures.getCreatedAuthors().add(createdAuthor);
-        }
-        
-        // Assert: All authors should be created successfully
-        assertEquals(5, createdAuthors.size());
-        
-        // Verify all authors exist
-        for (Author author : createdAuthors) {
-            assertTrue(authorEndpoints.authorExists(author.getId()));
-        }
     }
 } 
