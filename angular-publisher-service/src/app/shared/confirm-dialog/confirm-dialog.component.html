@@ -1,9 +1,32 @@
-<p-dialog [(visible)]="visible" [modal]="true" [closable]="false" [dismissableMask]="true" header="Confirmation">
-  <div class="p-d-flex p-ai-center p-jc-center" style="min-width: 200px;">
-    <span>{{ message }}</span>
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [closable]="false" 
+  header="Confirm Action"
+  [attr.data-testid]="TEST_IDS.SHARED.CONFIRM_DIALOG">
+  
+  <div [attr.data-testid]="TEST_IDS.SHARED.CONFIRM_DIALOG_MESSAGE">
+    {{ message }}
   </div>
+  
   <ng-template pTemplate="footer">
-    <button pButton type="button" label="Yes" (click)="onAccept()" class="p-button-danger"></button>
-    <button pButton type="button" label="No" (click)="onReject()" class="p-button-secondary"></button>
+    <div class="p-d-flex p-jc-end">
+      <button 
+        pButton 
+        type="button" 
+        label="Cancel" 
+        class="p-button-secondary" 
+        (click)="onReject()"
+        [attr.data-testid]="TEST_IDS.SHARED.CONFIRM_DIALOG_REJECT">
+      </button>
+      <button 
+        pButton 
+        type="button" 
+        label="Confirm" 
+        class="p-button-danger" 
+        (click)="onAccept()"
+        [attr.data-testid]="TEST_IDS.SHARED.CONFIRM_DIALOG_ACCEPT">
+      </button>
+    </div>
   </ng-template>
 </p-dialog> 

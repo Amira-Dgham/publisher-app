@@ -1,8 +1,21 @@
-<p-menubar [model]="items">
+<p-menubar [model]="items" [attr.data-testid]="TEST_IDS.SHARED.NAVBAR">
   <ng-template pTemplate="end">
-    <form (ngSubmit)="onSearch()" class="navbar-search-form">
-      <input type="text" pInputText [(ngModel)]="searchTitle" name="searchTitle" placeholder="Search Publications..." style="margin-right: 0.5rem;" />
-      <button pButton type="submit" icon="pi pi-search" label="Search"></button>
+    <form (ngSubmit)="onSearch()" class="navbar-search-form" [attr.data-testid]="TEST_IDS.SHARED.NAVBAR_SEARCH_FORM">
+      <input 
+        type="text" 
+        pInputText 
+        [(ngModel)]="searchTitle" 
+        name="searchTitle" 
+        placeholder="Search Publications..." 
+        style="margin-right: 0.5rem;" 
+        [attr.data-testid]="TEST_IDS.SHARED.NAVBAR_SEARCH_INPUT" />
+      <button 
+        pButton 
+        type="submit" 
+        icon="pi pi-search" 
+        label="Search"
+        [attr.data-testid]="TEST_IDS.SHARED.NAVBAR_SEARCH_BUTTON">
+      </button>
     </form>
   </ng-template>
 </p-menubar> 

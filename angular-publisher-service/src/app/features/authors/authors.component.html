@@ -1,27 +1,27 @@
-<p-table [value]="authors" [loading]="loading" dataKey="id">
-  <ng-template pTemplate="header">
+<p-table [value]="authors" [loading]="loading" dataKey="id" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE">
+  <ng-template pTemplate="header" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_HEADER">
     <tr>
-      <th>Name</th>
-      <th>Birth Date</th>
-      <th>Nationality</th>
-      <th>Books</th>
-      <th>Magazines</th>
+      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_NAME_COLUMN">Name</th>
+      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BIRTH_DATE_COLUMN">Birth Date</th>
+      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_NATIONALITY_COLUMN">Nationality</th>
+      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BOOKS_COLUMN">Books</th>
+      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_MAGAZINES_COLUMN">Magazines</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-author>
-    <tr>
+  <ng-template pTemplate="body" let-author [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BODY">
+    <tr [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_ROW">
       <td>{{ author.name }}</td>
       <td>{{ author.birthDate }}</td>
       <td>{{ author.nationality }}</td>
       <td>
-        <span *ngFor="let book of author.books; let last = last">
-          {{ book.title }}<span *ngIf="!last">, </span>
-        </span>
+        @for (book of author.books; track book.id; let last = $last) {
+          <span>{{ book.title }}@if (!last) {, }</span>
+        }
       </td>
       <td>
-        <span *ngFor="let mag of author.magazines; let last = last">
-          {{ mag.title }}<span *ngIf="!last">, </span>
-        </span>
+        @for (mag of author.magazines; track mag.id; let last = $last) {
+          <span>{{ mag.title }}@if (!last) {, }</span>
+        }
       </td>
     
     </tr>
@@ -31,40 +31,45 @@
   [rows]="pageSize"
   [totalRecords]="totalRecords"
   [first]="page * pageSize"
-  (onPageChange)="onPageChange($event)">
+  (onPageChange)="onPageChange($event)"
+  [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_PAGINATOR">
 </p-paginator>
 
-<button pButton label="Add Author" icon="pi pi-plus" (click)="openNew()"></button>
+<button pButton label="Add Author" icon="pi pi-plus" (click)="openNew()" [attr.data-testid]="TEST_IDS.AUTHORS.ADD_AUTHOR_BUTTON"></button>
 
-<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Author' : 'Add Author' }}">
+<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Author' : 'Add Author' }}" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_DIALOG">
   <form (ngSubmit)="save()" #authorForm="ngForm">
     <div class="p-fluid">
       <div class="p-field">
         <label for="name">Name</label>
-        <input id="name" type="text" pInputText [(ngModel)]="form.name" name="name" required minlength="2" maxlength="100" #name="ngModel" />
-        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="p-error">
-          <div *ngIf="name.errors?.['required']">Name is required.</div>
-          <div *ngIf="name.errors?.['minlength']">Name must be at least 2 characters.</div>
-          <div *ngIf="name.errors?.['maxlength']">Name cannot exceed 100 characters.</div>
-        </div>
+        <input id="name" type="text" pInputText [(ngModel)]="form.name" name="name" required minlength="2" maxlength="100" #name="ngModel" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NAME_INPUT" />
+        @if (name.invalid && (name.dirty || name.touched)) {
+          <div class="p-error" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NAME_ERROR">
+            @if (name.errors?.['required']) { <div [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NAME_REQUIRED_ERROR">Name is required.</div> }
+            @if (name.errors?.['minlength']) { <div [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NAME_MIN_LENGTH_ERROR">Name must be at least 2 characters.</div> }
+            @if (name.errors?.['maxlength']) { <div [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NAME_MAX_LENGTH_ERROR">Name cannot exceed 100 characters.</div> }
+          </div>
+        }
       </div>
       <div class="p-field">
         <label for="birthDate">Birth Date</label>
-        <input id="birthDate" type="date" pInputText [(ngModel)]="form.birthDate" name="birthDate" />
+        <input id="birthDate" type="date" pInputText [(ngModel)]="form.birthDate" name="birthDate" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_BIRTH_DATE_INPUT" />
       </div>
       <div class="p-field">
         <label for="nationality">Nationality</label>
-        <input id="nationality" type="text" pInputText [(ngModel)]="form.nationality" name="nationality" maxlength="50" #nationality="ngModel" />
-        <div *ngIf="nationality.invalid && (nationality.dirty || nationality.touched)" class="p-error">
-          <div *ngIf="nationality.errors?.['maxlength']">Nationality cannot exceed 50 characters.</div>
-        </div>
+        <input id="nationality" type="text" pInputText [(ngModel)]="form.nationality" name="nationality" maxlength="50" #nationality="ngModel" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NATIONALITY_INPUT" />
+        @if (nationality.invalid && (nationality.dirty || nationality.touched)) {
+          <div class="p-error" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NATIONALITY_ERROR">
+            @if (nationality.errors?.['maxlength']) { <div [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_NATIONALITY_MAX_LENGTH_ERROR">Nationality cannot exceed 50 characters.</div> }
+          </div>
+        }
       </div>
     </div>
     <div class="p-d-flex p-jc-end">
-      <button pButton type="submit" label="Save" [disabled]="authorForm.invalid"></button>
-      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false"></button>
+      <button pButton type="submit" label="Save" [disabled]="authorForm.invalid" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_SAVE_BUTTON"></button>
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_CANCEL_BUTTON"></button>
     </div>
   </form>
 </p-dialog>
 
-<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this author?" (accept)="deleteAuthor()" (reject)="confirmDelete = false"></app-confirm-dialog> 
+<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this author?" (accept)="deleteAuthor()" (reject)="confirmDelete = false" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHOR_DELETE_CONFIRM"></app-confirm-dialog> 
