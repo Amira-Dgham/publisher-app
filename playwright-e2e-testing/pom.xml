@@ -95,6 +95,10 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -107,7 +111,6 @@
                 <configuration>
                     <systemPropertyVariables>
                         <environment>${environment}</environment>
-                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
 
                 </configuration>
@@ -173,3 +176,4 @@
         </profile>
     </profiles>
 </project>
+

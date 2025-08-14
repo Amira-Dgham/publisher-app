@@ -1,8 +1,10 @@
 package com.mobelite.e2e.api.test.api;
 
+import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.Playwright;
 import com.mobelite.e2e.api.client.ApiClient;
 import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
+import com.mobelite.e2e.extensions.ApiContextExtension;
 import com.mobelite.e2e.fixtures.AuthorFixtures;
 import com.mobelite.e2e.models.Author;
 import com.mobelite.e2e.models.ApiResponse;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,18 +34,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Author API E2E Tests")
 @Slf4j
+@ExtendWith(ApiContextExtension.class) // ① Register the extension
 public class AuthorE2ETest {
 
-    private Playwright playwright;
     private ApiClient apiClient;
     private AuthorEndpoints authorEndpoints;
     private AuthorFixtures authorFixtures;
 
     @BeforeEach
-    void setUp() {
+    void setUp(APIRequestContext apiRequestContext) { // ② Inject here
         log.info("Setting up AuthorE2ETest");
-        playwright = Playwright.create();
-        apiClient = new ApiClient(playwright);
+        apiClient = new ApiClient(apiRequestContext); // ③ Pass injected context
         authorEndpoints = new AuthorEndpoints(apiClient);
         authorFixtures = new AuthorFixtures(apiClient);
     }
@@ -50,19 +52,11 @@ public class AuthorE2ETest {
     @AfterEach
     void tearDown() {
         log.info("Tearing down AuthorE2ETest");
-        // Clean up test data
         if (authorFixtures != null) {
             authorFixtures.cleanupAllTestAuthors();
         }
-        
-        // Close resources
-        if (apiClient != null) {
-            apiClient.close();
-        }
-        if (playwright != null) {
-            playwright.close();
-        }
     }
+
 
     // -------- POSITIVE TEST SCENARIOS -------- //
 
@@ -73,17 +67,17 @@ public class AuthorE2ETest {
     void testCreateAuthorWithValidData() {
         // Arrange
         AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        
+
         // Act
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
-        
+
         // Assert
         assertNotNull(createdAuthor);
         assertNotNull(createdAuthor.getId());
         assertEquals(authorRequest.getName(), createdAuthor.getName());
         assertEquals(authorRequest.getBirthDate(), createdAuthor.getBirthDate());
         assertEquals(authorRequest.getNationality(), createdAuthor.getNationality());
-        
+
         // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
     }
@@ -95,15 +89,15 @@ public class AuthorE2ETest {
     void testCreateAuthorWithMinimalData() {
         // Arrange
         AuthorRequest authorRequest = authorFixtures.createMinimalAuthorRequest();
-        
+
         // Act
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
-        
+
         // Assert
         assertNotNull(createdAuthor);
         assertNotNull(createdAuthor.getId());
         assertEquals(authorRequest.getName(), createdAuthor.getName());
-        
+
         // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
     }
@@ -117,10 +111,10 @@ public class AuthorE2ETest {
         AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
         Author createdAuthor = authorEndpoints.createTestAuthorViaEndpoint(authorRequest);
         authorFixtures.getCreatedAuthors().add(createdAuthor);
-        
+
         // Act: Retrieve the author by ID
         Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(createdAuthor.getId());
-        
+
         // Assert: Validate the retrieved data
         assertNotNull(retrievedAuthor);
         assertEquals(createdAuthor.getId(), retrievedAuthor.getId());
@@ -136,10 +130,10 @@ public class AuthorE2ETest {
     void testGetAllAuthors() {
         // Arrange: Create multiple authors
         authorFixtures.setupMultipleTestAuthors(3);
-        
+
         // Act: Retrieve all authors
         PageResponse<Author> authorsPage = authorEndpoints.getAllAuthorsAndValidateStructure();
-        
+
         // Assert: Validate the response
         assertNotNull(authorsPage);
         assertTrue(authorsPage.getTotalElements() >= 3);
@@ -154,15 +148,15 @@ public class AuthorE2ETest {
     void testGetAllAuthorsWithCustomPagination() {
         // Arrange: Create multiple authors
         authorFixtures.setupMultipleTestAuthors(5);
-        
+
         // Act: Retrieve authors with custom pagination
         ApiResponse<PageResponse<Author>> response = authorEndpoints.getAllAuthorsWithPagination(0, 10, "name");
-        
+
         // Assert: Validate the response
         assertNotNull(response);
         assertTrue(response.isSuccess());
         assertNotNull(response.getData());
-        
+
         PageResponse<Author> authorsPage = response.getData();
         assertEquals(0, authorsPage.getNumber()); // First page
         assertEquals(10, authorsPage.getSize()); // Page size
@@ -178,10 +172,10 @@ public class AuthorE2ETest {
     void testCreateAuthorWithInvalidData() {
         // Arrange: Create invalid author request
         AuthorRequest invalidRequest = authorFixtures.createInvalidAuthorRequest();
-        
+
         // Act: Attempt to create author with invalid data
         ApiResponse<?> errorResponse = authorEndpoints.createAuthorWithInvalidDataAndValidateError(invalidRequest);
-        
+
         // Assert: Validate error response
         assertNotNull(errorResponse);
         assertFalse(errorResponse.isSuccess());
@@ -195,10 +189,10 @@ public class AuthorE2ETest {
     void testGetNonExistentAuthor() {
         // Arrange: Use a non-existent ID
         Long nonExistentId = 999999L;
-        
+
         // Act: Attempt to retrieve non-existent author
         ApiResponse<?> errorResponse = authorEndpoints.getNonExistentAuthorAndValidateError(nonExistentId);
-        
+
         // Assert: Validate error response
         assertNotNull(errorResponse);
         assertFalse(errorResponse.isSuccess());
@@ -214,18 +208,18 @@ public class AuthorE2ETest {
     void testDataConsistencyAcrossOperations() {
         // Arrange: Create an author
         AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        
+
         // Act: Create author and then retrieve it
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
         Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(createdAuthor.getId());
-        
+
         // Assert: Data should be consistent
         assertEquals(createdAuthor.getId(), retrievedAuthor.getId());
         assertEquals(createdAuthor.getName(), retrievedAuthor.getName());
         assertEquals(createdAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
         assertEquals(createdAuthor.getNationality(), retrievedAuthor.getNationality());
-        
+
         // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
     }
-} 
+}
