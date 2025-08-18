@@ -91,6 +91,26 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public void deleteAuthor(Long id) {
+        log.info("Attempting to delete author with ID: {}", id);
+
+        // Check if author exists before attempting to delete
+        if (!authorRepository.existsById(id)) {
+            log.warn("Author with ID {} not found for deletion", id);
+            throw new ResourceNotFoundException("Author not found with ID: " + id);
+        }
+
+        try {
+            // Delete the author
+            authorRepository.deleteById(id);
+            log.info("Successfully deleted author with ID: {}", id);
+        } catch (Exception e) {
+            log.error("Error deleting author with ID {}: {}", id, e.getMessage(), e);
+            throw new RuntimeException("Failed to delete author with ID: " + id, e);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean existsById(Long id) {
         return authorRepository.existsById(id);

@@ -1,4 +1,4 @@
-package com.mobelite.e2e.apis.core;
+package com.mobelite.e2e.api.core;
 
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.options.RequestOptions;

@@ -1,11 +1,11 @@
-package com.mobelite.e2e.apis.core;
+package com.mobelite.e2e.api.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.RequestOptions;
 import com.mobelite.e2e.config.TestConfig;
-import com.mobelite.e2e.extensions.ApiContextExtension;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,13 +15,6 @@ public class ApiClient implements AutoCloseable {
     private final APIRequestContext requestContext;
     private final ObjectMapper objectMapper;
     private final String baseUrl;
-
-    public ApiClient(Playwright playwright) {
-        TestConfig config = TestConfig.getInstance();
-        this.baseUrl = config.getApiBaseUrl();
-        this.objectMapper = config.getObjectMapper();
-        this.requestContext = ApiContextExtension.createNewContext(playwright);
-    }
 
     public ApiClient(APIRequestContext apiRequestContext) {
         TestConfig config = TestConfig.getInstance();
@@ -81,13 +74,41 @@ public class ApiClient implements AutoCloseable {
         }
     }
 
+    /**
+     * Parses the API response body into the specified Java class.
+     *
+     * @param <T> the type of the parsed object
+     * @param response the APIResponse object to parse
+     * @param clazz the target class type
+     * @return the parsed object
+     */
     public <T> T parseResponse(APIResponse response, Class<T> clazz) {
         try {
             String responseText = response.text();
-            log.debug("Parsing response: {}", responseText);
+            log.debug("Parsing response to {}: {}", clazz.getSimpleName(), responseText);
             return objectMapper.readValue(responseText, clazz);
         } catch (Exception e) {
-            log.error("Failed to parse response to {}: {}", clazz.getSimpleName(), e.getMessage());
+            log.error("Failed to parse API response to {}: {}", clazz.getSimpleName(), e.getMessage());
+            throw new RuntimeException("Failed to parse API response", e);
+        }
+    }
+
+    /**
+     * Parses the API response body using TypeReference for complex generic types.
+     * This method properly handles generic type information, avoiding ClassCastException.
+     *
+     * @param <T> the type of the parsed object
+     * @param response the APIResponse object to parse
+     * @param typeReference the TypeReference containing the target type information
+     * @return the parsed object
+     */
+    public <T> T parseResponse(APIResponse response, TypeReference<T> typeReference) {
+        try {
+            String responseText = response.text();
+            log.debug("Parsing response using TypeReference: {}", responseText);
+            return objectMapper.readValue(responseText, typeReference);
+        } catch (Exception e) {
+            log.error("Failed to parse API response using TypeReference: {}", e.getMessage());
             throw new RuntimeException("Failed to parse API response", e);
         }
     }

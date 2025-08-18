@@ -1,7 +1,7 @@
-package com.mobelite.e2e.apis.clients;
+package com.mobelite.e2e.api.clients;
 
-import com.mobelite.e2e.apis.core.ApiClient;
-import com.mobelite.e2e.apis.endpoints.BaseEndpoints;
+import com.mobelite.e2e.api.core.ApiClient;
+import com.mobelite.e2e.api.endpoints.BaseEndpoints;
 
 public class MagazineApiClient extends BaseEndpoints {
 

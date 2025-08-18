@@ -83,4 +83,20 @@ public class AuthorController {
 
         return  ResponseEntity.ok(ApiResponseDto.success(response));
     }
+
+    @Operation(summary = "Delete author by ID", description = "Deletes an author by their unique identifier")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteAuthor(
+            @Parameter(description = "Author ID") @PathVariable Long id) {
+
+        authorService.deleteAuthor(id);
+
+        ApiResponseDto<Void> response = ApiResponseDto.<Void>builder()
+                .success(true)
+                .message("Author deleted successfully")
+                .data(null)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,4 +1,4 @@
-package com.mobelite.e2e.constants;
+package com.mobelite.e2e.shared.constants;
 
 public final class HttpStatusCodes {
     private HttpStatusCodes() {}

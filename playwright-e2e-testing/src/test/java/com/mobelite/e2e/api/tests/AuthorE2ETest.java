@@ -1,14 +1,14 @@
-package com.mobelite.e2e.api.test.api.tests;
+package com.mobelite.e2e.api.tests;
 
 import com.microsoft.playwright.APIRequestContext;
-import com.mobelite.e2e.apis.core.ApiClient;
-import com.mobelite.e2e.apis.endpoints.AuthorEndpoints;
-import com.mobelite.e2e.api.test.api.extensions.ApiContextExtension;
-import com.mobelite.e2e.api.test.api.fixtures.AuthorFixtures;
-import com.mobelite.e2e.apis.models.Author;
-import com.mobelite.e2e.apis.models.ApiResponse;
-import com.mobelite.e2e.apis.models.PageResponse;
-import com.mobelite.e2e.apis.models.request.AuthorRequest;
+import com.mobelite.e2e.api.core.ApiClient;
+import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
+import com.mobelite.e2e.extensions.ApiContextExtension;
+import com.mobelite.e2e.api.fixtures.AuthorFixtures;
+import com.mobelite.e2e.api.models.Author;
+import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.api.models.PageResponse;
+import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Author API E2E Tests")
 @Slf4j
-@ExtendWith(ApiContextExtension.class) // ① Register the extension
+@ExtendWith(ApiContextExtension.class)
 public class AuthorE2ETest {
 
     private ApiClient apiClient;
@@ -41,9 +41,9 @@ public class AuthorE2ETest {
     private AuthorFixtures authorFixtures;
 
     @BeforeEach
-    void setUp(APIRequestContext apiRequestContext) { // ② Inject here
+    void setUp(APIRequestContext apiRequestContext) {
         log.info("Setting up AuthorE2ETest");
-        apiClient = new ApiClient(apiRequestContext); // ③ Pass injected context
+        apiClient = new ApiClient(apiRequestContext);
         authorEndpoints = new AuthorEndpoints(apiClient);
         authorFixtures = new AuthorFixtures(apiClient);
     }

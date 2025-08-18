@@ -1,13 +1,14 @@
-package com.mobelite.e2e.apis.endpoints;
+package com.mobelite.e2e.api.endpoints;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.microsoft.playwright.APIResponse;
-import com.mobelite.e2e.apis.core.ApiClient;
-import static com.mobelite.e2e.constants.ApiEndpoints.*;
-import static com.mobelite.e2e.constants.HttpStatusCodes.*;
-import com.mobelite.e2e.apis.models.ApiResponse;
-import com.mobelite.e2e.apis.models.Author;
-import com.mobelite.e2e.apis.models.PageResponse;
-import com.mobelite.e2e.apis.models.request.AuthorRequest;
+import com.mobelite.e2e.api.core.ApiClient;
+import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.*;
+import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.api.models.Author;
+import com.mobelite.e2e.api.models.PageResponse;
+import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,13 +39,17 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Create author via endpoint")
     public ApiResponse<Author> createAuthor(AuthorRequest authorRequest) {
         log.info("Creating author via endpoint: {}", authorRequest.getName());
-        
+
         APIResponse response = post(AUTHORS_BASE)
                 .body(authorRequest)
                 .execute();
-        
+
+        log.info("Creating author via response: {}", response);
+
         validateStatus(response, STATUS_CREATED);
-        return parseResponse(response, ApiResponse.class);
+
+        // Use TypeReference to properly handle generic types
+        return parseResponse(response, new TypeReference<ApiResponse<Author>>() {});
     }
 
     /**
@@ -58,7 +63,7 @@ public class AuthorEndpoints extends BaseEndpoints {
         ApiResponse<Author> response = createAuthor(authorRequest);
         validateHasData(response);
         validateMessageContains(response, "created successfully");
-        return response.getData();
+        return response.getData(); // No need for casting anymore
     }
 
     // -------- READ ENDPOINTS -------- //
@@ -72,12 +77,12 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Get author by ID via endpoint: {id}")
     public ApiResponse<Author> getAuthorById(Long id) {
         log.info("Getting author by ID via endpoint: {}", id);
-        
+
         String endpoint = buildPath(AUTHOR_BY_ID, id);
         APIResponse response = get(endpoint).execute();
-        
+
         validateStatus(response, STATUS_OK);
-        return parseResponse(response, ApiResponse.class);
+        return parseResponse(response, new TypeReference<ApiResponse<Author>>() {});
     }
 
     /**
@@ -102,11 +107,11 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Get all authors via endpoint")
     public ApiResponse<PageResponse<Author>> getAllAuthors() {
         log.info("Getting all authors via endpoint");
-        
+
         APIResponse response = get(AUTHORS_BASE).execute();
-        
+
         validateStatus(response, STATUS_OK);
-        return parseResponse(response, ApiResponse.class);
+        return parseResponse(response, new TypeReference<ApiResponse<PageResponse<Author>>>() {});
     }
 
     /**
@@ -120,15 +125,15 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Get all authors with pagination via endpoint: page={page}, size={size}, sort={sort}")
     public ApiResponse<PageResponse<Author>> getAllAuthorsWithPagination(int page, int size, String sort) {
         log.info("Getting all authors with pagination via endpoint: page={}, size={}, sort={}", page, size, sort);
-        
+
         APIResponse response = get(AUTHORS_BASE)
                 .queryParam("page", String.valueOf(page))
                 .queryParam("size", String.valueOf(size))
                 .queryParam("sort", sort)
                 .execute();
-        
+
         validateStatus(response, STATUS_OK);
-        return parseResponse(response, ApiResponse.class);
+        return parseResponse(response, new TypeReference<ApiResponse<PageResponse<Author>>>() {});
     }
 
     /**
@@ -154,11 +159,11 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Create author with invalid data and validate error")
     public ApiResponse<?> createAuthorWithInvalidDataAndValidateError(AuthorRequest invalidRequest) {
         log.info("Attempting to create author with invalid data via endpoint");
-        
+
         APIResponse response = post(AUTHORS_BASE)
                 .body(invalidRequest)
                 .execute();
-        
+
         validateStatus(response, STATUS_BAD_REQUEST);
         return parseErrorResponse(response);
     }
@@ -172,10 +177,10 @@ public class AuthorEndpoints extends BaseEndpoints {
     @Step("Get non-existent author and validate error: {id}")
     public ApiResponse<?> getNonExistentAuthorAndValidateError(Long id) {
         log.info("Attempting to get non-existent author via endpoint: {}", id);
-        
+
         String endpoint = buildPath(AUTHOR_BY_ID, id);
         APIResponse response = get(endpoint).execute();
-        
+
         validateStatus(response, STATUS_NOT_FOUND);
         return parseErrorResponse(response);
     }
@@ -212,4 +217,4 @@ public class AuthorEndpoints extends BaseEndpoints {
             log.warn("Failed to cleanup test author {}: {}", id, e.getMessage());
         }
     }
-} 
+}

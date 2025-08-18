@@ -1,19 +1,19 @@
-package com.mobelite.e2e.apis.clients;
+package com.mobelite.e2e.api.clients;
 
 import com.microsoft.playwright.APIResponse;
-import com.mobelite.e2e.apis.core.ApiClient;
-import com.mobelite.e2e.apis.endpoints.BaseEndpoints;
-import com.mobelite.e2e.apis.models.ApiResponse;
-import com.mobelite.e2e.apis.models.Author;
-import com.mobelite.e2e.apis.models.PageResponse;
-import com.mobelite.e2e.apis.models.request.AuthorRequest;
+import com.mobelite.e2e.api.core.ApiClient;
+import com.mobelite.e2e.api.endpoints.BaseEndpoints;
+import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.api.models.Author;
+import com.mobelite.e2e.api.models.PageResponse;
+import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * AuthorApiClient provides methods to interact with the Author API endpoints.
  * Extends BaseEndpoints to leverage common HTTP methods and validation utilities.
- * 
+ *
  * Available endpoints:
  * - POST /api/v1/authors - Create a new author
  * - GET /api/v1/authors/{id} - Get author by ID
@@ -44,11 +44,11 @@ public class AuthorApiClient extends BaseEndpoints {
     @Step("Create author")
     public ApiResponse<Author> createAuthor(AuthorRequest authorRequest) {
         log.info("Creating author: {}", authorRequest.getName());
-        
+
         APIResponse response = post(BASE_PATH)
                 .body(authorRequest)
                 .execute();
-        
+
         validateStatus(response, 201);
         return parseResponse(response, ApiResponse.class);
     }
@@ -77,10 +77,10 @@ public class AuthorApiClient extends BaseEndpoints {
     @Step("Get author by ID: {id}")
     public ApiResponse<Author> getAuthorById(Long id) {
         log.info("Getting author by ID: {}", id);
-        
+
         String endpoint = buildPath(BASE_PATH + "/{id}", id);
         APIResponse response = get(endpoint).execute();
-        
+
         validateStatus(response, 200);
         return parseResponse(response, ApiResponse.class);
     }
@@ -106,9 +106,9 @@ public class AuthorApiClient extends BaseEndpoints {
     @Step("Get all authors")
     public ApiResponse<PageResponse<Author>> getAllAuthors() {
         log.info("Getting all authors");
-        
+
         APIResponse response = get(BASE_PATH).execute();
-        
+
         validateStatus(response, 200);
         return parseResponse(response, ApiResponse.class);
     }
@@ -124,13 +124,13 @@ public class AuthorApiClient extends BaseEndpoints {
     @Step("Get all authors with pagination: page={page}, size={size}, sort={sort}")
     public ApiResponse<PageResponse<Author>> getAllAuthors(int page, int size, String sort) {
         log.info("Getting all authors with pagination: page={}, size={}, sort={}", page, size, sort);
-        
+
         APIResponse response = get(BASE_PATH)
                 .queryParam("page", String.valueOf(page))
                 .queryParam("size", String.valueOf(size))
                 .queryParam("sort", sort)
                 .execute();
-        
+
         validateStatus(response, 200);
         return parseResponse(response, ApiResponse.class);
     }
@@ -188,34 +188,34 @@ public class AuthorApiClient extends BaseEndpoints {
         if (createdAuthor == null) {
             throw new AssertionError("Created author is null");
         }
-        
+
         if (createdAuthor.getId() == null) {
             throw new AssertionError("Created author ID is null");
         }
-        
+
         if (!authorRequest.getName().equals(createdAuthor.getName())) {
             throw new AssertionError(String.format(
                 "Author name mismatch. Expected: %s, Actual: %s",
                 authorRequest.getName(), createdAuthor.getName()
             ));
         }
-        
-        if (authorRequest.getBirthDate() != null && 
+
+        if (authorRequest.getBirthDate() != null &&
             !authorRequest.getBirthDate().equals(createdAuthor.getBirthDate())) {
             throw new AssertionError(String.format(
                 "Author birth date mismatch. Expected: %s, Actual: %s",
                 authorRequest.getBirthDate(), createdAuthor.getBirthDate()
             ));
         }
-        
-        if (authorRequest.getNationality() != null && 
+
+        if (authorRequest.getNationality() != null &&
             !authorRequest.getNationality().equals(createdAuthor.getNationality())) {
             throw new AssertionError(String.format(
                 "Author nationality mismatch. Expected: %s, Actual: %s",
                 authorRequest.getNationality(), createdAuthor.getNationality()
             ));
         }
-        
+
         log.info("Author creation validation passed for ID: {}", createdAuthor.getId());
     }
 

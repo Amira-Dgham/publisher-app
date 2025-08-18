@@ -1,4 +1,4 @@
-package com.mobelite.e2e.api.extensions;
+package com.mobelite.e2e.extensions;
 
 import com.microsoft.playwright.*;
 import com.mobelite.e2e.config.TestConfig;
@@ -6,82 +6,58 @@ import org.junit.jupiter.api.extension.*;
 
 import java.util.Map;
 
+/**
+ * JUnit 5 extension to provide a Playwright APIRequestContext
+ * for API E2E tests, with automatic setup and teardown.
+ */
 public class ApiContextExtension implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
 
-    private static Playwright playwright;
-    private static APIRequestContext apiRequestContext;
+    private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiContextExtension.class);
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        if (playwright == null) {
-            playwright = Playwright.create();
-        }
-        if (apiRequestContext == null) {
-            apiRequestContext = createApiRequestContext(playwright);
-        }
+        TestConfig config = TestConfig.getInstance();
+        Playwright playwright = Playwright.create();
+
+        APIRequestContext apiRequestContext = playwright.request().newContext(
+                new APIRequest.NewContextOptions()
+                        .setBaseURL(config.getApiBaseUrl())
+                        .setTimeout(config.getTimeout())
+                        .setExtraHTTPHeaders(Map.of(
+                                "Content-Type", "application/json",
+                                "Accept", "application/json",
+                                "User-Agent", "E2E-API-Client/1.0"
+                        ))
+        );
+
+        // Store objects in ExtensionContext for later retrieval
+        context.getStore(NAMESPACE).put("playwright", playwright);
+        context.getStore(NAMESPACE).put("apiContext", apiRequestContext);
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        if (apiRequestContext != null) {
-            apiRequestContext.dispose();
-            apiRequestContext = null;
-        }
-        if (playwright != null) {
-            playwright.close();
-            playwright = null;
-        }
+        APIRequestContext apiRequestContext = context.getStore(NAMESPACE).remove("apiContext", APIRequestContext.class);
+        if (apiRequestContext != null) apiRequestContext.dispose();
+
+        Playwright playwright = context.getStore(NAMESPACE).remove("playwright", Playwright.class);
+        if (playwright != null) playwright.close();
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return parameterContext.getParameter().getType() == APIRequestContext.class;
+        Class<?> type = parameterContext.getParameter().getType();
+        return type == APIRequestContext.class || type == Playwright.class;
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return apiRequestContext;
-    }
-
-    /**
-     * Creates a new APIRequestContext with standardized configuration.
-     * This method centralizes the configuration logic to avoid duplication.
-     *
-     * @param playwright the Playwright instance
-     * @return configured APIRequestContext
-     */
-    private static APIRequestContext createApiRequestContext(Playwright playwright) {
-        TestConfig config = TestConfig.getInstance();
-        return playwright.request().newContext(
-                new APIRequest.NewContextOptions()
-                        .setBaseURL(config.getApiBaseUrl())
-                        .setTimeout(config.getTimeout())
-                        .setExtraHTTPHeaders(getDefaultHeaders())
-        );
-    }
-
-    /**
-     * Returns the default HTTP headers for API requests.
-     * Centralizes header configuration to avoid duplication across classes.
-     *
-     * @return map of default headers
-     */
-    public static Map<String, String> getDefaultHeaders() {
-        return Map.of(
-                "Content-Type", "application/json",
-                "Accept", "application/json",
-                "User-Agent", "E2E-Test-Client/1.0"
-        );
-    }
-
-    /**
-     * Utility method to create a new APIRequestContext.
-     * Can be used by other classes that need to create their own context.
-     *
-     * @param playwright the Playwright instance
-     * @return configured APIRequestContext
-     */
-    public static APIRequestContext createNewContext(Playwright playwright) {
-        return createApiRequestContext(playwright);
+        Class<?> type = parameterContext.getParameter().getType();
+        if (type == APIRequestContext.class) {
+            return extensionContext.getStore(NAMESPACE).get("apiContext", APIRequestContext.class);
+        } else if (type == Playwright.class) {
+            return extensionContext.getStore(NAMESPACE).get("playwright", Playwright.class);
+        }
+        return null;
     }
 }

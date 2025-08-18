@@ -1,4 +1,4 @@
-package com.mobelite.e2e.helpers;
+package com.mobelite.e2e.shared.helpers;
 
 public class GenerateData {
 }

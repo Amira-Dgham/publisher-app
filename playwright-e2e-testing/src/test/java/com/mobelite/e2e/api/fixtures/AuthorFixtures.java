@@ -1,9 +1,9 @@
-package com.mobelite.e2e.api.test.api.fixtures;
+package com.mobelite.e2e.api.fixtures;
 
-import com.mobelite.e2e.apis.core.ApiClient;
-import com.mobelite.e2e.apis.endpoints.AuthorEndpoints;
-import com.mobelite.e2e.apis.models.Author;
-import com.mobelite.e2e.apis.models.request.AuthorRequest;
+import com.mobelite.e2e.api.core.ApiClient;
+import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
+import com.mobelite.e2e.api.models.Author;
+import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 

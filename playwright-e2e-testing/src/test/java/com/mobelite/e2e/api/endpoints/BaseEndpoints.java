@@ -1,9 +1,11 @@
-package com.mobelite.e2e.apis.endpoints;
+package com.mobelite.e2e.api.endpoints;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.microsoft.playwright.APIResponse;
-import com.mobelite.e2e.apis.core.ApiClient;
-import com.mobelite.e2e.apis.core.ApiRequestBuilder;
-import com.mobelite.e2e.apis.models.ApiResponse;
+import com.mobelite.e2e.api.core.ApiClient;
+import com.mobelite.e2e.api.core.ApiRequestBuilder;
+import com.mobelite.e2e.api.models.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 
@@ -170,11 +172,24 @@ public abstract class BaseEndpoints {
      *
      * @param <T> the type of the parsed object
      * @param response the APIResponse object to parse
-     * @param clazz the class of the type to parse to
+     * @param clazz the target class type
      * @return the parsed object
      */
     protected <T> T parseResponse(APIResponse response, Class<T> clazz) {
         return apiClient.parseResponse(response, clazz);
+    }
+
+    /**
+     * Parses the API response body using TypeReference for generic types.
+     * This method handles complex generics properly, avoiding ClassCastException.
+     *
+     * @param <T> the type of the parsed object
+     * @param response the APIResponse object to parse
+     * @param typeReference the TypeReference for the target type
+     * @return the parsed object
+     */
+    protected <T> T parseResponse(APIResponse response, TypeReference<T> typeReference) {
+        return apiClient.parseResponse(response, typeReference);
     }
 
     /**

@@ -28,7 +28,8 @@ public class Magazine extends Publication {
     @JoinTable(
             name = "magazine_authors",
             joinColumns = @JoinColumn(name = "magazine_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
+            inverseJoinColumns = @JoinColumn(name = "author_id",nullable = true)
+
     )
     private List<Author> authors;
 }
