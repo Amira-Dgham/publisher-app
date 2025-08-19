@@ -3,13 +3,17 @@ package com.mobelite.e2e.api.fixtures;
 import com.mobelite.e2e.api.core.ApiClient;
 import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
 import com.mobelite.e2e.api.models.Author;
+import com.mobelite.e2e.api.models.PageResponse;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -19,6 +23,14 @@ import java.util.concurrent.atomic.AtomicLong;
 public class AuthorFixtures {
 
     private final AuthorEndpoints authorEndpoints;
+    /**
+     * -- GETTER --
+     *  Gets the list of all created authors.
+     *  Returns a defensive copy to prevent external modification.
+     *
+     * @return a copy of the list of created authors
+     */ // Return the actual list for adding authors
+    @Getter
     private final List<Author> createdAuthors;
     private final AtomicLong authorIdCounter;
 
@@ -32,7 +44,7 @@ public class AuthorFixtures {
      */
     public AuthorFixtures(ApiClient apiClient) {
         this.authorEndpoints = new AuthorEndpoints(apiClient);
-        this.createdAuthors = new ArrayList<>();
+        this.createdAuthors = Collections.synchronizedList(new ArrayList<>());
         this.authorIdCounter = new AtomicLong(1);
     }
 
@@ -46,7 +58,7 @@ public class AuthorFixtures {
     @Step("Create valid author request")
     public AuthorRequest createValidAuthorRequest() {
         return AuthorRequest.builder()
-                .name(TEST_AUTHOR_PREFIX + "Valid_" + authorIdCounter.getAndIncrement())
+                .name(TEST_AUTHOR_PREFIX + "Valid_" + UUID.randomUUID())
                 .birthDate(LocalDate.of(1980, 1, 1))
                 .nationality("American")
                 .build();
@@ -92,54 +104,172 @@ public class AuthorFixtures {
                 .build();
     }
 
-    // -------- TEST SETUP AND TEARDOWN -------- //
+    // -------- IMPROVED TEST SETUP AND TEARDOWN -------- //
 
     /**
      * Sets up multiple test authors for testing pagination and bulk operations.
+     * Each created author is immediately added to the cleanup list.
      *
      * @param count the number of authors to create
      */
     @Step("Setup {count} test authors")
     public void setupMultipleTestAuthors(int count) {
+        log.info("Setting up {} test authors", count);
+
         for (int i = 0; i < count; i++) {
-            AuthorRequest request = createValidAuthorRequest();
-            Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(request);
-            createdAuthors.add(createdAuthor);
-            log.info("Setup: Created test author with ID: {}", createdAuthor.getId());
+            Author createdAuthor = null;
+            try {
+                AuthorRequest request = createValidAuthorRequest();
+                createdAuthor = authorEndpoints.createAuthorAndValidateStructure(request);
+                // Add to cleanup list immediately after creation
+                createdAuthors.add(createdAuthor);
+                log.info("Setup: Created test author #{} with ID: {}", i + 1, createdAuthor.getId());
+            } catch (Exception e) {
+                log.error("Failed to create test author #{}: {}", i + 1, e.getMessage());
+                // If author was created but validation failed, still add to cleanup
+                if (createdAuthor != null && createdAuthor.getId() != null) {
+                    createdAuthors.add(createdAuthor);
+                }
+                // Continue with next author instead of failing completely
+            }
+        }
+
+        log.info("Setup completed. Total authors to cleanup: {}", createdAuthors.size());
+    }
+
+    /**
+     * Cleans up all created test authors with improved error handling and logging.
+     * This method is typically called in @AfterEach and @AfterAll.
+     */
+    @Step("Cleanup all test authors")
+    public void cleanupAllTestAuthors() {
+        if (createdAuthors.isEmpty()) {
+            log.info("No test authors to cleanup");
+            return;
+        }
+
+        log.info("Cleanup: Starting cleanup of {} test authors", createdAuthors.size());
+
+        List<Author> failedDeletes = new ArrayList<>();
+        int successCount = 0;
+
+        // Create a copy to avoid concurrent modification
+        List<Author> authorsToDelete = new ArrayList<>(createdAuthors);
+
+        for (Author author : authorsToDelete) {
+            if (author == null || author.getId() == null) {
+                log.warn("Cleanup: Skipping null author or author with null ID");
+                continue;
+            }
+
+            try {
+                authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
+                successCount++;
+                log.info("Cleanup: Successfully deleted author with ID: {}", author.getId());
+            } catch (Exception e) {
+                log.error("Cleanup: Failed to delete author with ID {}: {}", author.getId(), e.getMessage());
+                failedDeletes.add(author);
+            }
+        }
+
+        // Clear the list regardless of success/failure
+        createdAuthors.clear();
+
+        log.info("Cleanup completed: {} successful, {} failed deletions", successCount, failedDeletes.size());
+
+        // If there were failures, log them for investigation
+        if (!failedDeletes.isEmpty()) {
+            log.warn("Cleanup: Failed to delete the following author IDs: {}",
+                    failedDeletes.stream().map(Author::getId).toList());
         }
     }
 
     /**
-     * Cleans up all created test authors.
-     * This method is typically called in @AfterEach.
+     * Force cleanup by attempting to delete all test authors by name pattern.
+     * This is a more aggressive cleanup method that can be used if regular cleanup fails.
      */
-    @Step("Cleanup all test authors")
-    public void cleanupAllTestAuthors() {
-        log.info("Cleanup: Starting cleanup of {} test authors", createdAuthors.size());
+    @Step("Force cleanup all test authors by pattern")
+    public void forceCleanupTestAuthorsByPattern() {
+        log.info("Force cleanup: Attempting to find and delete all test authors by name pattern");
 
-        for (Author author : createdAuthors) {
-            try {
-                authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
-                log.info("Cleanup: Successfully cleaned up author with ID: {}", author.getId());
-            } catch (Exception e) {
-                log.warn("Cleanup: Failed to cleanup author with ID {}: {}", author.getId(), e.getMessage());
+        try {
+            // Get all authors and filter by test prefix
+            PageResponse<Author> allAuthors = authorEndpoints.getAllAuthorsAndValidateStructure();
+
+            if (allAuthors != null && allAuthors.hasContent()) {
+                List<Author> testAuthors = allAuthors.getContent().stream()
+                        .filter(author -> author.getName() != null &&
+                                author.getName().startsWith(TEST_AUTHOR_PREFIX))
+                        .toList();
+
+                log.info("Force cleanup: Found {} test authors to delete", testAuthors.size());
+
+                for (Author author : testAuthors) {
+                    try {
+                        authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
+                        log.info("Force cleanup: Deleted test author with ID: {}", author.getId());
+                    } catch (Exception e) {
+                        log.error("Force cleanup: Failed to delete test author {}: {}", author.getId(), e.getMessage());
+                    }
+                }
             }
+        } catch (Exception e) {
+            log.error("Force cleanup: Failed to retrieve authors for pattern-based cleanup", e);
         }
+    }
 
-        createdAuthors.clear();
-        log.info("Cleanup: Completed cleanup of all test authors");
+    /**
+     * Creates an author and immediately registers it for cleanup.
+     * This is a convenience method to ensure all created authors are tracked.
+     *
+     * @param authorRequest the author creation request
+     * @return the created author
+     */
+    @Step("Create author and register for cleanup")
+    public Author createAuthorAndRegisterForCleanup(AuthorRequest authorRequest) {
+        Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
+        registerAuthorForCleanup(createdAuthor);
+        return createdAuthor;
+    }
+
+    /**
+     * Creates an author specifically for deletion testing.
+     * The author is NOT added to the cleanup list since it will be deleted in the test.
+     *
+     * @return a created author for deletion testing
+     */
+    @Step("Create author for deletion test")
+    public Author createAuthorForDeletionTest() {
+        AuthorRequest authorRequest = AuthorRequest.builder()
+                .name(TEST_AUTHOR_PREFIX + "ForDeletion_" + UUID.randomUUID())
+                .birthDate(LocalDate.of(1975, 6, 15))
+                .nationality("British")
+                .build();
+
+        return authorEndpoints.createAuthorAndValidateStructure(authorRequest);
     }
 
     // -------- UTILITY METHODS -------- //
 
     /**
-     * Gets the list of all created authors.
+     * Registers an author for cleanup. Use this when creating authors outside of fixtures.
      *
-     * @return the list of created authors
+     * @param author the author to register for cleanup
      */
-    public List<Author> getCreatedAuthors() {
-        return new ArrayList<>(createdAuthors);
+    @Step("Register author for cleanup")
+    public void registerAuthorForCleanup(Author author) {
+        if (author != null && author.getId() != null) {
+            createdAuthors.add(author);
+            log.info("Registered author with ID {} for cleanup", author.getId());
+        }
     }
 
-
+    /**
+     * Gets the current count of authors registered for cleanup.
+     *
+     * @return the number of authors in the cleanup list
+     */
+    public int getCleanupCount() {
+        return createdAuthors.size();
+    }
 }
