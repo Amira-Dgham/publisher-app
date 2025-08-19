@@ -1,17 +1,35 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { environment } from '../../../environments/environment';
+import { LoaderService } from './loader.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private axiosInstance: AxiosInstance;
 
-  constructor() {
+  constructor(private loader: LoaderService) {
     this.axiosInstance = axios.create({
       baseURL: environment.apiBaseUrl,
       headers: {
         'Content-Type': 'application/json',
       },
+    });
+
+    // Attach interceptors to manage loader state
+    this.axiosInstance.interceptors.request.use((config) => {
+      this.loader.start();
+      return config;
+    }, (error) => {
+      this.loader.stop();
+      return Promise.reject(error);
+    });
+
+    this.axiosInstance.interceptors.response.use((response) => {
+      this.loader.stop();
+      return response;
+    }, (error) => {
+      this.loader.stop();
+      return Promise.reject(error);
     });
   }
 
@@ -32,8 +50,6 @@ export class ApiService {
   }
 
   private handleError(error: any): never {
-    // Centralized error handling
-    // Optionally add notification logic here
     throw error;
   }
 } 

@@ -1,22 +1,22 @@
-<p-table [value]="books" [loading]="loading" dataKey="id">
-  <ng-template pTemplate="header">
+<p-table [value]="books" [loading]="loading" dataKey="id" [attr.data-testid]="'books-table'">
+  <ng-template pTemplate="header" [attr.data-testid]="'books-table-header'">
     <tr>
-      <th>Title</th>
-      <th>ISBN</th>
-      <th>Publication Date</th>
-      <th>Author</th>
-      <th>Actions</th>
+      <th [attr.data-testid]="'books-table-title-column'">Title</th>
+      <th [attr.data-testid]="'books-table-isbn-column'">ISBN</th>
+      <th [attr.data-testid]="'books-table-publication-date-column'">Publication Date</th>
+      <th [attr.data-testid]="'books-table-author-column'">Author</th>
+      <th [attr.data-testid]="'books-table-actions-column'">Actions</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-book>
-    <tr>
+  <ng-template pTemplate="body" let-book [attr.data-testid]="'books-table-body'">
+    <tr [attr.data-testid]="'books-table-row'">
       <td>{{ book.title }}</td>
       <td>{{ book.isbn }}</td>
       <td>{{ book.publicationDate }}</td>
       <td>{{ book.author.name }}</td>
       <td>
-        <button pButton icon="pi pi-pencil" (click)="openEdit(book)" class="p-button-text"></button>
-        <button pButton icon="pi pi-trash" (click)="confirmDeleteBook(book)" class="p-button-text p-button-danger"></button>
+        <button pButton icon="pi pi-pencil" (click)="openEdit(book)" class="p-button-text" [attr.data-testid]="'edit-book-button'"></button>
+        <button pButton icon="pi pi-trash" (click)="confirmDeleteBook(book)" class="p-button-text p-button-danger" [attr.data-testid]="'delete-book-button'"></button>
       </td>
     </tr>
   </ng-template>
@@ -25,36 +25,37 @@
   [rows]="pageSize"
   [totalRecords]="totalRecords"
   [first]="page * pageSize"
-  (onPageChange)="onPageChange($event)">
+  (onPageChange)="onPageChange($event)"
+  [attr.data-testid]="'books-paginator'">
 </p-paginator>
 
-<button pButton label="Add Book" icon="pi pi-plus" (click)="openNew()"></button>
+<button pButton label="Add Book" icon="pi pi-plus" (click)="openNew()" [attr.data-testid]="'add-book-button'"></button>
 
-<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Book' : 'Add Book' }}">
+<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Book' : 'Add Book' }}" [attr.data-testid]="'book-dialog'">
   <form (ngSubmit)="save()" #bookForm="ngForm">
     <div class="p-fluid">
       <div class="p-field">
         <label for="title">Title</label>
-        <input id="title" type="text" pInputText [(ngModel)]="form.title" name="title" required />
+        <input id="title" type="text" pInputText [(ngModel)]="form.title" name="title" required [attr.data-testid]="'book-title-input'" />
       </div>
       <div class="p-field">
         <label for="isbn">ISBN</label>
-        <input id="isbn" type="text" pInputText [(ngModel)]="form.isbn" name="isbn" required />
+        <input id="isbn" type="text" pInputText [(ngModel)]="form.isbn" name="isbn" required [attr.data-testid]="'book-isbn-input'" />
       </div>
       <div class="p-field">
         <label for="publicationDate">Publication Date</label>
-        <input id="publicationDate" type="date" pInputText [(ngModel)]="form.publicationDate" name="publicationDate" required />
+        <input id="publicationDate" type="date" pInputText [(ngModel)]="form.publicationDate" name="publicationDate" required [attr.data-testid]="'book-publication-date-input'" />
       </div>
       <div class="p-field">
         <label for="authorId">Author ID</label>
-        <input id="authorId" type="number" pInputText [(ngModel)]="form.authorId" name="authorId" required />
+        <input id="authorId" type="number" pInputText [(ngModel)]="form.authorId" name="authorId" required [attr.data-testid]="'book-author-select'" />
       </div>
     </div>
     <div class="p-d-flex p-jc-end">
-      <button pButton type="submit" label="Save" [disabled]="bookForm.invalid"></button>
-      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false"></button>
+      <button pButton type="submit" label="Save" [disabled]="bookForm.invalid" [attr.data-testid]="'book-save-button'"></button>
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false" [attr.data-testid]="'book-cancel-button'"></button>
     </div>
   </form>
 </p-dialog>
 
-<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this book?" (accept)="deleteBook()" (reject)="confirmDelete = false"></app-confirm-dialog> 
+<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this book?" (accept)="deleteBook()" (reject)="confirmDelete = false" [attr.data-testid]="'book-delete-confirm'"></app-confirm-dialog> 

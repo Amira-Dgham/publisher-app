@@ -37,9 +37,18 @@ public class Author {
     @Column(length = 50)
     private String nationality;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Magazine> magazines = new HashSet<>();
+
+    @PreRemove
+    private void removeMagazineAssociations() {
+        for (Magazine magazine : magazines) {
+            magazine.getAuthors().remove(this);
+        }
+        magazines.clear();
+    }
 }

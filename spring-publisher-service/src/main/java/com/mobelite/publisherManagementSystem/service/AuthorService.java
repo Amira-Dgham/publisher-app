@@ -24,7 +24,6 @@ public interface AuthorService {
      */
     AuthorResponseDto createAuthor(AuthorRequestDto authorRequestDto);
 
-
     /**
      * Get author by ID.
      *
@@ -33,7 +32,20 @@ public interface AuthorService {
      */
     AuthorResponseDto getAuthorById(Long id);
 
+    /**
+     * Get all authors with pagination.
+     *
+     * @param pageable Pagination information
+     * @return Page of author responses
+     */
     Page<AuthorResponseDto> getAllAuthors(Pageable pageable);
+
+    /**
+     * Delete an author by ID.
+     *
+     * @param id Author ID
+     */
+    void deleteAuthor(Long id);
 
     /**
      * Check if an author exists by ID.

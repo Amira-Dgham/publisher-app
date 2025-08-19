@@ -104,9 +104,7 @@ services:
 
       networks:
         - publisher-network
-      
-
-
+    
   db-publisher-service:
     image: postgres:15-alpine
     container_name: publisher-db-${ENV:-dev}
@@ -143,6 +141,12 @@ services:
   e2e-publisher-service:
     image: mcr.microsoft.com/playwright/java:v1.40.0
     container_name: e2e-publisher-service-${ENV:-dev}
+    build:
+      context: ./playwright-e2e-testing
+      target: ${DOCKER_TARGET:-development}
+      args:
+        - ENV=${ENV:-dev}
+    
     depends_on:
       spring-publisher-service:
         condition: service_healthy

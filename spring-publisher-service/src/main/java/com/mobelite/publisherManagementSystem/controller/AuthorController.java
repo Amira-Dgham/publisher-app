@@ -1,7 +1,6 @@
 package com.mobelite.publisherManagementSystem.controller;
 
 // Jakarta/Javax imports
-import com.mobelite.publisherManagementSystem.dto.response.book.BookResponseDto;
 import jakarta.validation.Valid;
 
 // Lombok imports
@@ -27,7 +26,6 @@ import com.mobelite.publisherManagementSystem.dto.response.ApiResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.author.AuthorResponseDto;
 import com.mobelite.publisherManagementSystem.service.AuthorService;
 
-import java.util.List;
 
 /**
  * REST Controller for Author operations.
@@ -82,5 +80,21 @@ public class AuthorController {
         Page<AuthorResponseDto> response = authorService.getAllAuthors(pageable);
 
         return  ResponseEntity.ok(ApiResponseDto.success(response));
+    }
+
+    @Operation(summary = "Delete author by ID", description = "Deletes an author by their unique identifier")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteAuthor(
+            @Parameter(description = "Author ID") @PathVariable Long id) {
+
+        authorService.deleteAuthor(id);
+
+        ApiResponseDto<Void> response = ApiResponseDto.<Void>builder()
+                .success(true)
+                .message("Author deleted successfully")
+                .data(null)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }
