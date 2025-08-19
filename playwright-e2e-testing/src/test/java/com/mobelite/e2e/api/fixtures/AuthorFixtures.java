@@ -53,6 +53,20 @@ public class AuthorFixtures {
     }
 
     /**
+     * Creates a valid author request with all fields populated.
+     *
+     * @return a valid AuthorRequest
+     */
+    @Step("Create valid author request")
+    public AuthorRequest createSharedAuthorRequest() {
+        return AuthorRequest.builder()
+                .name(TEST_AUTHOR_PREFIX + "Shared_" + authorIdCounter.getAndIncrement())
+                .birthDate(LocalDate.of(1980, 1, 1))
+                .nationality("American")
+                .build();
+    }
+
+    /**
      * Creates a minimal author request with only required fields.
      *
      * @return a minimal AuthorRequest
@@ -89,7 +103,7 @@ public class AuthorFixtures {
     public void setupMultipleTestAuthors(int count) {
         for (int i = 0; i < count; i++) {
             AuthorRequest request = createValidAuthorRequest();
-            Author createdAuthor = authorEndpoints.createTestAuthorViaEndpoint(request);
+            Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(request);
             createdAuthors.add(createdAuthor);
             log.info("Setup: Created test author with ID: {}", createdAuthor.getId());
         }
@@ -105,7 +119,7 @@ public class AuthorFixtures {
 
         for (Author author : createdAuthors) {
             try {
-                authorEndpoints.cleanupTestAuthor(author.getId());
+                authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
                 log.info("Cleanup: Successfully cleaned up author with ID: {}", author.getId());
             } catch (Exception e) {
                 log.warn("Cleanup: Failed to cleanup author with ID {}: {}", author.getId(), e.getMessage());
@@ -127,12 +141,5 @@ public class AuthorFixtures {
         return new ArrayList<>(createdAuthors);
     }
 
-    /**
-     * Gets the count of created authors.
-     *
-     * @return the count of created authors
-     */
-    public int getCreatedAuthorsCount() {
-        return createdAuthors.size();
-    }
+
 }

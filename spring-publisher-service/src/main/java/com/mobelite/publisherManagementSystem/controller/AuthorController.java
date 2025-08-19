@@ -1,7 +1,6 @@
 package com.mobelite.publisherManagementSystem.controller;
 
 // Jakarta/Javax imports
-import com.mobelite.publisherManagementSystem.dto.response.book.BookResponseDto;
 import jakarta.validation.Valid;
 
 // Lombok imports
@@ -27,7 +26,6 @@ import com.mobelite.publisherManagementSystem.dto.response.ApiResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.author.AuthorResponseDto;
 import com.mobelite.publisherManagementSystem.service.AuthorService;
 
-import java.util.List;
 
 /**
  * REST Controller for Author operations.

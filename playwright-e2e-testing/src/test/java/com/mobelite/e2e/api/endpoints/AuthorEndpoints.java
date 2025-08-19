@@ -62,6 +62,8 @@ public class AuthorEndpoints extends BaseEndpoints {
     public Author createAuthorAndValidateStructure(AuthorRequest authorRequest) {
         ApiResponse<Author> response = createAuthor(authorRequest);
         validateHasData(response);
+        validateIsSuccess(response);
+
         validateMessageContains(response, "created successfully");
         return response.getData(); // No need for casting anymore
     }
@@ -148,6 +150,38 @@ public class AuthorEndpoints extends BaseEndpoints {
         return response.getData();
     }
 
+    /**
+     * Deletes an author by their unique identifier.
+     *
+     * @param id the author ID to delete
+     * @return the API response confirming deletion
+     */
+    @Step("Delete author by ID via endpoint: {id}")
+    public ApiResponse<Void> deleteAuthor(Long id) {
+        log.info("Deleting author by ID via endpoint: {}", id);
+
+        String endpoint = buildPath(AUTHOR_BY_ID, id);
+        APIResponse response = delete(endpoint).execute();
+
+        validateStatus(response, STATUS_OK);
+        return parseResponse(response, new TypeReference<ApiResponse<Void>>() {});
+    }
+
+    /**
+     * Deletes an author by ID and validates the response structure.
+     *
+     * @param id the author ID to delete
+     * @return the delete response
+     */
+    @Step("Delete author by ID and validate structure: {id}")
+    public ApiResponse<Void> deleteAuthorAndValidateStructure(Long id) {
+        ApiResponse<Void> response = deleteAuthor(id);
+        validateIsSuccess(response);
+        validateMessageContains(response, "deleted successfully");
+        return response;
+    }
+
+
     // -------- ERROR SCENARIO ENDPOINTS -------- //
 
     /**
@@ -185,36 +219,20 @@ public class AuthorEndpoints extends BaseEndpoints {
         return parseErrorResponse(response);
     }
 
-    // -------- UTILITY ENDPOINTS -------- //
-
     /**
-     * Creates a test author via endpoint and returns the created data.
-     * This is a convenience method for test setup.
+     * Attempts to delete a non-existent author and validates the error response.
      *
-     * @param authorRequest the author request data
-     * @return the created author
+     * @param id the non-existent author ID
+     * @return the error response
      */
-    @Step("Create test author via endpoint")
-    public Author createTestAuthorViaEndpoint(AuthorRequest authorRequest) {
-        Author createdAuthor = createAuthorAndValidateStructure(authorRequest);
-        log.info("Test author created via endpoint with ID: {}", createdAuthor.getId());
-        return createdAuthor;
-    }
+    @Step("Delete non-existent author and validate error: {id}")
+    public ApiResponse<?> deleteNonExistentAuthorAndValidateError(Long id) {
+        log.info("Attempting to delete non-existent author via endpoint: {}", id);
 
-    /**
-     * Cleans up test data by deleting an author.
-     * This is a convenience method for test cleanup.
-     *
-     * @param id the author ID to delete
-     */
-    @Step("Clean up test author: {id}")
-    public void cleanupTestAuthor(Long id) {
-        try {
-            // Note: Delete endpoint not implemented in current controller
-            // This method is prepared for future implementation
-            log.info("Test author cleanup prepared for ID: {}", id);
-        } catch (Exception e) {
-            log.warn("Failed to cleanup test author {}: {}", id, e.getMessage());
-        }
+        String endpoint = buildPath(AUTHOR_BY_ID, id);
+        APIResponse response = delete(endpoint).execute();
+
+        validateStatus(response, STATUS_NOT_FOUND);
+        return parseErrorResponse(response);
     }
 }

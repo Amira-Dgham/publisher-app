@@ -14,18 +14,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Focused E2E tests for the Author API.
- * Tests only essential CRUD operations and validation scenarios.
+ * Uses a shared author for retrieval tests to avoid creating duplicates.
  */
 @Epic("Author Management")
 @Feature("Author API")
@@ -40,12 +36,28 @@ public class AuthorE2ETest {
     private AuthorEndpoints authorEndpoints;
     private AuthorFixtures authorFixtures;
 
+    // Shared author for retrieval tests
+    private Author sharedAuthor;
+
     @BeforeEach
     void setUp(APIRequestContext apiRequestContext) {
         log.info("Setting up AuthorE2ETest");
         apiClient = new ApiClient(apiRequestContext);
         authorEndpoints = new AuthorEndpoints(apiClient);
         authorFixtures = new AuthorFixtures(apiClient);
+    }
+
+    @BeforeAll
+    void setupSharedAuthor(APIRequestContext apiRequestContext) {
+        // Initialize ApiClient, Endpoints, and Fixtures here
+        apiClient = new ApiClient(apiRequestContext);
+        authorEndpoints = new AuthorEndpoints(apiClient);
+        authorFixtures = new AuthorFixtures(apiClient);
+
+        // Now create the shared author
+        AuthorRequest authorRequest = authorFixtures.createSharedAuthorRequest();
+        sharedAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
+        authorFixtures.getCreatedAuthors().add(sharedAuthor);
     }
 
     @AfterEach
@@ -56,7 +68,6 @@ public class AuthorE2ETest {
         }
     }
 
-
     // -------- POSITIVE TEST SCENARIOS -------- //
 
     @Test
@@ -64,20 +75,15 @@ public class AuthorE2ETest {
     @Description("Test creating an author with all valid fields populated")
     @Story("Author Creation")
     void testCreateAuthorWithValidData() {
-        // Arrange
         AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-
-        // Act
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
 
-        // Assert
         assertNotNull(createdAuthor);
         assertNotNull(createdAuthor.getId());
         assertEquals(authorRequest.getName(), createdAuthor.getName());
         assertEquals(authorRequest.getBirthDate(), createdAuthor.getBirthDate());
         assertEquals(authorRequest.getNationality(), createdAuthor.getNationality());
 
-        // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
     }
 
@@ -86,40 +92,30 @@ public class AuthorE2ETest {
     @Description("Test creating an author with only required fields")
     @Story("Author Creation")
     void testCreateAuthorWithMinimalData() {
-        // Arrange
         AuthorRequest authorRequest = authorFixtures.createMinimalAuthorRequest();
-
-        // Act
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
 
-        // Assert
         assertNotNull(createdAuthor);
         assertNotNull(createdAuthor.getId());
         assertEquals(authorRequest.getName(), createdAuthor.getName());
 
-        // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
     }
 
     @Test
-    @DisplayName("Should retrieve author by ID")
-    @Description("Test retrieving an author by their unique identifier")
+    @DisplayName("Should retrieve shared author by ID")
+    @Description("Test retrieving a shared author by their unique identifier")
     @Story("Author Retrieval")
     void testGetAuthorById() {
-        // Arrange: Create an author first
-        AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        Author createdAuthor = authorEndpoints.createTestAuthorViaEndpoint(authorRequest);
-        authorFixtures.getCreatedAuthors().add(createdAuthor);
+        assertNotNull(sharedAuthor, "Shared author must exist");
 
-        // Act: Retrieve the author by ID
-        Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(createdAuthor.getId());
+        Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(sharedAuthor.getId());
 
-        // Assert: Validate the retrieved data
         assertNotNull(retrievedAuthor);
-        assertEquals(createdAuthor.getId(), retrievedAuthor.getId());
-        assertEquals(createdAuthor.getName(), retrievedAuthor.getName());
-        assertEquals(createdAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
-        assertEquals(createdAuthor.getNationality(), retrievedAuthor.getNationality());
+        assertEquals(sharedAuthor.getId(), retrievedAuthor.getId());
+        assertEquals(sharedAuthor.getName(), retrievedAuthor.getName());
+        assertEquals(sharedAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
+        assertEquals(sharedAuthor.getNationality(), retrievedAuthor.getNationality());
     }
 
     @Test
@@ -127,13 +123,10 @@ public class AuthorE2ETest {
     @Description("Test retrieving all authors with default pagination")
     @Story("Author Retrieval")
     void testGetAllAuthors() {
-        // Arrange: Create multiple authors
         authorFixtures.setupMultipleTestAuthors(3);
 
-        // Act: Retrieve all authors
         PageResponse<Author> authorsPage = authorEndpoints.getAllAuthorsAndValidateStructure();
 
-        // Assert: Validate the response
         assertNotNull(authorsPage);
         assertTrue(authorsPage.getTotalElements() >= 3);
         assertTrue(authorsPage.hasContent());
@@ -145,21 +138,20 @@ public class AuthorE2ETest {
     @Description("Test retrieving authors with custom page, size, and sort parameters")
     @Story("Author Retrieval")
     void testGetAllAuthorsWithCustomPagination() {
-        // Arrange: Create multiple authors
         authorFixtures.setupMultipleTestAuthors(5);
 
-        // Act: Retrieve authors with custom pagination
         ApiResponse<PageResponse<Author>> response = authorEndpoints.getAllAuthorsWithPagination(0, 10, "name");
 
-        // Assert: Validate the response
         assertNotNull(response);
         assertTrue(response.isSuccess());
         assertNotNull(response.getData());
 
         PageResponse<Author> authorsPage = response.getData();
-        assertEquals(0, authorsPage.getNumber()); // First page
-        assertEquals(10, authorsPage.getSize()); // Page size
+        assertEquals(0, authorsPage.getNumber());
+        assertEquals(10, authorsPage.getSize());
         assertTrue(authorsPage.getTotalElements() >= 5);
+
+
     }
 
     // -------- NEGATIVE TEST SCENARIOS -------- //
@@ -169,13 +161,9 @@ public class AuthorE2ETest {
     @Description("Test creating an author with invalid data should return error")
     @Story("Author Creation Validation")
     void testCreateAuthorWithInvalidData() {
-        // Arrange: Create invalid author request
         AuthorRequest invalidRequest = authorFixtures.createInvalidAuthorRequest();
-
-        // Act: Attempt to create author with invalid data
         ApiResponse<?> errorResponse = authorEndpoints.createAuthorWithInvalidDataAndValidateError(invalidRequest);
 
-        // Assert: Validate error response
         assertNotNull(errorResponse);
         assertFalse(errorResponse.isSuccess());
         assertNotNull(errorResponse.getMessage());
@@ -186,13 +174,9 @@ public class AuthorE2ETest {
     @Description("Test retrieving a non-existent author should return 404 error")
     @Story("Author Retrieval")
     void testGetNonExistentAuthor() {
-        // Arrange: Use a non-existent ID
         Long nonExistentId = 999999L;
-
-        // Act: Attempt to retrieve non-existent author
         ApiResponse<?> errorResponse = authorEndpoints.getNonExistentAuthorAndValidateError(nonExistentId);
 
-        // Assert: Validate error response
         assertNotNull(errorResponse);
         assertFalse(errorResponse.isSuccess());
         assertNotNull(errorResponse.getMessage());
@@ -205,20 +189,16 @@ public class AuthorE2ETest {
     @Description("Test that author data remains consistent across create and retrieve operations")
     @Story("Author Data Consistency")
     void testDataConsistencyAcrossOperations() {
-        // Arrange: Create an author
         AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
 
-        // Act: Create author and then retrieve it
         Author createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
         Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(createdAuthor.getId());
 
-        // Assert: Data should be consistent
         assertEquals(createdAuthor.getId(), retrievedAuthor.getId());
         assertEquals(createdAuthor.getName(), retrievedAuthor.getName());
         assertEquals(createdAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
         assertEquals(createdAuthor.getNationality(), retrievedAuthor.getNationality());
-
-        // Store for cleanup
         authorFixtures.getCreatedAuthors().add(createdAuthor);
+
     }
 }

@@ -165,6 +165,19 @@ public abstract class BaseEndpoints {
         }
     }
 
+    @Step("Validate response is success")
+    protected void validateIsSuccess(ApiResponse<?> response) {
+        if (response == null) {
+            throw new AssertionError("Response should not be null");
+        }
+        if (!response.isSuccess()) {
+            throw new AssertionError(String.format(
+                    "Expected success to be 'true' but was '%s'",
+                    response.isSuccess()
+            ));
+        }
+    }
+
     // -------- Utility methods for parsing responses and building paths -------- //
 
     /**
