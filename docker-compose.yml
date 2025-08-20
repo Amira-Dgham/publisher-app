@@ -8,7 +8,6 @@ services:
         - eclipse-temurin:17-jre-alpine
     image: publisher-service:${ENV:-dev}-${BUILD_VERSION:-latest}
     container_name: spring-publisher-service-${ENV:-dev}
-    restart: unless-stopped
 
     ports:
       - "${APP_PORT:-8080}:8080"
@@ -36,17 +35,17 @@ services:
 
     volumes:
       - type: bind
-        source: ./logs
+        source: ./spring-publisher-service/./logs
         target: /app/logs
         bind:
           create_host_path: true
       - type: bind
-        source: ./.m2
+        source: ./spring-publisher-service/.m2
         target: /root/.m2
         bind:
           create_host_path: true
       - type: bind
-        source: ./target
+        source: ./spring-publisher-service/target
         target: /app/target
         bind:
           create_host_path: true
@@ -77,11 +76,7 @@ services:
 
       healthcheck:
         test: |
-          if [ "${DOCKER_TARGET:-development}" = "development" ]; then
-            wget --no-verbose --tries=1 --spider http://localhost:4200 || exit 1
-          else
-            wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1
-          fi
+          curl -f http://angular-publisher-service:${ANGULAR_INTERNAL_PORT:-4200} || exit 1
         start_period: 60s
         interval: 30s
         timeout: 10s
@@ -108,7 +103,6 @@ services:
   db-publisher-service:
     image: postgres:15-alpine
     container_name: publisher-db-${ENV:-dev}
-    restart: unless-stopped
 
     security_opt:
       - no-new-privileges:true
@@ -139,49 +133,26 @@ services:
     shm_size: 256M
 
   e2e-publisher-service:
-    image: mcr.microsoft.com/playwright/java:v1.40.0
-    container_name: e2e-publisher-service-${ENV:-dev}
     build:
       context: ./playwright-e2e-testing
-      target: ${DOCKER_TARGET:-development}
-      args:
-        - ENV=${ENV:-dev}
-    
+      dockerfile: Dockerfile
+    image: e2e-publisher-service:latest
+
     depends_on:
-      spring-publisher-service:
-        condition: service_healthy
-      angular-publisher-service:
-        condition: service_healthy
-    
+      - spring-publisher-service
+      - angular-publisher-service
+
     environment:
-      - ENV=${ENV:-dev}
-      - API_BASE_URL=http://spring-publisher-service:8080
-      - FRONTEND_BASE_URL=http://angular-publisher-service:${ANGULAR_INTERNAL_PORT:-4200}
-    
+      TEST_ENV: ${ENV:-dev}
+
     volumes:
-      - type: bind
-        source: ./e2e-tests
-        target: /tests
-        bind:
-          create_host_path: true
-      - type: bind
-        source: ./test-results
-        target: /test-results
-        bind:
-          create_host_path: true
-    
+      - ./playwright-e2e-testing:/e2e:cached
+      - ${HOME}/.m2:/root/.m2
+
+
     networks:
       - publisher-network
-    
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-          cpus: '1.0'
-        reservations:
-          memory: 1G
-          cpus: '0.5'
-    
+      
 
 networks:
   publisher-network:

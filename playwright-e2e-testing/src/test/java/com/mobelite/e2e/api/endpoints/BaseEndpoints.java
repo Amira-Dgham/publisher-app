@@ -5,7 +5,6 @@ import com.microsoft.playwright.APIResponse;
 import com.mobelite.e2e.api.core.ApiClient;
 import com.mobelite.e2e.api.core.ApiRequestBuilder;
 import com.mobelite.e2e.api.models.ApiResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 

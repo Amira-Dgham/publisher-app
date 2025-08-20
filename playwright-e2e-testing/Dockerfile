@@ -1,15 +1,14 @@
-# Use the official Playwright image for Java
-FROM mcr.microsoft.com/playwright/java:v1.40.0
+# playwright-e2e-testing/Dockerfile
+FROM mcr.microsoft.com/playwright/java:v1.53.0-jammy
 
-WORKDIR /e2e
+WORKDIR /playwright-e2e-testing
 
-# Copy Maven project files
-COPY pom.xml ./
-COPY src ./src
+# Copy everything into /e2e
+COPY . .
 
-# Download dependencies and build tests
+# Download dependencies
 RUN mvn dependency:go-offline -B
 RUN mvn compile
 
-# Optionally, run tests on container start (customize as needed)
+# Default command (can be overridden in docker-compose run)
 CMD ["mvn", "test"]
