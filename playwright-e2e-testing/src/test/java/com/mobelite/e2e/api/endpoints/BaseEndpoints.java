@@ -11,15 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * BaseEndpoints is an abstract base class providing common HTTP request
  * methods, response validation, and utility functions for API endpoint classes.
- *
  * It serves as a foundation to create specific endpoint classes that interact
  * with the API through the ApiClient and ApiRequestBuilder abstractions.
- *
- * Responsibilities:
- * - Provide factory methods to create requests with common HTTP verbs (GET, POST, PUT, DELETE, PATCH).
- * - Provide reusable validation methods to verify response status, success, data presence, and messages.
- * - Provide utility methods to parse API responses and build endpoint paths with parameters.
- *
  * This promotes code reuse and consistency in endpoint implementations,
  * and leverages Allure @Step annotations for enhanced test reporting.
  */
@@ -114,24 +107,6 @@ public abstract class BaseEndpoints {
         }
     }
 
-    /**
-     * Validates that the API response status code indicates success (any 2xx status).
-     * Throws AssertionError if the status is outside the 2xx range.
-     *
-     * @param response the API response to validate
-     */
-    @Step("Validate successful response")
-    protected void validateSuccess(APIResponse response) {
-        int status = response.status();
-        if (status < 200 || status >= 300) {
-            String errorMessage = String.format(
-                    "Expected successful response (2xx) but got %d. Response: %s",
-                    status, response.text()
-            );
-            log.error(errorMessage);
-            throw new AssertionError(errorMessage);
-        }
-    }
 
     /**
      * Validates that the parsed API response contains non-null data.
