@@ -1,30 +1,26 @@
 package com.mobelite.e2e.api.tests;
+
 import com.microsoft.playwright.APIRequestContext;
+import com.mobelite.e2e.api.core.ApiAssertions;
 import com.mobelite.e2e.api.core.ApiClient;
 import com.mobelite.e2e.api.endpoints.AuthorEndpoints;
-import com.mobelite.e2e.extensions.ApiContextExtension;
 import com.mobelite.e2e.api.fixtures.AuthorFixtures;
 import com.mobelite.e2e.api.models.Author;
 import com.mobelite.e2e.api.models.ApiResponse;
 import com.mobelite.e2e.api.models.PageResponse;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import com.mobelite.e2e.extensions.ApiContextExtension;
+import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Comprehensive E2E tests for the Author API including CRUD operations.
- * Uses improved cleanup mechanisms to prevent orphaned test data.
- */
 @Epic("Author Management")
 @Feature("Author API")
 @Story("E2E Testing")
@@ -39,333 +35,201 @@ public class AuthorE2ETest {
     private AuthorFixtures authorFixtures;
     private Author sharedAuthor;
 
-    @BeforeEach
-    void setUp(APIRequestContext apiRequestContext) {
-        log.info("Setting up AuthorE2ETest");
-        apiClient = new ApiClient(apiRequestContext);
-        authorEndpoints = new AuthorEndpoints(apiClient);
-        authorFixtures = new AuthorFixtures(apiClient);
-    }
-
     @BeforeAll
-    void setupSharedAuthor(APIRequestContext apiRequestContext) {
-        log.info("Setting up shared author for all tests");
+    void initAll(APIRequestContext apiRequestContext) {
+        log.info("Initializing AuthorE2ETest suite");
         apiClient = new ApiClient(apiRequestContext);
         authorEndpoints = new AuthorEndpoints(apiClient);
         authorFixtures = new AuthorFixtures(apiClient);
 
-        try {
-            AuthorRequest authorRequest = authorFixtures.createSharedAuthorRequest();
-            sharedAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
-            authorFixtures.registerAuthorForCleanup(sharedAuthor);
-            log.info("Shared author created with ID: {}", sharedAuthor.getId());
-        } catch (Exception e) {
-            log.error("Failed to create shared author", e);
-            throw new RuntimeException("Failed to setup shared author", e);
-        }
+        // Create a shared author for all tests
+        sharedAuthor = authorFixtures.createAuthorAndRegisterForCleanup(
+                authorFixtures.createValidAuthorRequest()
+        );
+        log.info("Shared author created with ID: {}", sharedAuthor.getId());
     }
 
     @AfterEach
-    void tearDown() {
-        log.info("Tearing down AuthorE2ETest - Current cleanup count: {}", authorFixtures.getCleanupCount());
-        if (authorFixtures != null) {
-            authorFixtures.cleanupAllTestAuthors();
+    void cleanupAfterEach() {
+        log.info("Cleaning up per-test authors...");
+
+        if (sharedAuthor != null) {
+            authorFixtures.removeAuthorFromCleanup(sharedAuthor);
         }
+
+        authorFixtures.cleanupAllAuthors(); // deletes only test-specific authors
     }
 
     @AfterAll
-    void tearDownAll() {
-        log.info("Final cleanup - ensuring all test authors are deleted");
-        if (authorFixtures != null) {
-            authorFixtures.cleanupAllTestAuthors();
-            // Force cleanup as safety net
-            authorFixtures.forceCleanupTestAuthorsByPattern();
-        }
-    }
+    void finalCleanup() {
+        log.info("Final cleanup for all remaining authors");
+        int remainingCount = authorFixtures.getCleanupCount();
 
-    // -------- CREATE TEST SCENARIOS -------- //
+        if (remainingCount > 0) {
+            log.info("Attempting final cleanup of {} authors", remainingCount);
+            List<Long> pendingIds = authorFixtures.getAuthorsPendingCleanup();
+            log.debug("Final cleanup for author IDs: {}", pendingIds);
 
-    @Test
-    @DisplayName("Should create author with valid data")
-    @Description("Test creating an author with all valid fields populated")
-    @Story("Author Creation")
-    void testCreateAuthorWithValidData() {
-        AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        Author createdAuthor = authorFixtures.createAuthorAndRegisterForCleanup(authorRequest);
+            authorFixtures.cleanupAllAuthors();
 
-        assertNotNull(createdAuthor);
-        assertNotNull(createdAuthor.getId());
-        assertEquals(authorRequest.getName(), createdAuthor.getName());
-        assertEquals(authorRequest.getBirthDate(), createdAuthor.getBirthDate());
-        assertEquals(authorRequest.getNationality(), createdAuthor.getNationality());
-
-        log.info("Successfully created author with ID: {}", createdAuthor.getId());
-    }
-
-    @Test
-    @DisplayName("Should create author with minimal data")
-    @Description("Test creating an author with only required fields")
-    @Story("Author Creation")
-    void testCreateAuthorWithMinimalData() {
-        AuthorRequest authorRequest = authorFixtures.createMinimalAuthorRequest();
-        Author createdAuthor = authorFixtures.createAuthorAndRegisterForCleanup(authorRequest);
-
-        assertNotNull(createdAuthor);
-        assertNotNull(createdAuthor.getId());
-        assertEquals(authorRequest.getName(), createdAuthor.getName());
-
-        log.info("Successfully created minimal author with ID: {}", createdAuthor.getId());
-    }
-
-    // -------- READ/RETRIEVE TEST SCENARIOS -------- //
-
-    @Test
-    @DisplayName("Should retrieve shared author by ID")
-    @Description("Test retrieving a shared author by their unique identifier")
-    @Story("Author Retrieval")
-    void testGetAuthorById() {
-        assertNotNull(sharedAuthor, "Shared author must exist");
-
-        Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(sharedAuthor.getId());
-
-        assertNotNull(retrievedAuthor);
-        assertEquals(sharedAuthor.getId(), retrievedAuthor.getId());
-        assertEquals(sharedAuthor.getName(), retrievedAuthor.getName());
-        assertEquals(sharedAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
-        assertEquals(sharedAuthor.getNationality(), retrievedAuthor.getNationality());
-    }
-
-    @Test
-    @DisplayName("Should retrieve all authors with pagination")
-    @Description("Test retrieving all authors with default pagination")
-    @Story("Author Retrieval")
-    void testGetAllAuthors() {
-        authorFixtures.setupMultipleTestAuthors(3);
-
-        PageResponse<Author> authorsPage = authorEndpoints.getAllAuthorsAndValidateStructure();
-
-        assertNotNull(authorsPage);
-        assertTrue(authorsPage.getTotalElements() >= 3);
-        assertTrue(authorsPage.hasContent());
-        assertFalse(authorsPage.isEmpty());
-    }
-
-    @Test
-    @DisplayName("Should retrieve authors with custom pagination")
-    @Description("Test retrieving authors with custom page, size, and sort parameters")
-    @Story("Author Retrieval")
-    void testGetAllAuthorsWithCustomPagination() {
-        authorFixtures.setupMultipleTestAuthors(5);
-
-        ApiResponse<PageResponse<Author>> response = authorEndpoints.getAllAuthorsWithPagination(0, 10, "name");
-
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertNotNull(response.getData());
-
-        PageResponse<Author> authorsPage = response.getData();
-        assertEquals(0, authorsPage.getNumber());
-        assertEquals(10, authorsPage.getSize());
-        assertTrue(authorsPage.getTotalElements() >= 5);
-    }
-
-    // -------- DELETE TEST SCENARIOS -------- //
-
-    @Test
-    @DisplayName("Should delete author successfully")
-    @Description("Test deleting an existing author should return success")
-    @Story("Author Deletion")
-    void testDeleteAuthor() {
-        // Create an author specifically for deletion test
-        Author authorToDelete = authorFixtures.createAuthorForDeletionTest();
-
-        assertNotNull(authorToDelete);
-        assertNotNull(authorToDelete.getId());
-        log.info("Created author for deletion test with ID: {}", authorToDelete.getId());
-
-        // Delete the author
-        ApiResponse<Void> deleteResponse = authorEndpoints.deleteAuthorAndValidateStructure(authorToDelete.getId());
-
-        assertNotNull(deleteResponse);
-        assertTrue(deleteResponse.isSuccess());
-        assertNotNull(deleteResponse.getMessage());
-        log.info("Successfully deleted author with ID: {}", authorToDelete.getId());
-
-        // Verify author is actually deleted by trying to retrieve it
-        ApiResponse<?> getResponse = authorEndpoints.getNonExistentAuthorAndValidateError(authorToDelete.getId());
-        assertNotNull(getResponse);
-        assertFalse(getResponse.isSuccess());
-
-        // Note: Don't add to cleanup list since it's already deleted
-    }
-
-    @Test
-    @DisplayName("Should delete multiple authors successfully")
-    @Description("Test deleting multiple authors in sequence")
-    @Story("Author Deletion")
-    void testDeleteMultipleAuthors() {
-        // Create multiple authors for deletion
-        List<Author> authorsToDelete = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            Author createdAuthor = authorFixtures.createAuthorForDeletionTest();
-            authorsToDelete.add(createdAuthor);
-            log.info("Created author #{} for deletion test with ID: {}", i + 1, createdAuthor.getId());
-        }
-
-        // Delete all authors
-        for (Author author : authorsToDelete) {
-            ApiResponse<Void> deleteResponse = authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
-
-            assertNotNull(deleteResponse);
-            assertTrue(deleteResponse.isSuccess());
-            log.info("Successfully deleted author with ID: {}", author.getId());
-        }
-
-        // Verify all authors are deleted
-        for (Author author : authorsToDelete) {
-            ApiResponse<?> getResponse = authorEndpoints.getNonExistentAuthorAndValidateError(author.getId());
-            assertNotNull(getResponse);
-            assertFalse(getResponse.isSuccess());
-        }
-
-        // Note: Don't add to cleanup list since they're already deleted
-    }
-
-    @Test
-    @DisplayName("Should delete author and verify it's removed from listings")
-    @Description("Test that deleted author no longer appears in author listings")
-    @Story("Author Deletion")
-    void testDeleteAuthorAndVerifyRemovedFromListings() {
-        // Get initial count
-        PageResponse<Author> initialAuthors = authorEndpoints.getAllAuthorsAndValidateStructure();
-        long initialCount = initialAuthors.getTotalElements();
-
-        // Create an author
-        Author authorToDelete = authorFixtures.createAuthorForDeletionTest();
-        log.info("Created author for deletion test with ID: {}", authorToDelete.getId());
-
-        // Verify author exists in listings
-        PageResponse<Author> authorsAfterCreation = authorEndpoints.getAllAuthorsAndValidateStructure();
-        assertEquals(initialCount + 1, authorsAfterCreation.getTotalElements());
-
-        // Delete the author
-        ApiResponse<Void> deleteResponse = authorEndpoints.deleteAuthorAndValidateStructure(authorToDelete.getId());
-        assertTrue(deleteResponse.isSuccess());
-        log.info("Successfully deleted author with ID: {}", authorToDelete.getId());
-
-        // Verify author is removed from listings
-        PageResponse<Author> authorsAfterDeletion = authorEndpoints.getAllAuthorsAndValidateStructure();
-        assertEquals(initialCount, authorsAfterDeletion.getTotalElements());
-
-        // Double-check that the specific author is not in the list
-        boolean authorStillExists = authorsAfterDeletion.getContent().stream()
-                .anyMatch(author -> author.getId().equals(authorToDelete.getId()));
-        assertFalse(authorStillExists, "Deleted author should not appear in author listings");
-    }
-
-    // -------- NEGATIVE DELETE TEST SCENARIOS -------- //
-
-    @Test
-    @DisplayName("Should fail to delete non-existent author")
-    @Description("Test deleting a non-existent author should return 404 error")
-    @Story("Author Deletion")
-    void testDeleteNonExistentAuthor() {
-        Long nonExistentId = 999999L;
-        ApiResponse<?> errorResponse = authorEndpoints.deleteNonExistentAuthorAndValidateError(nonExistentId);
-
-        assertNotNull(errorResponse);
-        assertFalse(errorResponse.isSuccess());
-        assertNotNull(errorResponse.getMessage());
-        log.info("Correctly received error when trying to delete non-existent author ID: {}", nonExistentId);
-    }
-
-    @Test
-    @DisplayName("Should fail to delete already deleted author")
-    @Description("Test deleting an author twice should return error on second attempt")
-    @Story("Author Deletion")
-    void testDeleteAlreadyDeletedAuthor() {
-        // Create an author
-        Author authorToDelete = authorFixtures.createAuthorForDeletionTest();
-
-        assertNotNull(authorToDelete);
-        assertNotNull(authorToDelete.getId());
-        log.info("Created author for double deletion test with ID: {}", authorToDelete.getId());
-
-        // Delete the author first time - should succeed
-        ApiResponse<Void> firstDeleteResponse = authorEndpoints.deleteAuthorAndValidateStructure(authorToDelete.getId());
-        assertTrue(firstDeleteResponse.isSuccess());
-        log.info("First deletion successful for author ID: {}", authorToDelete.getId());
-
-        // Try to delete the same author again - should fail
-        ApiResponse<?> secondDeleteResponse = authorEndpoints.deleteNonExistentAuthorAndValidateError(authorToDelete.getId());
-
-        assertNotNull(secondDeleteResponse);
-        assertFalse(secondDeleteResponse.isSuccess());
-        assertNotNull(secondDeleteResponse.getMessage());
-        log.info("Second deletion correctly failed for author ID: {}", authorToDelete.getId());
-
-        // Note: Don't add to cleanup list since it's already deleted
-    }
-
-    // -------- NEGATIVE TEST SCENARIOS -------- //
-
-    @Test
-    @DisplayName("Should fail to create author with invalid data")
-    @Description("Test creating an author with invalid data should return error")
-    @Story("Author Creation Validation")
-    void testCreateAuthorWithInvalidData() {
-        AuthorRequest invalidRequest = authorFixtures.createInvalidAuthorRequest();
-        ApiResponse<?> errorResponse = authorEndpoints.createAuthorWithInvalidDataAndValidateError(invalidRequest);
-
-        assertNotNull(errorResponse);
-        assertFalse(errorResponse.isSuccess());
-        assertNotNull(errorResponse.getMessage());
-    }
-
-    @Test
-    @DisplayName("Should fail to retrieve non-existent author")
-    @Description("Test retrieving a non-existent author should return 404 error")
-    @Story("Author Retrieval")
-    void testGetNonExistentAuthor() {
-        Long nonExistentId = 999999L;
-        ApiResponse<?> errorResponse = authorEndpoints.getNonExistentAuthorAndValidateError(nonExistentId);
-
-        assertNotNull(errorResponse);
-        assertFalse(errorResponse.isSuccess());
-        assertNotNull(errorResponse.getMessage());
-    }
-
-
-    // -------- DATA CONSISTENCY TEST -------- //
-
-    @Test
-    @DisplayName("Should maintain data consistency across operations")
-    @Description("Test that author data remains consistent across create and retrieve operations")
-    @Story("Author Data Consistency")
-    void testDataConsistencyAcrossOperations() {
-        AuthorRequest authorRequest = authorFixtures.createValidAuthorRequest();
-        Author createdAuthor = null;
-
-        try {
-            createdAuthor = authorEndpoints.createAuthorAndValidateStructure(authorRequest);
-            // Add to cleanup list immediately after creation
-            authorFixtures.getCreatedAuthors().add(createdAuthor);
-
-            Author retrievedAuthor = authorEndpoints.getAuthorByIdAndValidateStructure(createdAuthor.getId());
-
-            assertEquals(createdAuthor.getId(), retrievedAuthor.getId());
-            assertEquals(createdAuthor.getName(), retrievedAuthor.getName());
-            assertEquals(createdAuthor.getBirthDate(), retrievedAuthor.getBirthDate());
-            assertEquals(createdAuthor.getNationality(), retrievedAuthor.getNationality());
-
-            log.info("Data consistency verified for author ID: {}", createdAuthor.getId());
-        } catch (Exception e) {
-            // If creation succeeded but validation failed, ensure cleanup
-            if (createdAuthor != null && createdAuthor.getId() != null) {
-                authorFixtures.getCreatedAuthors().add(createdAuthor);
+            // Force cleanup any remaining authors
+            int stillRemaining = authorFixtures.getCleanupCount();
+            if (stillRemaining > 0) {
+                log.warn("Force cleaning {} remaining authors", stillRemaining);
+                for (Long authorId : authorFixtures.getAuthorsPendingCleanup()) {
+                    authorFixtures.forceCleanupAuthor(authorId);
+                }
             }
-            throw e;
         }
+
+        log.info("Final cleanup complete. Remaining authors: {}", authorFixtures.getCleanupCount());
+    }
+
+    // -------- CREATE TESTS -------- //
+
+    @Test
+    @DisplayName("Create author with valid data")
+    void createAuthorWithValidData() {
+        AuthorRequest request = authorFixtures.createValidAuthorRequest();
+        Author created = authorFixtures.createAuthorAndRegisterForCleanup(request);
+
+        assertNotNull(created, "Created author should not be null");
+        assertNotNull(created.getId(), "Created author ID should not be null");
+        assertEquals(request.getName(), created.getName());
+        assertEquals(request.getBirthDate(), created.getBirthDate());
+        assertEquals(request.getNationality(), created.getNationality());
+
+        log.info("Author created successfully: {}", created.getId());
+    }
+
+    @Test
+    @DisplayName("Create author with minimal data")
+    void createAuthorWithMinimalData() {
+        AuthorRequest request = authorFixtures.createMinimalAuthorRequest();
+        Author created = authorFixtures.createAuthorAndRegisterForCleanup(request);
+
+        assertNotNull(created);
+        assertNotNull(created.getId());
+        assertEquals(request.getName(), created.getName());
+
+        log.info("Minimal author created successfully: {}", created.getId());
+    }
+
+    // -------- READ TESTS -------- //
+
+    @Test
+    @DisplayName("Retrieve shared author by ID")
+    void getSharedAuthorById() {
+        assertNotNull(sharedAuthor);
+        assertNotNull(sharedAuthor.getId());
+
+        Author retrieved = authorEndpoints.getAuthorByIdAndValidateStructure(sharedAuthor.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(sharedAuthor.getId(), retrieved.getId());
+        assertEquals(sharedAuthor.getName(), retrieved.getName());
+
+        log.info("Successfully retrieved shared author: {}", retrieved.getId());
+    }
+
+    @Test
+    @DisplayName("Retrieve authors with pagination")
+    void getAllAuthorsWithPagination() {
+        int testAuthorsCount = 5;
+        log.info("Setting up {} test authors for pagination test", testAuthorsCount);
+
+        authorFixtures.setupTestAuthors(testAuthorsCount);
+
+        // Verify authors were created
+        int actualCreated = authorFixtures.getCleanupCount();
+        log.info("Actually created {} authors (including shared)", actualCreated);
+
+        PageResponse<Author> page = authorEndpoints.getAllAuthorsAndValidateStructure();
+        assertNotNull(page, "Page response should not be null");
+        assertTrue(page.getTotalElements() >= testAuthorsCount,
+                "Should have at least " + testAuthorsCount + " authors, but found: " + page.getTotalElements());
+        assertTrue(page.hasContent(), "Page should have content");
+
+        log.info("Pagination test successful - found {} total authors", page.getTotalElements());
+    }
+
+    // -------- DELETE TESTS -------- //
+
+    @Test
+    @DisplayName("Delete author successfully")
+    void deleteAuthor() {
+        // Create author specifically for deletion test
+        Author author = authorFixtures.createAuthorAndRegisterForCleanup(
+                authorFixtures.createValidAuthorRequest()
+        );
+
+        assertNotNull(author, "Test author should be created");
+        assertNotNull(author.getId(), "Test author ID should not be null");
+
+        log.info("Deleting author: {}", author.getId());
+
+        // Perform deletion
+        ApiResponse<Void> response = authorEndpoints.deleteAuthorAndValidateStructure(author.getId());
+        assertTrue(response.isSuccess(), "Delete operation should succeed");
+
+        // Remove from cleanup list since we manually deleted it
+        authorFixtures.removeAuthorFromCleanup(author);
+
+        // Verify author no longer exists
+        ApiResponse<?> getResponse = authorEndpoints.getNonExistentAuthorAndValidateError(author.getId());
+        assertFalse(getResponse.isSuccess(), "Get operation should fail for deleted author");
+
+        log.info("Delete test successful for author: {}", author.getId());
+    }
+
+    @Test
+    @DisplayName("Fail to delete non-existent author")
+
+    void deleteNonExistentAuthor() {
+        Long nonExistentId = 999999L;
+        log.info("Attempting to delete non-existent author: {}", nonExistentId);
+
+        ApiResponse<?> response = authorEndpoints.deleteNonExistentAuthorAndValidateError(nonExistentId);
+        assertFalse(response.isSuccess());
+        assertNotNull(response.getMessage(), "Author not found ");
+
+        log.info("Delete non-existent author test successful - got expected error: {}", response.getMessage());
+    }
+
+    // -------- NEGATIVE TESTS -------- //
+
+    @Test
+    @DisplayName("Fail to create author with invalid data")
+    void createAuthorWithInvalidData() {
+        AuthorRequest invalid = authorFixtures.createInvalidAuthorRequest();
+        log.info("Attempting to create author with invalid data");
+
+        ApiResponse<?> response = authorEndpoints.createAuthorWithInvalidDataAndValidateError(invalid);
+
+        assertFalse(response.isSuccess());
+        assertNotNull(response.getMessage(), "Validation failed");
+
+        log.info("Invalid data test successful - got expected error: {}", response.getMessage());
+    }
+
+    // -------- DATA CONSISTENCY -------- //
+
+    @Test
+    @DisplayName("Data consistency across create and retrieve")
+    void dataConsistency() {
+        AuthorRequest request = authorFixtures.createValidAuthorRequest();
+        Author created = authorFixtures.createAuthorAndRegisterForCleanup(request);
+
+        assertNotNull(created);
+        assertNotNull(created.getId());
+
+        Author retrieved = authorEndpoints.getAuthorByIdAndValidateStructure(created.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(created.getId(), retrieved.getId());
+        assertEquals(created.getName(), retrieved.getName());
+        assertEquals(created.getBirthDate(), retrieved.getBirthDate());
+
+        log.info("Data consistency test successful for author: {}", created.getId());
     }
 }
