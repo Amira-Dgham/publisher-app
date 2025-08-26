@@ -73,14 +73,16 @@ public class BookE2ETest {
             }
         }
 
-        // Clean up test author
-        if (testAuthor != null) {
-            try {
-                authorEndpoints.deleteAuthor(testAuthor.getId());
-                log.info("Cleaned up author with ID: {}", testAuthor.getId());
-            } catch (Exception e) {
-                log.warn("Failed to clean up author with ID: {}", testAuthor.getId());
-            }
+
+    }
+
+    @AfterAll
+    void cleanupAuthorsAfterAllTests() {
+        if (authorFixtures.getCleanupCount() > 0) {
+            log.info("Cleaning up {} authors after all tests", authorFixtures.getCleanupCount());
+            authorFixtures.cleanupAllAuthors();
+        } else {
+            log.info("No authors to clean up after all tests");
         }
     }
 
@@ -136,10 +138,11 @@ public class BookE2ETest {
     @Test
     @Order(3)
     @Story("Book Listing")
-    @Severity(SeverityLevel.NORMAL)
     @Description("Should successfully retrieve all books")
     void shouldRetrieveAllBooks() {
         // Given
+        log.info("amira id ID: {}", testAuthor.getId());
+
         BookRequest bookRequest = BookFixtures.createValidBookRequest(testAuthor.getId());
         createdBook = bookEndpoints.createBookAndValidateStructure(bookRequest);
 
@@ -154,10 +157,6 @@ public class BookE2ETest {
 
         log.info("Successfully retrieved {} books", pageResponse.getTotalElements());
     }
-
-
-
-
 
     // ======================= EDGE CASES & SPECIAL SCENARIOS ======================= //
 
@@ -186,4 +185,253 @@ public class BookE2ETest {
 
         log.info("Successfully created book with minimal data");
     }
+
+
+
+
+
+
+
+    @Test
+    @Order(27)
+    @Story("Book Deletion")
+    @Description("Should return 404 when deleting non-existent book")
+    void shouldReturn404WhenDeletingNonExistentBook() {
+        // Given
+        Long nonExistentId = 999999L;
+
+
+
+        // When & Then
+        ApiResponse<?> response = bookEndpoints.deleteNonExistentBookAndValidateError(nonExistentId);
+
+        log.info("Successfully returned 404 when deleting non-existent book ID: {}", nonExistentId);
+    }
+
+
+
+    @Test
+    @Order(31)
+    @Story("Book Creation")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Should create book with current date")
+    void shouldCreateBookWithCurrentDate() {
+        // Given
+        BookRequest currentDateRequest = BookFixtures.createValidBookRequestWithDate(
+                LocalDate.now(), testAuthor.getId());
+
+        // When
+        createdBook = bookEndpoints.createBookAndValidateStructure(currentDateRequest);
+
+        // Then
+        assertThat(createdBook).isNotNull();
+        assertThat(createdBook.getPublicationDate()).isEqualTo(LocalDate.now());
+
+        log.info("Successfully created book with current date");
+    }
+
+    @Test
+    @Order(32)
+    @Story("Book Creation")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Should create multiple books for same author")
+    void shouldCreateMultipleBooksForSameAuthor() {
+        // Given
+        List<BookRequest> bookRequests = BookFixtures.createMultipleValidBookRequests(testAuthor.getId(), 3);
+
+        // When
+        List<Book> createdBooks = bookRequests.stream()
+                .map(bookEndpoints::createBookAndValidateStructure)
+                .toList();
+
+        // Then
+        assertThat(createdBooks).hasSize(3);
+        assertThat(createdBooks).allMatch(book -> book.getAuthor().getId().equals(testAuthor.getId()));
+        assertThat(createdBooks).extracting(Book::getId).doesNotHaveDuplicates();
+
+        // Verify through API
+        PageResponse<Book> authorBooks = bookEndpoints.getBooksByAuthorIdAndValidateStructure(testAuthor.getId());
+        assertThat(authorBooks.getTotalElements()).isGreaterThanOrEqualTo(3);
+
+        // Clean up
+        createdBooks.forEach(book -> {
+            try {
+                bookEndpoints.deleteBook(book.getId());
+            } catch (Exception e) {
+                log.warn("Failed to clean up book with ID: {}", book.getId());
+            }
+        });
+
+        log.info("Successfully created {} books for same author", createdBooks.size());
+    }
+
+    @Test
+    @Order(34)
+    @Story("Book Validation")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Should handle special characters in book title")
+    void shouldHandleSpecialCharactersInTitle() {
+        // Given
+        String specialTitle = "Book Title: A Story of Love & War (2023) - Part I";
+        BookRequest specialRequest = BookFixtures.createValidBookRequestWithTitle(
+                specialTitle, testAuthor.getId());
+
+        // When
+        createdBook = bookEndpoints.createBookAndValidateStructure(specialRequest);
+
+        // Then
+        assertThat(createdBook).isNotNull();
+        assertThat(createdBook.getTitle()).isEqualTo(specialTitle);
+
+        log.info("Successfully created book with special characters in title");
+    }
+
+    @Test
+    @Order(35)
+    @Story("Book Validation")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Should handle ISBN-10 and ISBN-13 formats")
+    void shouldHandleDifferentISBNFormats() {
+        // Test ISBN-13
+        BookRequest isbn13Request = BookFixtures.createValidBookRequestWithISBN(
+                "978-0-123-45678-9", testAuthor.getId());
+        Book isbn13Book = bookEndpoints.createBookAndValidateStructure(isbn13Request);
+
+        assertThat(isbn13Book).isNotNull();
+        assertThat(isbn13Book.getIsbn()).isEqualTo("978-0-123-45678-9");
+        bookEndpoints.deleteBook(isbn13Book.getId());
+
+        // Test ISBN-10
+        BookRequest isbn10Request = BookFixtures.createValidBookRequestWithISBN(
+                BookFixtures.generateValidISBN10(), testAuthor.getId());
+        createdBook = bookEndpoints.createBookAndValidateStructure(isbn10Request);
+
+        assertThat(createdBook).isNotNull();
+        assertThat(createdBook.getIsbn()).isNotNull();
+
+        log.info("Successfully handled both ISBN-10 and ISBN-13 formats");
+    }
+
+    // ======================= PERFORMANCE & LOAD TESTS ======================= //
+
+    @Test
+    @Order(40)
+    @Story("Performance")
+    @Severity(SeverityLevel.MINOR)
+    @Description("Should handle bulk book operations efficiently")
+    void shouldHandleBulkBookOperationsEfficiently() {
+        // Given
+        int bookCount = 10;
+        List<BookRequest> bulkRequests = BookFixtures.createMultipleValidBookRequests(
+                testAuthor.getId(), bookCount);
+
+        // When - Bulk creation
+        long startTime = System.currentTimeMillis();
+        List<Book> bulkBooks = bulkRequests.stream()
+                .map(bookEndpoints::createBookAndValidateStructure)
+                .toList();
+        long creationTime = System.currentTimeMillis() - startTime;
+
+        // Then
+        assertThat(bulkBooks).hasSize(bookCount);
+        assertThat(creationTime).isLessThan(10000); // Should complete within 10 seconds
+
+        // Verify retrieval performance
+        startTime = System.currentTimeMillis();
+        PageResponse<Book> allBooks = bookEndpoints.getAllBooksAndValidateStructure();
+        long retrievalTime = System.currentTimeMillis() - startTime;
+
+        assertThat(allBooks.getTotalElements()).isGreaterThanOrEqualTo(bookCount);
+        assertThat(retrievalTime).isLessThan(5000); // Should complete within 5 seconds
+
+        // Clean up
+        bulkBooks.forEach(book -> {
+            try {
+                bookEndpoints.deleteBook(book.getId());
+            } catch (Exception e) {
+                log.warn("Failed to clean up book with ID: {}", book.getId());
+            }
+        });
+
+        log.info("Successfully handled bulk operations: {} books created in {}ms, retrieved in {}ms",
+                bookCount, creationTime, retrievalTime);
+    }
+
+
+@Test
+@Order(5)
+@Story("Book Filtering")
+@Severity(SeverityLevel.NORMAL)
+@Description("Should successfully retrieve books by author ID")
+void shouldRetrieveBooksByAuthorId() {
+    // Given
+    BookRequest bookRequest = BookFixtures.createValidBookRequest(testAuthor.getId());
+    createdBook = bookEndpoints.createBookAndValidateStructure(bookRequest);
+
+    // When
+    PageResponse<Book> pageResponse = bookEndpoints.getBooksByAuthorIdAndValidateStructure(testAuthor.getId());
+
+    // Then
+    assertThat(pageResponse).isNotNull();
+    assertThat(pageResponse.getContent()).isNotNull();
+    assertThat(pageResponse.getTotalElements()).isGreaterThan(0);
+    assertThat(pageResponse.getContent())
+            .allMatch(book -> book.getAuthor().getId().equals(testAuthor.getId()));
+
+    log.info("Successfully retrieved {} books for author ID: {}",
+            pageResponse.getTotalElements(), testAuthor.getId());
+}
+
+@Test
+@Order(6)
+@Story("Book Update")
+@Severity(SeverityLevel.CRITICAL)
+@Description("Should successfully update a book")
+void shouldUpdateBook() {
+    // Given
+    BookRequest initialRequest = BookFixtures.createValidBookRequest(testAuthor.getId());
+    createdBook = bookEndpoints.createBookAndValidateStructure(initialRequest);
+
+    BookRequest updateRequest = BookFixtures.createValidBookRequestWithTitle(
+            "Updated Book Title", testAuthor.getId());
+
+    // When
+    Book updatedBook = bookEndpoints.updateBookAndValidateStructure(createdBook.getId(), updateRequest);
+
+    // Then
+    assertThat(updatedBook).isNotNull();
+    assertThat(updatedBook.getId()).isEqualTo(createdBook.getId());
+    assertThat(updatedBook.getTitle()).isEqualTo(updateRequest.getTitle());
+    assertThat(updatedBook.getPublicationDate()).isEqualTo(updateRequest.getPublicationDate());
+    assertThat(updatedBook.getIsbn()).isEqualTo(updateRequest.getIsbn());
+
+    createdBook = updatedBook; // Update reference for cleanup
+    log.info("Successfully updated book with ID: {}", updatedBook.getId());
+}
+
+@Test
+@Order(7)
+@Story("Book Deletion")
+@Severity(SeverityLevel.CRITICAL)
+@Description("Should successfully delete a book")
+void shouldDeleteBook() {
+    // Given
+    BookRequest bookRequest = BookFixtures.createValidBookRequest(testAuthor.getId());
+    createdBook = bookEndpoints.createBookAndValidateStructure(bookRequest);
+    Long bookId = createdBook.getId();
+
+    // When
+    ApiResponse<Void> deleteResponse = bookEndpoints.deleteBookAndValidateStructure(bookId);
+
+    // Then
+    ApiAssertions.assertMessageContains(deleteResponse, "deleted successfully");
+
+    // Verify book is deleted
+    ApiResponse<?> getResponse = bookEndpoints.getNonExistentBookAndValidateError(bookId);
+
+
+    createdBook = null; // Reset for cleanup
+    log.info("Successfully deleted book with ID: {}", bookId);
+}
+
 }
