@@ -7,14 +7,15 @@ import io.qameta.allure.Step;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ApiRequestBuilder {
-
 
     private final ApiClient apiClient;
     private final HttpMethod method;
@@ -36,9 +37,7 @@ public class ApiRequestBuilder {
     }
 
     public ApiRequestBuilder headers(Map<String, String> headers) {
-        if (headers != null && !headers.isEmpty()) {
-            this.headers.putAll(headers);
-        }
+        if (headers != null) headers.forEach(this::header);
         return this;
     }
 
@@ -58,13 +57,7 @@ public class ApiRequestBuilder {
     // --- Execution ---
     @Step("Execute {method} {endpoint}")
     public APIResponse execute() {
-        return switch (method) {
-            case GET    -> apiClient.get(buildEndpointWithParams(), buildRequestOptions());
-            case POST   -> apiClient.post(buildEndpointWithParams(), buildRequestOptions());
-            case PUT    -> apiClient.put(buildEndpointWithParams(), buildRequestOptions());
-            case PATCH  -> apiClient.patch(buildEndpointWithParams(), buildRequestOptions());
-            case DELETE -> apiClient.delete(buildEndpointWithParams(), buildRequestOptions());
-        };
+        return apiClient.execute(method, buildEndpointWithParams(), buildRequestOptions());
     }
 
     // --- Internals ---
@@ -72,15 +65,17 @@ public class ApiRequestBuilder {
         RequestOptions options = RequestOptions.create();
         headers.forEach(options::setHeader);
         if (body != null) {
-            options.setData(apiClient.toJson(body)); // always JSON
+            options.setData(apiClient.toJson(body));
         }
         return options;
     }
 
     private String buildEndpointWithParams() {
         if (queryParams.isEmpty()) return endpoint;
-        StringJoiner joiner = new StringJoiner("&", endpoint + "?", "");
-        queryParams.forEach((k, v) -> joiner.add(k + "=" + v));
-        return joiner.toString();
+        return endpoint + "?" + queryParams.entrySet().stream()
+                .map(e -> URLEncoder.encode(e.getKey(), StandardCharsets.UTF_8)
+                        + "=" +
+                        URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
     }
 }
