@@ -14,14 +14,6 @@ public class PlaywrightSchemaValidator {
 
     private static final ObjectMapper mapper = TestConfig.getInstance().getObjectMapper();
 
-    /**
-     * Validates an ApiResponse against the given schemas.
-     *
-     * @param response           The ApiResponse object to validate
-     * @param responseSchemaPath Path to the wrapper schema (ApiResponse)
-     * @param dataSchemaPath     Path to the schema for the "data" object (PageResponse, Entity, etc.)
-     * @param contentSchemaPath  Path to the schema for items inside "data.content" (optional, can be null)
-     */
     public static void validateResponseAndData(Object response,
                                                String responseSchemaPath,
                                                String dataSchemaPath,

@@ -13,8 +13,7 @@ export const TEST_IDS = {
   },
 
   // Authors Feature
-  AUTHORS: {
-    // Table
+ AUTHORS: {
     AUTHORS_TABLE: 'authors-table',
     AUTHORS_TABLE_HEADER: 'authors-table-header',
     AUTHORS_TABLE_BODY: 'authors-table-body',
@@ -24,38 +23,26 @@ export const TEST_IDS = {
     AUTHORS_TABLE_NATIONALITY_COLUMN: 'authors-table-nationality-column',
     AUTHORS_TABLE_BOOKS_COLUMN: 'authors-table-books-column',
     AUTHORS_TABLE_MAGAZINES_COLUMN: 'authors-table-magazines-column',
-    
-    // Pagination
-    AUTHORS_PAGINATOR: 'authors-paginator',
-    
-    // Buttons
     ADD_AUTHOR_BUTTON: 'add-author-button',
-    
-    // Dialog
     AUTHOR_DIALOG: 'author-dialog',
-    AUTHOR_DIALOG_HEADER: 'author-dialog-header',
-    
-    // Form Fields
+    AUTHORS_PAGINATOR: 'authors-paginator',
+     AUTHOR_DIALOG_HEADER: 'author-dialog-header',
     AUTHOR_NAME_INPUT: 'author-name-input',
     AUTHOR_BIRTH_DATE_INPUT: 'author-birth-date-input',
     AUTHOR_NATIONALITY_INPUT: 'author-nationality-input',
+    AUTHOR_SAVE_BUTTON: 'author-save-button',
+    AUTHOR_CANCEL_BUTTON: 'author-cancel-button',
     
-    // Form Validation
     AUTHOR_NAME_ERROR: 'author-name-error',
     AUTHOR_NAME_REQUIRED_ERROR: 'author-name-required-error',
     AUTHOR_NAME_MIN_LENGTH_ERROR: 'author-name-min-length-error',
     AUTHOR_NAME_MAX_LENGTH_ERROR: 'author-name-max-length-error',
     AUTHOR_NATIONALITY_ERROR: 'author-nationality-error',
     AUTHOR_NATIONALITY_MAX_LENGTH_ERROR: 'author-nationality-max-length-error',
-    
-    // Form Actions
-    AUTHOR_SAVE_BUTTON: 'author-save-button',
-    AUTHOR_CANCEL_BUTTON: 'author-cancel-button',
-    
-    // Delete Confirmation
     AUTHOR_DELETE_CONFIRM: 'author-delete-confirm',
+    AUTHOR_EDIT_BUTTON: 'author-edit-button',       // NEW
+    AUTHOR_DELETE_BUTTON: 'author-delete-button'    // NEW
   },
-
   // Books Feature
   BOOKS: {
     // Table

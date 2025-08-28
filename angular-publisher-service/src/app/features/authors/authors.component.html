@@ -1,15 +1,17 @@
 <p-table [value]="authors" [loading]="loading" dataKey="id" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE">
-  <ng-template pTemplate="header" [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_HEADER">
-    <tr>
-      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_NAME_COLUMN">Name</th>
-      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BIRTH_DATE_COLUMN">Birth Date</th>
-      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_NATIONALITY_COLUMN">Nationality</th>
-      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BOOKS_COLUMN">Books</th>
-      <th [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_MAGAZINES_COLUMN">Magazines</th>
+  <ng-template pTemplate="header">
+    <tr data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_HEADER }}">
+      <th data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_NAME_COLUMN }}">Name</th>
+      <th data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_BIRTH_DATE_COLUMN }}">Birth Date</th>
+      <th data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_NATIONALITY_COLUMN }}">Nationality</th>
+      <th data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_BOOKS_COLUMN }}">Books</th>
+      <th data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_MAGAZINES_COLUMN }}">Magazines</th>
+      <th>Actions</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-author [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_BODY">
-    <tr [attr.data-testid]="TEST_IDS.AUTHORS.AUTHORS_TABLE_ROW">
+
+  <ng-template pTemplate="body" let-author>
+    <tr data-testid="{{ TEST_IDS.AUTHORS.AUTHORS_TABLE_ROW }}">
       <td>{{ author.name }}</td>
       <td>{{ author.birthDate }}</td>
       <td>{{ author.nationality }}</td>
@@ -23,9 +25,24 @@
           <span>{{ mag.title }}@if (!last) {, }</span>
         }
       </td>
-    
+      <td>
+        <button 
+          pButton icon="pi pi-pencil" 
+          class="p-button-rounded p-button-text" 
+          (click)="openEdit(author)" 
+          data-testid="{{ TEST_IDS.AUTHORS.AUTHOR_EDIT_BUTTON }}">
+        </button>
+        <button 
+          pButton icon="pi pi-trash" 
+          class="p-button-rounded p-button-danger p-button-text" 
+          (click)="confirmDeleteAuthor(author)" 
+          data-testid="{{ TEST_IDS.AUTHORS.AUTHOR_DELETE_BUTTON }}">
+        </button>
+      </td>
     </tr>
   </ng-template>
+</p-table>
+
 </p-table>
 <p-paginator
   [rows]="pageSize"

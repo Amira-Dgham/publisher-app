@@ -44,12 +44,12 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
     }
 
     @Override
-    protected String getBaseEndpoint() {
+    public String getBaseEndpoint() {
         return AUTHORS_BASE;
     }
 
     @Override
-    protected String getItemByIdEndpoint() {
+    public String getItemByIdEndpoint() {
         return AUTHOR_BY_ID;
     }
 

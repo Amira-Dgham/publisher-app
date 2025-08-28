@@ -6,11 +6,11 @@ import com.mobelite.e2e.api.models.Author;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.web.pages.AuthorPage;
+import com.microsoft.playwright.APIResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,14 +32,15 @@ public class AuthorsUiE2ETest extends BaseTest {
 
     @BeforeEach
     void setup() {
-        navigateTo("/authors");
         authorsPage = new AuthorPage(page);
         authorApi = new AuthorApiEndPoint();
-        authorApi.init(); // Initialize ApiClient and shared entity
+        authorApi.init(api); // Initialize ApiClient and shared entity
         authorFixtures = new AuthorFixtures();
+        navigateTo("/authors");
+
     }
 
-    @AfterEach
+    @org.junit.jupiter.api.AfterEach
     void cleanup() {
         authorApi.cleanUpEach();
         authorApi.tearDown();
@@ -52,7 +53,7 @@ public class AuthorsUiE2ETest extends BaseTest {
 
         assertTrue(authorsPage.isTableVisible());
         List<String> headers = authorsPage.getTableHeaders();
-        assertEquals(5, headers.size());
+        assertEquals(6, headers.size());
         assertEquals("Name", headers.get(0));
         assertEquals("Birth Date", headers.get(1));
         assertEquals("Nationality", headers.get(2));
@@ -62,8 +63,8 @@ public class AuthorsUiE2ETest extends BaseTest {
         assertTrue(authorsPage.isPaginatorVisible());
 
         var pageData = authorApi.getAllAndValidate(authorApi.getBaseEndpoint());
-        assertTrue(pageData.hasContent());
-        authorsPage.verifyTableRowCount(pageData.getTotalElements());
+        log.info("mira api size"+pageData.getContent().size());
+        authorsPage.verifyTableRowCount(pageData.getContent().size());
 
         log.info("Authors table loaded successfully with pagination");
     }
@@ -129,6 +130,7 @@ public class AuthorsUiE2ETest extends BaseTest {
     void deleteAuthor() {
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
         Author created = authorApi.createAndValidate(request, authorApi.getBaseEndpoint());
+        log.info("created id amiraaa"+created.getId());
         authorApi.trackForCleanup(created.getId());
 
         page.reload();

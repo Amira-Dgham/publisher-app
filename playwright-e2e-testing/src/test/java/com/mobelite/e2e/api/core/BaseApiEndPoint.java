@@ -6,13 +6,12 @@ import com.mobelite.e2e.api.models.PageResponse;
 import com.mobelite.e2e.api.utils.PlaywrightSchemaValidator;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.shared.constants.HttpMethod;
+import com.microsoft.playwright.APIRequestContext;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 public abstract class BaseApiEndPoint<T, R> extends BaseTest {
 
@@ -36,8 +35,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
     // ---- Optional shared entity creation ----
     protected boolean shouldCreateSharedEntity() { return true; }
 
-    @BeforeAll
-    void init() {
+    public void init(APIRequestContext api) {
         this.apiClient = new ApiClient(api);
 
         if (shouldCreateSharedEntity()) {
@@ -51,8 +49,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         }
     }
 
-    @AfterAll
-    void tearDown() {
+    public void tearDown() {
         if (sharedEntity != null) {
             try {
                 deleteAndValidate(getId(sharedEntity), getItemByIdEndpoint());
@@ -63,8 +60,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         }
     }
 
-    @AfterEach
-    void cleanUpEach() {
+    public void cleanUpEach() {
         for (Long id : entitiesToCleanup) {
             try {
                 deleteAndValidate(id, getItemByIdEndpoint());
@@ -113,7 +109,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         return response;
     }
 
-    protected void trackForCleanup(Long id) { entitiesToCleanup.add(id); }
+    public void trackForCleanup(Long id) { entitiesToCleanup.add(id); }
 
     protected <U> ApiResponse<U> executeRequest(ApiRequestBuilder builder, int expectedStatus, TypeReference<ApiResponse<U>> typeRef) {
         var response = builder.execute();

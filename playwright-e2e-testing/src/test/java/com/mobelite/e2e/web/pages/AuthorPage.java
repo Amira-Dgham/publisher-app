@@ -4,12 +4,14 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import com.mobelite.e2e.shared.constants.TestIds;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class AuthorPage {
 
     private final Page page;
@@ -18,7 +20,10 @@ public class AuthorPage {
         this.page = page;
     }
 
-    // Locators
+    // ============================
+    // LOCATORS
+    // ============================
+
     public Locator table() {
         return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE + "']");
     }
@@ -27,8 +32,9 @@ public class AuthorPage {
         return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE_HEADER + "']");
     }
 
-    public Locator tableBody() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE_BODY + "']");
+    public Locator tableRows() {
+        // use tr with data-testid instead of tbody
+        return page.locator("tr[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE_ROW + "']");
     }
 
     public Locator addAuthorButton() {
@@ -83,17 +89,32 @@ public class AuthorPage {
         return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_DELETE_CONFIRM + "']");
     }
 
-    public Locator editButtonForRow(String authorName) {
-        return tableBody().locator("tr:has-text('" + authorName + "') button[data-testid='" + TestIds.AUTHORS.AUTHOR_EDIT_BUTTON + "']");
+    // ============================
+    // SMART ROW LOCATORS
+    // ============================
+
+    private Locator rowByAuthorName(String authorName) {
+        return tableRows().filter(new Locator.FilterOptions().setHasText(authorName));
     }
 
-    public Locator deleteButtonForRow(String authorName) {
-        return tableBody().locator("tr:has-text('" + authorName + "') button[data-testid='" + TestIds.AUTHORS.AUTHOR_DELETE_BUTTON + "']");
+    public Locator editButtonForAuthor(String authorName) {
+        return rowByAuthorName(authorName)
+                .locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_EDIT_BUTTON + "']");
     }
 
-    // Methods
+    public Locator deleteButtonForAuthor(String authorName) {
+        return rowByAuthorName(authorName)
+                .locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_DELETE_BUTTON + "']");
+    }
+
+    // ============================
+    // METHODS
+    // ============================
+
     public void waitForTableToLoad() {
-        table().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE).setTimeout(10000));
+        table().waitFor(new Locator.WaitForOptions()
+                .setState(WaitForSelectorState.VISIBLE)
+                .setTimeout(10000));
     }
 
     public boolean isTableVisible() {
@@ -102,10 +123,16 @@ public class AuthorPage {
 
     public List<String> getTableHeaders() {
         List<String> headers = new ArrayList<>();
-        Locator headersLocator = tableHeader().locator("th");
-        for (int i = 0; i < headersLocator.count(); i++) {
-            headers.add(headersLocator.nth(i).innerText());
+        Locator headersLocator = page.locator("p-table .p-datatable-table thead tr th");
+        long count = headersLocator.count();
+
+        log.info("Found {} table headers", count);
+
+        for (int i = 0; i < count; i++) {
+            headers.add(headersLocator.nth(i).innerText().trim());
         }
+
+        log.info("Headers: {}", headers);
         return headers;
     }
 
@@ -142,30 +169,32 @@ public class AuthorPage {
     }
 
     public void waitForDialogToClose() {
-        dialog().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN).setTimeout(5000));
+        dialog().waitFor(new Locator.WaitForOptions()
+                .setState(WaitForSelectorState.HIDDEN)
+                .setTimeout(5000));
     }
 
     public boolean isAuthorInTable(String name, String birthDate, String nationality) {
-        Locator rows = tableBody().locator("tr");
-        for (int i = 0; i < rows.count(); i++) {
-            Locator row = rows.nth(i);
-            String rowName = row.locator("td").nth(0).innerText();
-            if (rowName.equals(name)) {
-                if (birthDate != null && !birthDate.isEmpty()) {
-                    assertEquals(birthDate, row.locator("td").nth(1).innerText());
-                }
-                if (nationality != null && !nationality.isEmpty()) {
-                    assertEquals(nationality, row.locator("td").nth(2).innerText());
-                }
-                return true;
-            }
+        Locator row = rowByAuthorName(name);
+        if (!row.isVisible()) {
+            log.warn("Author row not found: {}", name);
+            return false;
         }
-        return false;
+        if (birthDate != null && !birthDate.isEmpty()) {
+            assertEquals(birthDate, row.locator("td").nth(1).innerText());
+        }
+        if (nationality != null && !nationality.isEmpty()) {
+            assertEquals(nationality, row.locator("td").nth(2).innerText());
+        }
+        return true;
     }
 
     public void verifyTableRowCount(long expectedCount) {
-        Locator rows = tableBody().locator("tr");
-        assertEquals(expectedCount, rows.count(), "Table row count does not match expected");
+        long actualCount = tableRows().count();
+
+        log.info("amira html size"+actualCount);
+
+        assertEquals(expectedCount, actualCount, "Table row count does not match expected");
     }
 
     public boolean isNameRequiredErrorVisible() {
@@ -185,14 +214,14 @@ public class AuthorPage {
     }
 
     public void clickEditForAuthor(String authorName) {
-        editButtonForRow(authorName).click();
+        editButtonForAuthor(authorName).click();
     }
 
     public void clickDeleteForAuthor(String authorName) {
-        deleteButtonForRow(authorName).click();
+        deleteButtonForAuthor(authorName).click();
     }
 
     public void confirmDelete() {
-        deleteConfirm().locator("button[label='Yes']").click(); // Adjust based on ConfirmDialogComponent
+        deleteConfirm().locator("button[label='Confirm']").click();
     }
 }
