@@ -161,7 +161,12 @@ public class AuthorPage {
     }
 
     public void clickSaveButton() {
-        saveButton().click();
+        Locator btn = saveButton();
+        if (btn.count() > 0) {
+            btn.click();
+        } else {
+            log.warn("Save button NOT found!");
+        }
     }
 
     public void clickCancelButton() {

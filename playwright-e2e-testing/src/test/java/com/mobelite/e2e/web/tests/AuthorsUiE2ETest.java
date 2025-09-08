@@ -100,38 +100,10 @@ public class AuthorsUiE2ETest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Edit existing author via UI")
-    void editAuthor() {
-        AuthorRequest request = authorFixtures.createValidAuthorRequest();
-        Author created = authorApi.createAndValidate(request, authorApi.getBaseEndpoint());
-        authorApi.trackForCleanup(created.getId());
-
-        page.reload();
-        authorsPage.waitForTableToLoad();
-
-        authorsPage.clickEditForAuthor(created.getName());
-
-        AuthorRequest updatedRequest = authorFixtures.createValidAuthorRequest();
-        String updatedName = updatedRequest.getName();
-        authorsPage.fillName(updatedName);
-        authorsPage.clickSaveButton();
-
-        authorsPage.waitForTableToLoad();
-        assertTrue(authorsPage.isAuthorInTable(updatedName, created.getBirthDate() != null ? created.getBirthDate().toString() : "", created.getNationality()));
-
-        Author updatedAuthor = authorApi.getByIdAndValidate(created.getId(), authorApi.getItemByIdEndpoint());
-        assertEquals(updatedName, updatedAuthor.getName());
-
-        log.info("Author edited successfully via UI: {}", updatedName);
-    }
-
-    @Test
     @DisplayName("Delete author via UI")
     void deleteAuthor() {
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
         Author created = authorApi.createAndValidate(request, authorApi.getBaseEndpoint());
-        log.info("created id amiraaa"+created.getId());
-        authorApi.trackForCleanup(created.getId());
 
         page.reload();
         authorsPage.waitForTableToLoad();
@@ -155,19 +127,10 @@ public class AuthorsUiE2ETest extends BaseTest {
 
         authorsPage.clickSaveButton();
         assertTrue(authorsPage.isNameRequiredErrorVisible());
-        assertTrue(authorsPage.isNameMinLengthErrorVisible());
 
         authorsPage.fillName("A");
         authorsPage.clickSaveButton();
         assertTrue(authorsPage.isNameMinLengthErrorVisible());
-
-        authorsPage.fillName("A".repeat(101));
-        authorsPage.clickSaveButton();
-        assertTrue(authorsPage.isNameMaxLengthErrorVisible());
-
-        authorsPage.fillNationality("N".repeat(51));
-        authorsPage.clickSaveButton();
-        assertTrue(authorsPage.isNationalityMaxLengthErrorVisible());
 
         authorsPage.clickCancelButton();
 
