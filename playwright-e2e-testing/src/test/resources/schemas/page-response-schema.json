@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PageResponse",
+  "type": "object",
+  "required": ["content", "number", "size", "totalElements", "totalPages", "first", "last"],
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {}
+    },
+    "number": { "type": "integer" },
+    "size": { "type": "integer" },
+    "totalElements": { "type": "integer" },
+    "totalPages": { "type": "integer" },
+    "first": { "type": "boolean" },
+    "last": { "type": "boolean" },
+    "hasNext": { "type": ["boolean", "null"] },
+    "hasPrevious": { "type": ["boolean", "null"] }
+  }
+}

@@ -3,127 +3,75 @@ package com.mobelite.e2e.api.core;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.RequestOptions;
-import com.mobelite.e2e.config.TestConfig;
-import io.qameta.allure.Step;
+import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.shared.constants.HttpMethod;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ApiClient implements AutoCloseable {
+@RequiredArgsConstructor
+public class ApiClient {
 
-    private final APIRequestContext requestContext;
-    private final ObjectMapper objectMapper;
-    private final String baseUrl;
+    private final APIRequestContext api;
 
-    public ApiClient(APIRequestContext apiRequestContext) {
-        TestConfig config = TestConfig.getInstance();
-        this.baseUrl = config.getApiBaseUrl();
-        this.objectMapper = config.getObjectMapper();
-        this.requestContext = apiRequestContext;
+    // Single ObjectMapper instance for all serialization/deserialization
+    private final ObjectMapper mapper;
+
+    // Constructor with mapper initialization
+    public ApiClient(APIRequestContext api) {
+        this.api = api;
+        this.mapper = new ObjectMapper();
+        this.mapper.registerModule(new JavaTimeModule()); // support LocalDate, LocalDateTime
+        this.mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    @Step("GET {endpoint}")
-    public APIResponse get(String endpoint, RequestOptions options) {
-        return executeRequest("GET", endpoint, options, () ->
-                requestContext.get(endpoint, options != null ? options : RequestOptions.create()));
-    }
+    public APIResponse execute(HttpMethod method, String endpoint, RequestOptions options) {
+        log.info("Executing {} {}", method, endpoint);
 
-    @Step("POST {endpoint}")
-    public APIResponse post(String endpoint, RequestOptions options) {
-        return executeRequest("POST", endpoint, options, () ->
-                requestContext.post(endpoint, options != null ? options : RequestOptions.create()));
-    }
-
-    @Step("PUT {endpoint}")
-    public APIResponse put(String endpoint, RequestOptions options) {
-        return executeRequest("PUT", endpoint, options, () ->
-                requestContext.put(endpoint, options != null ? options : RequestOptions.create()));
-    }
-
-    @Step("PATCH {endpoint}")
-    public APIResponse patch(String endpoint, RequestOptions options) {
-        return executeRequest("PATCH", endpoint, options, () ->
-                requestContext.patch(endpoint, options != null ? options : RequestOptions.create()));
-    }
-
-    @Step("DELETE {endpoint}")
-    public APIResponse delete(String endpoint, RequestOptions options) {
-        return executeRequest("DELETE", endpoint, options, () ->
-                requestContext.delete(endpoint, options != null ? options : RequestOptions.create()));
-    }
-
-    private APIResponse executeRequest(String method, String endpoint, RequestOptions options,
-                                       java.util.function.Supplier<APIResponse> requestSupplier) {
-        log.info("Executing {} request to: {}", method, endpoint);
-        try {
-            APIResponse response = requestSupplier.get();
-            log.info("Response: {} {}", response.status(), response.statusText());
-            return response;
-        } catch (Exception e) {
-            log.error("Request failed: {} {}", method, endpoint, e);
-            throw new RuntimeException(String.format("API request failed: %s %s", method, endpoint), e);
-        }
+        return switch (method) {
+            case GET -> api.get(endpoint, options);
+            case POST -> api.post(endpoint, options);
+            case PUT -> api.put(endpoint, options);
+            case PATCH -> api.patch(endpoint, options);
+            case DELETE -> api.delete(endpoint, options);
+        };
     }
 
     public String toJson(Object obj) {
         try {
-            return objectMapper.writeValueAsString(obj);
+            // Use the shared mapper, not a new one
+            return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize object to JSON", e);
+            throw new RuntimeException("Failed to serialize body to JSON", e);
         }
     }
 
-    /**
-     * Parses the API response body into the specified Java class.
-     *
-     * @param <T> the type of the parsed object
-     * @param response the APIResponse object to parse
-     * @param clazz the target class type
-     * @return the parsed object
-     */
-    public <T> T parseResponse(APIResponse response, Class<T> clazz) {
-        try {
-            String responseText = response.text();
-            log.debug("Parsing response to {}: {}", clazz.getSimpleName(), responseText);
-            return objectMapper.readValue(responseText, clazz);
-        } catch (Exception e) {
-            log.error("Failed to parse API response to {}: {}", clazz.getSimpleName(), e.getMessage());
-            throw new RuntimeException("Failed to parse API response", e);
-        }
-    }
-
-    /**
-     * Parses the API response body using TypeReference for complex generic types.
-     * This method properly handles generic type information, avoiding ClassCastException.
-     *
-     * @param <T> the type of the parsed object
-     * @param response the APIResponse object to parse
-     * @param typeReference the TypeReference containing the target type information
-     * @return the parsed object
-     */
     public <T> T parseResponse(APIResponse response, TypeReference<T> typeReference) {
         try {
             String responseText = response.text();
             log.debug("Parsing response using TypeReference: {}", responseText);
-            return objectMapper.readValue(responseText, typeReference);
+            return mapper.readValue(responseText, typeReference);
         } catch (Exception e) {
             log.error("Failed to parse API response using TypeReference: {}", e.getMessage());
             throw new RuntimeException("Failed to parse API response", e);
         }
     }
 
-    public RequestOptions createJsonOptions(Object body) {
-        RequestOptions options = RequestOptions.create();
-        if (body != null) {
-            options.setData(toJson(body));
+    public ApiResponse<?> parseErrorResponse(APIResponse response) {
+        try {
+            String responseText = response.text();
+            log.debug("Parsing error response: {}", responseText);
+            return mapper.readValue(responseText, new TypeReference<ApiResponse<?>>() {});
+        } catch (Exception e) {
+            log.warn("Failed to parse error response, falling back to raw text: {}", e.getMessage());
+            ApiResponse<Object> errorResponse = new ApiResponse<>();
+            errorResponse.setSuccess(false);
+            errorResponse.setMessage(response.text());
+            return errorResponse;
         }
-        return options;
-    }
-
-    @Override
-    public void close() {
-        // Do nothing if the context is managed externally by the extension
-        log.debug("ApiClient.close() called, but APIRequestContext lifecycle managed externally.");
     }
 }

@@ -79,13 +79,22 @@ public class BookController {
      * @param id The book ID
      * @return The book response
      */
+    @Operation(summary = "Get book by ID", description = "Retrieves an book by their unique identifier")
     @GetMapping("/{id}")
-    @Operation(summary = "Get book by ID", description = "Retrieves a book by its ID")
-    public ResponseEntity<BookResponseDto> getBookById(@Parameter(description = "Book ID") @PathVariable Long id) {
-        BookResponseDto response = bookService.getBookById(id);
-        return ResponseEntity.ok(response);
-    }
+    public ResponseEntity<ApiResponseDto<BookResponseDto>> getBookById(
+            @Parameter(description = "Book ID") @PathVariable Long id) {
 
+        BookResponseDto book = bookService.getBookById(id);
+
+        ApiResponseDto<BookResponseDto> response = ApiResponseDto.<BookResponseDto>builder()
+                .success(true)
+                .message("Author retrieved successfully")
+                .data(book)
+                .build();
+
+        return ResponseEntity.ok(response);
+
+    }
     /**
      * Get a book by ISBN.
      *
@@ -137,9 +146,18 @@ public class BookController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a book", description = "Deletes a book by its ID")
-    public ResponseEntity<Void> deleteBook(@Parameter(description = "Book ID") @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto<Void>> deleteBook(@Parameter(description = "Book ID") @PathVariable Long id) {
+
         bookService.deleteBook(id);
-        return ResponseEntity.noContent().build();
+
+
+        ApiResponseDto<Void> response = ApiResponseDto.<Void>builder()
+                .success(true)
+                .message("book deleted successfully")
+                .data(null)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     /**

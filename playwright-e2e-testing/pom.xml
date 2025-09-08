@@ -47,6 +47,22 @@
             <version>${playwright.version}</version>
         </dependency>
 
+        <!-- JSON Schema Validator -->
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.0.82</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JSON Schema Validation -->
+        <dependency>
+            <groupId>org.everit.json</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -76,6 +92,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+
         </dependency>
 
         <!-- Logback -->
@@ -109,6 +126,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>2.4.4</version>
+            <scope>test</scope> <!-- optional: test scope if only for testing -->
         </dependency>
     </dependencies>
 

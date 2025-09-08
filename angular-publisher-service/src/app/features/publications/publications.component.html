@@ -6,6 +6,7 @@
       <th [attr.data-testid]="'publications-table-actions-column'">Actions</th>
     </tr>
   </ng-template>
+
   <ng-template pTemplate="body" let-publication [attr.data-testid]="'publications-table-body'">
     <tr [attr.data-testid]="'publications-table-row'">
       <td>{{ publication.title }}</td>
@@ -28,30 +29,28 @@
 
 <button pButton label="Add Publication" icon="pi pi-plus" (click)="openNew()" [attr.data-testid]="'add-publication-button'"></button>
 
-<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" header="{{ isEdit ? 'Edit Publication' : 'Add Publication' }}" [attr.data-testid]="'publication-dialog'">
+<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [header]="isEdit ? 'Edit Publication' : 'Add Publication'" [attr.data-testid]="'publication-dialog'">
   <form (ngSubmit)="save()" #publicationForm="ngForm">
     <div class="p-fluid">
       <div class="p-field">
         <label for="title">Title</label>
         <input id="title" type="text" pInputText [(ngModel)]="form.title" name="title" required minlength="2" maxlength="255" #title="ngModel" [attr.data-testid]="'publication-title-input'" />
-        @if (title.invalid && (title.dirty || title.touched)) {
-          <div class="p-error" [attr.data-testid]="'publication-title-error'">
-            @if (title.errors?.['required']) { <div [attr.data-testid]="'publication-title-required-error'">Title is required.</div> }
-            @if (title.errors?.['minlength']) { <div [attr.data-testid]="'publication-title-min-length-error'">Title must be at least 2 characters.</div> }
-            @if (title.errors?.['maxlength']) { <div [attr.data-testid]="'publication-title-max-length-error'">Title cannot exceed 255 characters.</div> }
-          </div>
-        }
+        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="p-error" [attr.data-testid]="'publication-title-error'">
+          <div *ngIf="title.errors?.['required']" [attr.data-testid]="'publication-title-required-error'">Title is required.</div>
+          <div *ngIf="title.errors?.['minlength']" [attr.data-testid]="'publication-title-min-length-error'">Title must be at least 2 characters.</div>
+          <div *ngIf="title.errors?.['maxlength']" [attr.data-testid]="'publication-title-max-length-error'">Title cannot exceed 255 characters.</div>
+        </div>
       </div>
+
       <div class="p-field">
         <label for="publicationDate">Publication Date</label>
         <input id="publicationDate" type="date" pInputText [(ngModel)]="form.publicationDate" name="publicationDate" required #publicationDate="ngModel" [attr.data-testid]="'publication-publication-date-input'" />
-        @if (publicationDate.invalid && (publicationDate.dirty || publicationDate.touched)) {
-          <div class="p-error" [attr.data-testid]="'publication-publication-date-error'">
-            @if (publicationDate.errors?.['required']) { <div [attr.data-testid]="'publication-publication-date-required-error'">Publication date is required.</div> }
-          </div>
-        }
+        <div *ngIf="publicationDate.invalid && (publicationDate.dirty || publicationDate.touched)" class="p-error" [attr.data-testid]="'publication-publication-date-error'">
+          <div *ngIf="publicationDate.errors?.['required']" [attr.data-testid]="'publication-publication-date-required-error'">Publication date is required.</div>
+        </div>
       </div>
     </div>
+
     <div class="p-d-flex p-jc-end">
       <button pButton type="submit" label="Save" [disabled]="publicationForm.invalid" [attr.data-testid]="'publication-save-button'"></button>
       <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false" [attr.data-testid]="'publication-cancel-button'"></button>
@@ -59,4 +58,4 @@
   </form>
 </p-dialog>
 
-<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this publication?" (accept)="deletePublication()" (reject)="confirmDelete = false" [attr.data-testid]="'publication-delete-confirm'"></app-confirm-dialog> 
+<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this publication?" (accept)="deletePublication()" (reject)="confirmDelete = false" [attr.data-testid]="'publication-delete-confirm'"></app-confirm-dialog>
