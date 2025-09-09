@@ -60,7 +60,7 @@ public class ApiClient {
             throw new RuntimeException("Failed to parse API response", e);
         }
     }
-
+    //todo
     public ApiResponse<?> parseErrorResponse(APIResponse response) {
         try {
             String responseText = response.text();

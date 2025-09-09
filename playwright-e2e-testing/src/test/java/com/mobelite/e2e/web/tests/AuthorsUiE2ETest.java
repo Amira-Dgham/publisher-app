@@ -11,12 +11,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
+import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHORS_BASE;
+import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHOR_BY_ID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("Author Management")
@@ -26,25 +26,23 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 public class AuthorsUiE2ETest extends BaseTest {
 
-    private AuthorPage authorsPage;
-    private AuthorApiEndPoint authorApi;
-    private AuthorFixtures authorFixtures;
+    private final AuthorPage authorsPage= new AuthorPage(page);
+    private final AuthorApiEndPoint authorApi= new AuthorApiEndPoint();;
+    private final AuthorFixtures authorFixtures = new AuthorFixtures();;
 
     @BeforeEach
     void setup() {
-        authorsPage = new AuthorPage(page);
-        authorApi = new AuthorApiEndPoint();
         authorApi.init(api); // Initialize ApiClient and shared entity
-        authorFixtures = new AuthorFixtures();
         navigateTo("/authors");
+    }
+
+    @AfterEach
+    void tearDown() {
+        takeScreenshot("AuthorFormTest");
+        authorApi.cleanUpEach(AUTHOR_BY_ID);
 
     }
 
-    @org.junit.jupiter.api.AfterEach
-    void cleanup() {
-        authorApi.cleanUpEach();
-        authorApi.tearDown();
-    }
 
     @Test
     @DisplayName("Load authors table and verify pagination")
@@ -62,7 +60,7 @@ public class AuthorsUiE2ETest extends BaseTest {
 
         assertTrue(authorsPage.isPaginatorVisible());
 
-        var pageData = authorApi.getAllAndValidate(authorApi.getBaseEndpoint());
+        var pageData = authorApi.getAllAndValidate(AUTHORS_BASE);
         log.info("mira api size"+pageData.getContent().size());
         authorsPage.verifyTableRowCount(pageData.getContent().size());
 
@@ -103,7 +101,7 @@ public class AuthorsUiE2ETest extends BaseTest {
     @DisplayName("Delete author via UI")
     void deleteAuthor() {
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
-        Author created = authorApi.createAndValidate(request, authorApi.getBaseEndpoint());
+        Author created = authorApi.createAndValidate(request, AUTHORS_BASE);
 
         page.reload();
         authorsPage.waitForTableToLoad();
@@ -114,7 +112,7 @@ public class AuthorsUiE2ETest extends BaseTest {
         authorsPage.waitForTableToLoad();
         assertFalse(authorsPage.isAuthorInTable(created.getName(), null, null));
 
-        APIResponse response = api.get(authorApi.getBaseEndpoint() + "/" + created.getId());
+        APIResponse response = api.get(AUTHORS_BASE + "/" + created.getId());
         assertEquals(404, response.status(), "Author should not exist");
 
         log.info("Author deleted successfully via UI: {}", created.getName());

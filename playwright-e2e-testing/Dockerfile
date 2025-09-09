@@ -13,4 +13,4 @@ RUN mvn dependency:go-offline -B
 RUN mvn compile
 
 # Default command
-CMD ["mvn", "test"]
+CMD ["../scripts/wait-for-services.sh", "mvn", "test"]

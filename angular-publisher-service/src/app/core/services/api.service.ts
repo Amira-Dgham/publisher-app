@@ -8,6 +8,7 @@ export class ApiService {
   private axiosInstance: AxiosInstance;
 
   constructor(private loader: LoaderService) {
+    console.log('API Base URL:', environment.apiBaseUrl); // Debug log for base URL
     this.axiosInstance = axios.create({
       baseURL: environment.apiBaseUrl,
       headers: {

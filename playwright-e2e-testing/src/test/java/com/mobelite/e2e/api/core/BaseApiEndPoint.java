@@ -7,10 +7,12 @@ import com.mobelite.e2e.api.utils.PlaywrightSchemaValidator;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import com.microsoft.playwright.APIRequestContext;
+import com.mobelite.e2e.shared.constants.HttpStatusCodes;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Slf4j
 public abstract class BaseApiEndPoint<T, R> extends BaseTest {
@@ -22,48 +24,24 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
     // ---- Required per-entity ----
     protected abstract String getEntityName();
     protected abstract String getItemSchema();
-    protected abstract R createSharedEntityRequest();
     protected abstract TypeReference<ApiResponse<T>> getItemTypeReference();
     protected abstract TypeReference<ApiResponse<PageResponse<T>>> getPageTypeReference();
-    protected abstract String getBaseEndpoint();
-    protected abstract String getItemByIdEndpoint();
 
     // ---- Defaults ----
     protected String getPageResponseSchema() { return "/schemas/page-response-schema.json"; }
     protected String getApiResponseSchema() { return "/schemas/api-response-schema.json"; }
 
-    // ---- Optional shared entity creation ----
-    protected boolean shouldCreateSharedEntity() { return true; }
-
+   // todo
     public void init(APIRequestContext api) {
         this.apiClient = new ApiClient(api);
-
-        if (shouldCreateSharedEntity()) {
-            R request = createSharedEntityRequest();
-            if (request != null) {
-                this.sharedEntity = createAndValidate(request, getBaseEndpoint());
-                log.info("Shared {} created with ID: {}", getEntityName(), getId(sharedEntity));
-            } else {
-                log.warn("Shared entity creation skipped because createSharedEntityRequest() returned null");
-            }
-        }
     }
 
-    public void tearDown() {
-        if (sharedEntity != null) {
-            try {
-                deleteAndValidate(getId(sharedEntity), getItemByIdEndpoint());
-                log.info("Shared {} deleted: {}", getEntityName(), getId(sharedEntity));
-            } catch (Exception e) {
-                log.warn("Failed to delete shared {}: {}", getEntityName(), e.getMessage());
-            }
-        }
-    }
+    public void cleanUpEach(String cleanupUrl) {
 
-    public void cleanUpEach() {
         for (Long id : entitiesToCleanup) {
+            log.info("cleantup dattaa",id);
             try {
-                deleteAndValidate(id, getItemByIdEndpoint());
+                deleteAndValidate(id, cleanupUrl);
                 log.info("Cleaned up {} {}", getEntityName(), id);
             } catch (Exception e) {
                 log.warn("Failed to delete {} {}: {}", getEntityName(), id, e.getMessage());
@@ -74,7 +52,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
 
     // ---- Generic CRUD operations ----
     public ApiResponse<T> create(R request, String endpoint) {
-        return executeRequest(post(endpoint).body(request), 201, getItemTypeReference());
+        return executeRequest(new ApiRequestBuilder(apiClient, HttpMethod.POST, endpoint).body(request), HttpStatusCodes.STATUS_CREATED, getItemTypeReference());
     }
 
     public T createAndValidate(R request, String endpoint) {
@@ -88,7 +66,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
     }
 
     public ApiResponse<T> getById(Long id, String endpoint) {
-        return executeRequest(get(buildPath(endpoint, id)), 200, getItemTypeReference());
+        return executeRequest(new ApiRequestBuilder(apiClient, HttpMethod.GET,buildPath(endpoint, id)), 200, getItemTypeReference());
     }
 
     public T getByIdAndValidate(Long id, String endpoint) {
@@ -96,11 +74,11 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
     }
 
     public PageResponse<T> getAllAndValidate(String endpoint) {
-        return validateResponseStructure(executeRequest(get(endpoint), 200, getPageTypeReference()), getApiResponseSchema(), getPageResponseSchema(), getItemSchema(), "Operation successful");
+        return validateResponseStructure(executeRequest(new ApiRequestBuilder(apiClient, HttpMethod.GET,endpoint), 200, getPageTypeReference()), getApiResponseSchema(), getPageResponseSchema(), getItemSchema(), "Operation successful");
     }
 
     public ApiResponse<Void> delete(Long id, String endpoint) {
-        return executeRequest(delete(buildPath(endpoint, id)), 200, new TypeReference<ApiResponse<Void>>() {});
+        return executeRequest(new ApiRequestBuilder(apiClient, HttpMethod.DELETE,buildPath(endpoint, id)), 200, new TypeReference<ApiResponse<Void>>() {});
     }
 
     public ApiResponse<Void> deleteAndValidate(Long id, String endpoint) {
@@ -123,16 +101,6 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         return apiClient.parseErrorResponse(response);
     }
 
-    @SuppressWarnings("unchecked")
-    protected Long getId(T entity) {
-        try {
-            var idMethod = entity.getClass().getMethod("getId");
-            return (Long) idMethod.invoke(entity);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to extract ID from entity: " + entity, e);
-        }
-    }
-
     protected <U> U validateResponseStructure(ApiResponse<U> response, String apiSchema, String dataSchema, String contentSchema, String expectedMessage) {
         PlaywrightSchemaValidator.validateResponseAndData(response, apiSchema, dataSchema, contentSchema);
         ApiAssertions.assertSuccess(response);
@@ -141,11 +109,6 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         return response.getData();
     }
 
-    // --- HTTP builders ---
-    protected ApiRequestBuilder post(String endpoint) { return new ApiRequestBuilder(apiClient, HttpMethod.POST, endpoint); }
-    protected ApiRequestBuilder get(String endpoint) { return new ApiRequestBuilder(apiClient, HttpMethod.GET, endpoint); }
-    protected ApiRequestBuilder put(String endpoint) { return new ApiRequestBuilder(apiClient, HttpMethod.PUT, endpoint); }
-    protected ApiRequestBuilder delete(String endpoint) { return new ApiRequestBuilder(apiClient, HttpMethod.DELETE, endpoint); }
 
     protected String buildPath(String template, Object... params) {
         String path = template;

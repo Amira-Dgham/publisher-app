@@ -1,7 +1,6 @@
 package com.mobelite.e2e.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ public final class TestConfig {
     private final String apiBaseUrl;
     private final String webBaseUrl;
     private final String databaseUrl;
-    private final int timeout;
     private final boolean headless;
     private final ObjectMapper objectMapper;
 
@@ -27,7 +25,6 @@ public final class TestConfig {
         this.apiBaseUrl = props.getProperty("api.base.url");
         this.webBaseUrl = props.getProperty("web.base.url");
         this.databaseUrl = props.getProperty("database.url");
-        this.timeout = Integer.parseInt(props.getProperty("test.timeout", "30000"));
         this.headless = Boolean.parseBoolean(props.getProperty("browser.headless", "true"));
         this.objectMapper = createObjectMapper();
     }

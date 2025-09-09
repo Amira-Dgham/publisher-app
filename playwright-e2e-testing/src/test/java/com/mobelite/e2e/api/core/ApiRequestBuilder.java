@@ -31,29 +31,6 @@ public class ApiRequestBuilder {
         return this;
     }
 
-    public ApiRequestBuilder header(String key, String value) {
-        headers.put(key, value);
-        return this;
-    }
-
-    public ApiRequestBuilder headers(Map<String, String> headers) {
-        if (headers != null) headers.forEach(this::header);
-        return this;
-    }
-
-    public ApiRequestBuilder queryParam(String key, String value) {
-        queryParams.put(key, value);
-        return this;
-    }
-
-    public ApiRequestBuilder auth(String token) {
-        return header("Authorization", "Bearer " + token);
-    }
-
-    public ApiRequestBuilder apiKey(String keyName, String apiKey) {
-        return header(keyName, apiKey);
-    }
-
     // --- Execution ---
     @Step("Execute {method} {endpoint}")
     public APIResponse execute() {

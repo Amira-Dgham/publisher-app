@@ -70,12 +70,4 @@ public class AuthorFixtures {
         );
     }
 
-    @Step("Create duplicate author request from existing AuthorRequest")
-    public AuthorRequest createDuplicateFromRequest(AuthorRequest existing) {
-        return createAuthorRequest(
-                existing.getName(),
-                existing.getBirthDate(),
-                existing.getNationality()
-        );
-    }
 }
