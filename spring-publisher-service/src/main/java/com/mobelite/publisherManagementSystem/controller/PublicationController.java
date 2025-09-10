@@ -37,7 +37,14 @@ public class PublicationController {
     public ResponseEntity<ApiResponseDto<PublicationResponseDto>> getPublicationById(
             @Parameter(description = "Publication ID") @PathVariable Long id) {
         PublicationResponseDto response = publicationService.getPublicationById(id);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        ApiResponseDto<PublicationResponseDto> apiResponse = ApiResponseDto.<PublicationResponseDto>builder()
+                .success(true)
+                .message("Publication retrieved successfully")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping
@@ -45,14 +52,28 @@ public class PublicationController {
     public ResponseEntity<ApiResponseDto<Page<PublicationSummaryResponseDto>>> getAllPublications(
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
         Page<PublicationSummaryResponseDto> response = publicationService.getAllPublications(pageable);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        ApiResponseDto<Page<PublicationSummaryResponseDto>> apiResponse = ApiResponseDto.<Page<PublicationSummaryResponseDto>>builder()
+                .success(true)
+                .message("Publications retrieved successfully")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/grouped")
     @Operation(summary = "Get grouped publications", description = "Retrieves all publications grouped by type (book or magazine)")
     public ResponseEntity<ApiResponseDto<GroupedPublicationsResponse>> getAllPublicationsGroupedByType() {
         GroupedPublicationsResponse response = publicationService.getAllPublicationsGroupedByType();
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        ApiResponseDto<GroupedPublicationsResponse> apiResponse = ApiResponseDto.<GroupedPublicationsResponse>builder()
+                .success(true)
+                .message("Publications grouped successfully")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/search/title")
@@ -61,15 +82,28 @@ public class PublicationController {
             @Parameter(description = "Title to search for") @RequestParam String title,
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
         Page<PublicationSummaryResponseDto> response = publicationService.searchPublicationsByTitle(title, pageable);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        ApiResponseDto<Page<PublicationSummaryResponseDto>> apiResponse = ApiResponseDto.<Page<PublicationSummaryResponseDto>>builder()
+                .success(true)
+                .message("Publications searched successfully")
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a publication", description = "Deletes a publication by its ID")
-    public ResponseEntity<Void> deletePublication(
+    public ResponseEntity<ApiResponseDto<Void>> deletePublication(
             @Parameter(description = "Publication ID") @PathVariable Long id) {
         publicationService.deletePublication(id);
-        return ResponseEntity.noContent().build();
+
+        ApiResponseDto<Void> apiResponse = ApiResponseDto.<Void>builder()
+                .success(true)
+                .message("Publication deleted successfully")
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}/exists")
@@ -77,7 +111,14 @@ public class PublicationController {
     public ResponseEntity<ApiResponseDto<Boolean>> existsById(
             @Parameter(description = "Publication ID") @PathVariable Long id) {
         boolean exists = publicationService.existsById(id);
-        return ResponseEntity.ok(ApiResponseDto.success(exists));
+
+        ApiResponseDto<Boolean> apiResponse = ApiResponseDto.<Boolean>builder()
+                .success(true)
+                .message("Existence check completed")
+                .data(exists)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/title/{title}/exists")
@@ -85,6 +126,13 @@ public class PublicationController {
     public ResponseEntity<ApiResponseDto<Boolean>> existsByTitle(
             @Parameter(description = "Publication title") @PathVariable String title) {
         boolean exists = publicationService.existsByTitle(title);
-        return ResponseEntity.ok(ApiResponseDto.success(exists));
+
+        ApiResponseDto<Boolean> apiResponse = ApiResponseDto.<Boolean>builder()
+                .success(true)
+                .message("Existence check by title completed")
+                .data(exists)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

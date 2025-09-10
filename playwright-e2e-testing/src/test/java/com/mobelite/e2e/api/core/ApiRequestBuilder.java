@@ -6,7 +6,6 @@ import com.mobelite.e2e.shared.constants.HttpMethod;
 import io.qameta.allure.Step;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -25,19 +24,16 @@ public class ApiRequestBuilder {
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> queryParams = new HashMap<>();
 
-    // --- Fluent builders ---
     public ApiRequestBuilder body(Object body) {
         this.body = body;
         return this;
     }
 
-    // --- Execution ---
     @Step("Execute {method} {endpoint}")
     public APIResponse execute() {
         return apiClient.execute(method, buildEndpointWithParams(), buildRequestOptions());
     }
 
-    // --- Internals ---
     private RequestOptions buildRequestOptions() {
         RequestOptions options = RequestOptions.create();
         headers.forEach(options::setHeader);

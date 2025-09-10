@@ -18,8 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -145,38 +148,51 @@ class AuthorServiceImplTest {
             // given
             List<Author> authors = createAuthorsWithPublications();
             List<AuthorResponseDto> expectedResponses = createAuthorResponseDtos();
+            Pageable pageable = PageRequest.of(0, 10);
 
-            given(authorRepository.findAllWithMagazines()).willReturn(authors);
+            given(authorRepository.findAllWithMagazines(pageable)).willReturn(new PageImpl<>(authors));
             given(authorMapper.toResponseDto(authors.get(0))).willReturn(expectedResponses.get(0));
             given(authorMapper.toResponseDto(authors.get(1))).willReturn(expectedResponses.get(1));
 
             // when
-            List<AuthorResponseDto> result = authorService.getAllAuthors();
+            Page<AuthorResponseDto> result = authorService.getAllAuthors(pageable);
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).hasSize(2);
-            assertThat(result.get(0).getName()).isEqualTo("John Doe");
-            assertThat(result.get(1).getName()).isEqualTo("Jane Smith");
+            assertThat(result.getContent()).hasSize(2);
+            
+            // Verify first author
+            AuthorResponseDto firstAuthor = result.getContent().get(0);
+            assertThat(firstAuthor.getName()).isEqualTo("John Doe");
+            assertThat(firstAuthor.getNationality()).isEqualTo("American");
+            
+            // Verify second author
+            AuthorResponseDto secondAuthor = result.getContent().get(1);
+            assertThat(secondAuthor.getName()).isEqualTo("Jane Smith");
+            assertThat(secondAuthor.getNationality()).isEqualTo("British");
 
-            verify(authorRepository).findAllWithMagazines();
-            verify(authorMapper, times(2)).toResponseDto(any(Author.class));
+            // Verify interactions
+            verify(authorRepository).findAllWithMagazines(pageable);
+            verify(authorMapper).toResponseDto(authors.get(0));
+            verify(authorMapper).toResponseDto(authors.get(1));
         }
 
         @Test
-        @DisplayName("Should return empty list when no authors exist")
+        @DisplayName("Should return empty page when no authors exist")
         void shouldReturnEmptyList_WhenNoAuthorsExist() {
             // given
-            given(authorRepository.findAllWithMagazines()).willReturn(Collections.emptyList());
+            Pageable pageable = PageRequest.of(0, 10);
+            given(authorRepository.findAllWithMagazines(pageable)).willReturn(new PageImpl<>(Collections.emptyList()));
 
             // when
-            List<AuthorResponseDto> result = authorService.getAllAuthors();
+            Page<AuthorResponseDto> result = authorService.getAllAuthors(pageable);
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).isEmpty();
+            assertThat(result.getContent()).isEmpty();
+            assertThat(result.getTotalElements()).isZero();
 
-            verify(authorRepository).findAllWithMagazines();
+            verify(authorRepository).findAllWithMagazines(pageable);
             verify(authorMapper, never()).toResponseDto(any());
         }
 
@@ -184,15 +200,16 @@ class AuthorServiceImplTest {
         @DisplayName("Should throw RuntimeException when repository throws exception")
         void shouldThrowRuntimeException_WhenRepositoryThrowsException() {
             // given
-            given(authorRepository.findAllWithMagazines()).willThrow(new RuntimeException("Database error"));
+            Pageable pageable = PageRequest.of(0, 10);
+            given(authorRepository.findAllWithMagazines(pageable)).willThrow(new RuntimeException("Database error"));
 
             // when & then
-            assertThatThrownBy(() -> authorService.getAllAuthors())
+            assertThatThrownBy(() -> authorService.getAllAuthors(pageable))
                     .isInstanceOf(RuntimeException.class)
                     .hasMessage("Failed to fetch authors")
                     .hasCauseInstanceOf(RuntimeException.class);
 
-            verify(authorRepository).findAllWithMagazines();
+            verify(authorRepository).findAllWithMagazines(pageable);
             verify(authorMapper, never()).toResponseDto(any());
         }
 
@@ -200,18 +217,19 @@ class AuthorServiceImplTest {
         @DisplayName("Should throw RuntimeException when mapper throws exception")
         void shouldThrowRuntimeException_WhenMapperThrowsException() {
             // given
+            Pageable pageable = PageRequest.of(0, 10);
             List<Author> authors = createAuthorsWithPublications();
-            given(authorRepository.findAllWithMagazines()).willReturn(authors);
+            given(authorRepository.findAllWithMagazines(pageable)).willReturn(new PageImpl<>(authors));
             given(authorMapper.toResponseDto(any(Author.class)))
                     .willThrow(new RuntimeException("Mapping error"));
 
             // when & then
-            assertThatThrownBy(() -> authorService.getAllAuthors())
+            assertThatThrownBy(() -> authorService.getAllAuthors(pageable))
                     .isInstanceOf(RuntimeException.class)
                     .hasMessage("Failed to fetch authors")
                     .hasCauseInstanceOf(RuntimeException.class);
 
-            verify(authorRepository).findAllWithMagazines();
+            verify(authorRepository).findAllWithMagazines(pageable);
             verify(authorMapper).toResponseDto(any(Author.class));
         }
 
@@ -219,21 +237,22 @@ class AuthorServiceImplTest {
         @DisplayName("Should handle authors with empty publications")
         void shouldHandleAuthors_WithEmptyPublications() {
             // given
+            Pageable pageable = PageRequest.of(0, 10);
             List<Author> authors = createAuthorsWithEmptyPublications();
             List<AuthorResponseDto> expectedResponses = createAuthorResponseDtos();
 
-            given(authorRepository.findAllWithMagazines()).willReturn(authors);
+            given(authorRepository.findAllWithMagazines(pageable)).willReturn(new PageImpl<>(authors));
             given(authorMapper.toResponseDto(authors.get(0))).willReturn(expectedResponses.get(0));
 
             // when
-            List<AuthorResponseDto> result = authorService.getAllAuthors();
+            Page<AuthorResponseDto> result = authorService.getAllAuthors(pageable);
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).hasSize(1);
-            assertThat(result.get(0).getName()).isEqualTo("John Doe");
+            assertThat(result.getContent()).hasSize(1);
+            assertThat(result.getContent().get(0).getName()).isEqualTo("John Doe");
 
-            verify(authorRepository).findAllWithMagazines();
+            verify(authorRepository).findAllWithMagazines(pageable);
             verify(authorMapper).toResponseDto(any(Author.class));
         }
     }

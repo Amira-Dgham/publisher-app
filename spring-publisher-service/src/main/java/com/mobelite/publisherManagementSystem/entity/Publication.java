@@ -7,10 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-/**
- * Abstract base entity for all publications in the library system.
- * Uses SINGLE_TABLE inheritance strategy for better performance.
- */
+
 @Entity
 @Table(name = "publications", uniqueConstraints = {
         @UniqueConstraint(columnNames = "title")

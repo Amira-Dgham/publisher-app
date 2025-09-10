@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Model representing a Publication for E2E testing.
- * Mirrors the structure of the Spring service Publication entity.
- * This is the base class for Book and Magazine.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

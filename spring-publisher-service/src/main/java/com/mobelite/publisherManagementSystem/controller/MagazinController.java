@@ -42,8 +42,16 @@ public class MagazinController {
     )
     public ResponseEntity<ApiResponseDto<MagazineResponseDto>> createMagazine(
             @Valid @RequestBody MagazineRequestDto requestDto) {
-        MagazineResponseDto responseDto = magazineService.createMagazine(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseDto.success(responseDto));
+
+        MagazineResponseDto createdMagazine = magazineService.createMagazine(requestDto);
+
+        ApiResponseDto<MagazineResponseDto> response = ApiResponseDto.<MagazineResponseDto>builder()
+                .success(true)
+                .message("Magazine created successfully")
+                .data(createdMagazine)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
@@ -54,8 +62,16 @@ public class MagazinController {
     public ResponseEntity<ApiResponseDto<MagazineResponseDto>> updateMagazine(
             @Parameter(description = "Magazine ID", required = true) @PathVariable Long id,
             @Valid @RequestBody MagazineRequestDto requestDto) {
-        MagazineResponseDto responseDto = magazineService.updateMagazine(id, requestDto);
-        return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+
+        MagazineResponseDto updatedMagazine = magazineService.updateMagazine(id, requestDto);
+
+        ApiResponseDto<MagazineResponseDto> response = ApiResponseDto.<MagazineResponseDto>builder()
+                .success(true)
+                .message("Magazine updated successfully")
+                .data(updatedMagazine)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -65,8 +81,16 @@ public class MagazinController {
     )
     public ResponseEntity<ApiResponseDto<MagazineResponseDto>> getMagazineById(
             @Parameter(description = "Magazine ID", required = true) @PathVariable Long id) {
-        MagazineResponseDto responseDto = magazineService.getMagazineById(id);
-        return ResponseEntity.ok(ApiResponseDto.success(responseDto));
+
+        MagazineResponseDto magazine = magazineService.getMagazineById(id);
+
+        ApiResponseDto<MagazineResponseDto> response = ApiResponseDto.<MagazineResponseDto>builder()
+                .success(true)
+                .message("Magazine retrieved successfully")
+                .data(magazine)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
@@ -82,7 +106,14 @@ public class MagazinController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
         Page<MagazineSummaryResponseDto> magazines = magazineService.getAllMagazines(pageable);
-        return ResponseEntity.ok(ApiResponseDto.success(magazines));
+
+        ApiResponseDto<Page<MagazineSummaryResponseDto>> response = ApiResponseDto.<Page<MagazineSummaryResponseDto>>builder()
+                .success(true)
+                .message("Magazines retrieved successfully")
+                .data(magazines)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -90,9 +121,17 @@ public class MagazinController {
             summary = "Delete magazine",
             description = "Deletes a magazine by its unique identifier"
     )
-    public ResponseEntity<Void> deleteMagazine(
+    public ResponseEntity<ApiResponseDto<Void>> deleteMagazine(
             @Parameter(description = "Magazine ID", required = true) @PathVariable Long id) {
+
         magazineService.deleteMagazine(id);
-        return ResponseEntity.noContent().build();
+
+        ApiResponseDto<Void> response = ApiResponseDto.<Void>builder()
+                .success(true)
+                .message("Magazine deleted successfully")
+                .data(null)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

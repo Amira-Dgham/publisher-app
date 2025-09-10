@@ -11,10 +11,7 @@ import com.mobelite.publisherManagementSystem.entity.Book;
 import com.mobelite.publisherManagementSystem.entity.Magazine;
 import org.mapstruct.*;
 
-/**
- * MapStruct mapper for Publication entity.
- * Handles mapping between DTOs and entities.
- */
+
 @Mapper(componentModel = "spring")
 public interface PublicationMapper {
 

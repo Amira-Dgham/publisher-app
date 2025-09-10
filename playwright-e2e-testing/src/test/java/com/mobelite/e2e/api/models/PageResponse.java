@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * PageResponse model for E2E testing that mirrors Spring's Page structure.
- * Used for paginated API responses.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package com.mobelite.e2e.api.utils;
+package com.mobelite.e2e.shared.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobelite.e2e.config.TestConfig;

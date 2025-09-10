@@ -14,9 +14,6 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    @EntityGraph(attributePaths = {"magazines"})
-    @Query("SELECT a FROM Author a")
-    List<Author> findAllWithMagazines();
 
     @EntityGraph(attributePaths = {"magazines"})
     @Query("SELECT a FROM Author a")
