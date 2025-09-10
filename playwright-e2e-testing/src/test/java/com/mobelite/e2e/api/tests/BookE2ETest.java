@@ -102,7 +102,7 @@ public class BookE2ETest extends BaseTest {
     @DisplayName("Delete book successfully")
     void deleteBook() {
         BookRequest request = bookFixtures.createValidBookRequest(sharedAuthor.getId());
-        Book created = bookApi.createBook(request);
+        Book created = bookApi.createBook(request,false);
 
         ApiResponse<Void> response = bookApi.deleteBook(created.getId());
         ApiAssertions.assertSuccess(response);

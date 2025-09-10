@@ -50,11 +50,6 @@ public class AuthorPageActions {
                 .locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_DELETE_BUTTON + "']").click();
     }
 
-    public void clickEditForAuthor(String authorName) {
-        page.locator(AuthorPageLocators.rowByAuthorName(authorName))
-                .locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_EDIT_BUTTON + "']").click();
-    }
-
     public void confirmDelete() {
         page.locator(AuthorPageLocators.DELETE_CONFIRM).locator("button[label='Confirm']").click();
     }

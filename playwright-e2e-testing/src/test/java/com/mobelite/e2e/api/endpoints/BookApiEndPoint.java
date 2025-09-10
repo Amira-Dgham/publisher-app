@@ -2,7 +2,7 @@ package com.mobelite.e2e.api.endpoints;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.e2e.api.core.BaseApiEndPoint;
 import com.mobelite.e2e.api.models.*;
-        import com.mobelite.e2e.api.models.request.BookRequest;
+import com.mobelite.e2e.api.models.request.BookRequest;
 
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;
 
@@ -26,9 +26,17 @@ public class BookApiEndPoint extends BaseApiEndPoint<Book, BookRequest> {
 
     // --- Convenience wrappers ---
 
+    // Default method: tracks created author
     public Book createBook(BookRequest request) {
+        return createBook(request, true);
+    }
+
+    // Overloaded method: optional tracking
+    public Book createBook(BookRequest request, boolean trackForCleanup) {
         Book book = createAndValidate(request, BOOKS_BASE);
-        trackForCleanup(book.getId());
+        if (trackForCleanup) {
+            trackForCleanup(book.getId());
+        }
         return book;
     }
 

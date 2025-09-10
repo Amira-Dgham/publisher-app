@@ -60,11 +60,4 @@ public class AuthorPageAssertions {
         return page.locator(AuthorPageLocators.NAME_MIN_LENGTH_ERROR).isVisible();
     }
 
-    public boolean isNameMaxLengthErrorVisible() {
-        return page.locator(AuthorPageLocators.NAME_MAX_LENGTH_ERROR).isVisible();
-    }
-
-    public boolean isNationalityMaxLengthErrorVisible() {
-        return page.locator(AuthorPageLocators.NATIONALITY_MAX_LENGTH_ERROR).isVisible();
-    }
 }

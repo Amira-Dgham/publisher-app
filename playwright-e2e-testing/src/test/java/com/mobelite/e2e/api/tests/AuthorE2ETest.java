@@ -109,7 +109,7 @@ public class AuthorE2ETest extends BaseTest {
     void deleteAuthor() {
         log.info("6 amira");
 
-        Author created = authorApi.createAuthor(authorFixtures.createValidAuthorRequest());
+        Author created = authorApi.createAuthor(authorFixtures.createValidAuthorRequest(),false);
         authorApi.deleteAuthor(created.getId());
         log.info("Author deleted successfully: {}", created.getId());
     }

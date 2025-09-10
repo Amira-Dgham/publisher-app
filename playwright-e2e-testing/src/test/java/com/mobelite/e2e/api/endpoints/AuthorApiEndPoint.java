@@ -24,10 +24,21 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
     protected TypeReference<ApiResponse<PageResponse<Author>>> getPageTypeReference() { return new TypeReference<>() {}; }
 
     // -------- Convenience wrappers --------
+    public PageResponse<Author> getAllAuthors() {
+        return getAllAndValidate(AUTHORS_BASE);
+    }
 
+    // Default method: tracks created author
     public Author createAuthor(AuthorRequest request) {
+        return createAuthor(request, true);
+    }
+
+    // Overloaded method: optional tracking
+    public Author createAuthor(AuthorRequest request, boolean trackForCleanup) {
         Author author = createAndValidate(request, AUTHORS_BASE);
-        trackForCleanup(author.getId());
+        if (trackForCleanup) {
+            trackForCleanup(author.getId());
+        }
         return author;
     }
 
@@ -47,6 +58,11 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
     }
 
     // -------- Request builders for negative/error cases --------
+
+    public ApiResponse<?> getNonExistentAuthor(Long id,int expectedStatus) {
+        return executeInvalidGet(id, AUTHOR_BY_ID, expectedStatus);
+    }
+
     public ApiResponse<?> createInvalidAuthor(AuthorRequest request, int expectedStatus) {
         return executeInvalidPost(request, AUTHORS_BASE, expectedStatus);
     }

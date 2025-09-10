@@ -6,7 +6,6 @@ import com.mobelite.e2e.shared.constants.AuthorTestIds;
 public class AuthorPageLocators {
 
     public static final String TABLE = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE + "']";
-    public static final String TABLE_HEADER = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE_HEADER + "']";
     public static final String TABLE_ROW = "tr[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE_ROW + "']";
     public static final String ADD_AUTHOR_BUTTON = "[data-testid='" + AuthorTestIds.AUTHORS.ADD_AUTHOR_BUTTON + "']";
     public static final String PAGINATOR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_PAGINATOR + "']";
@@ -21,8 +20,6 @@ public class AuthorPageLocators {
     // Error messages
     public static final String NAME_REQUIRED_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_REQUIRED_ERROR + "']";
     public static final String NAME_MIN_LENGTH_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_MIN_LENGTH_ERROR + "']";
-    public static final String NAME_MAX_LENGTH_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_MAX_LENGTH_ERROR + "']";
-    public static final String NATIONALITY_MAX_LENGTH_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NATIONALITY_MAX_LENGTH_ERROR + "']";
 
     // Smart locators
     public static String rowByAuthorName(String name) {

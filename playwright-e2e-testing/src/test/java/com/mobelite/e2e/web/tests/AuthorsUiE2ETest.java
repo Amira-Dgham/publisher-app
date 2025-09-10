@@ -5,18 +5,14 @@ import com.mobelite.e2e.api.fixtures.AuthorFixtures;
 import com.mobelite.e2e.api.models.Author;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
 import com.mobelite.e2e.config.BaseTest;
-
-import com.microsoft.playwright.APIResponse;
 import com.mobelite.e2e.web.pages.actions.AuthorPageActions;
 import com.mobelite.e2e.web.pages.assertions.AuthorPageAssertions;
 import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
-
 import java.util.List;
-
-import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHORS_BASE;
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHOR_BY_ID;
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.STATUS_NOT_FOUND;
 import static com.mobelite.e2e.shared.constants.PagesNavigate.AUTHORS_NAVIGATE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,7 +58,7 @@ public class AuthorsUiE2ETest extends BaseTest {
         assertEquals("Magazines", headers.get(4));
         assertTrue(asserts.isPaginatorVisible());
 
-        var pageData = authorApi.getAllAndValidate(AUTHORS_BASE);
+        var pageData = authorApi.getAllAuthors();
         asserts.verifyTableRowCount(pageData.getContent().size());
         log.info("Authors table loaded successfully with pagination");
     }
@@ -96,7 +92,7 @@ public class AuthorsUiE2ETest extends BaseTest {
     @DisplayName("Delete author via UI")
     void deleteAuthor() {
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
-        Author created = authorApi.createAndValidate(request, AUTHORS_BASE);
+        Author created = authorApi.createAuthor(request, false);
 
         page.reload();
         actions.waitForTableToLoad();
@@ -107,9 +103,7 @@ public class AuthorsUiE2ETest extends BaseTest {
         actions.waitForTableToLoad();
 
         assertFalse(asserts.isAuthorInTable(created.getName(), null, null));
-
-        APIResponse response = api.get(AUTHORS_BASE + "/" + created.getId());
-        assertEquals(404, response.status(), "Author should not exist");
+        authorApi.getNonExistentAuthor(created.getId(), STATUS_NOT_FOUND);
         log.info("Author deleted successfully via UI: {}", created.getName());
     }
 

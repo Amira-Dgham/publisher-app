@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.concurrent.ThreadLocalRandom;
+import static com.mobelite.e2e.shared.helpers.GenerateData.generateRandomDateInYear;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
@@ -17,20 +17,11 @@ public class BookFixtures {
     private static final AtomicLong counter = new AtomicLong(1);
     private static final String TEST_BOOK_PREFIX = "TEST_BOOK_";
 
-    // ---------------------- FACTORY METHODS ---------------------- //
-
-    private static LocalDate randomPublicationDate() {
-        int year = ThreadLocalRandom.current().nextInt(1900, LocalDate.now().getYear() + 1);
-        int month = ThreadLocalRandom.current().nextInt(1, 13);
-        int day = ThreadLocalRandom.current().nextInt(1, Month.of(month).length(false) + 1);
-        return LocalDate.of(year, month, day);
-    }
-
     @Step("Create valid book request")
     public static BookRequest createValidBookRequest(Long authorId) {
         return BookRequest.builder()
                 .title(faker.book().title() + "_" + counter.getAndIncrement())
-                .publicationDate(randomPublicationDate())
+                .publicationDate(generateRandomDateInYear(2000))
                 .isbn(faker.number().digits(13)) // valid ISBN-like number
                 .authorId(authorId)
                 .build();
@@ -50,7 +41,7 @@ public class BookFixtures {
     public static BookRequest createBookRequestWithInvalidISBN(Long authorId) {
         return BookRequest.builder()
                 .title("InvalidISBN_" + counter.getAndIncrement())
-                .publicationDate(randomPublicationDate())
+                .publicationDate(generateRandomDateInYear(1900))
                 .isbn("INVALID") // deliberately invalid
                 .authorId(authorId)
                 .build();
@@ -60,7 +51,7 @@ public class BookFixtures {
     public static BookRequest createBookRequestWithEmptyTitle(Long authorId) {
         return BookRequest.builder()
                 .title("") // invalid
-                .publicationDate(randomPublicationDate())
+                .publicationDate(generateRandomDateInYear(1900))
                 .isbn(faker.number().digits(13))
                 .authorId(authorId)
                 .build();

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mobelite.e2e.shared.helpers.ApiUtils.buildPath;
+
 @Slf4j
 public abstract class BaseApiEndPoint<T, R> extends BaseTest {
 
@@ -41,7 +42,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         for (Long id : entitiesToCleanup) {
             try {
                 // Attempt deletion only
-                deleteAndValidateIgnoreNotFound(id, cleanupUrl);
+                deleteAndValidate(id, cleanupUrl);
                 log.info("Cleaned up {} {}", getEntityName(), id);
             } catch (Exception e) {
                 log.warn("Failed to delete {} {}: {}", getEntityName(), id, e.getMessage());
@@ -94,27 +95,13 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         return response;
     }
 
-    private void deleteAndValidateIgnoreNotFound(Long id, String endpoint) {
-        try {
-            ApiResponse<Void> response = apiClient.executeAndValidate(
-                    new ApiRequestBuilder(apiClient, HttpMethod.DELETE, buildPath(endpoint, id)),
-                    new TypeReference<ApiResponse<Void>>() {
-                    },
-                    getApiResponseSchema(),
-                    null,
-                    null
-            );
-            ApiAssertions.assertMessageContains(response, "deleted successfully");
-        } catch (AssertionError ae) {
-            if (ae.getMessage().contains("Expected HTTP status 200 but was 404")) {
-                log.warn("{} {} already deleted, skipping", getEntityName(), id);
-            } else {
-                throw ae;
-            }
-        }
+    // ---- Negative GET (expect failure) ----
+    public ApiResponse<?> executeInvalidGet(Long id, String endpoint, int expectedStatus) {
+        var response = new ApiRequestBuilder(apiClient, HttpMethod.GET, buildPath(endpoint, id)).execute();
+        ApiAssertions.assertStatus(response, expectedStatus);
+        return apiClient.parseErrorResponse(response);
     }
 
-    // ---- Error requests ----
     public ApiResponse<?> executeInvalidPost(R request, String endpoint, int expectedStatus) {
         var response = new ApiRequestBuilder(apiClient, HttpMethod.POST, endpoint).body(request).execute();
         ApiAssertions.assertStatus(response, expectedStatus);
