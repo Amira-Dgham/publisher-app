@@ -7,52 +7,37 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 
+@Slf4j
 public class PlaywrightSchemaValidator {
 
     private static final ObjectMapper mapper = TestConfig.getInstance().getObjectMapper();
 
+    /**
+     * Validates a response object against wrapper and data/content schemas.
+     */
     public static void validateResponseAndData(Object response,
                                                String responseSchemaPath,
                                                String dataSchemaPath,
                                                String contentSchemaPath) {
         try {
-            // Serialize response object to JSON
+            // Convert response object to JSONObject
             String json = mapper.writeValueAsString(response);
             JSONObject jsonResponse = new JSONObject(json);
 
-            // 1. Validate wrapper (ApiResponse)
+            // Validate wrapper (ApiResponse)
             validateAgainstSchema(jsonResponse, responseSchemaPath);
+            log.info("Wrapper schema validation passed: {}", responseSchemaPath);
 
-            // 2. Validate "data" if schema is provided
+            // Validate "data" field if provided
             if (dataSchemaPath != null && jsonResponse.has("data") && !jsonResponse.isNull("data")) {
                 Object dataNode = jsonResponse.get("data");
-
-                if (dataNode instanceof JSONObject jsonData) {
-                    System.out.println("[INFO] Validating 'data' object against schema: " + dataSchemaPath);
-                    validateAgainstSchema(jsonData, dataSchemaPath);
-
-                    // 3. If "content" exists and contentSchemaPath is provided → validate each element
-                    if (contentSchemaPath != null && jsonData.has("content")) {
-                        JSONArray contentArray = jsonData.getJSONArray("content");
-                        for (int i = 0; i < contentArray.length(); i++) {
-                            System.out.println("[DEBUG] Validating 'content' element index " + i +
-                                    " against schema: " + contentSchemaPath);
-                            validateAgainstSchema(contentArray.getJSONObject(i), contentSchemaPath);
-                        }
-                    }
-                } else if (dataNode instanceof JSONArray jsonArray) {
-                    System.out.println("[INFO] Validating array of 'data' objects against schema: " + dataSchemaPath);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        validateAgainstSchema(jsonArray.getJSONObject(i), dataSchemaPath);
-                    }
-                } else {
-                    System.out.println("[WARN] 'data' field is neither JSONObject nor JSONArray. Skipping schema validation for 'data'");
-                }
+                validateDataNode(dataNode, dataSchemaPath, contentSchemaPath);
             } else {
-                System.out.println("[INFO] No 'data' field to validate or dataSchemaPath is null.");
+                log.info("No 'data' field to validate or dataSchemaPath is null.");
             }
 
         } catch (Exception e) {
@@ -61,16 +46,45 @@ public class PlaywrightSchemaValidator {
     }
 
     /**
-     * Validates a JSON object against a schema.
+     * Validates a JSONObject or JSONArray data node.
+     */
+    private static void validateDataNode(Object dataNode, String dataSchemaPath, String contentSchemaPath) {
+        if (dataNode instanceof JSONObject jsonData) {
+            log.info("Validating 'data' object against schema: {}", dataSchemaPath);
+            validateAgainstSchema(jsonData, dataSchemaPath);
+
+            if (contentSchemaPath != null && jsonData.has("content")) {
+                JSONArray contentArray = jsonData.getJSONArray("content");
+                for (int i = 0; i < contentArray.length(); i++) {
+                    log.debug("Validating 'content' element index {} against schema: {}", i, contentSchemaPath);
+                    validateAgainstSchema(contentArray.getJSONObject(i), contentSchemaPath);
+                }
+            }
+
+        } else if (dataNode instanceof JSONArray jsonArray) {
+            log.info("Validating array of 'data' objects against schema: {}", dataSchemaPath);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                validateAgainstSchema(jsonArray.getJSONObject(i), dataSchemaPath);
+            }
+
+        } else {
+            log.warn("'data' field is neither JSONObject nor JSONArray. Skipping schema validation.");
+        }
+    }
+
+    /**
+     * Validates a JSON object against a schema file.
      */
     public static void validateAgainstSchema(JSONObject json, String schemaPath) {
         try (InputStream schemaStream = PlaywrightSchemaValidator.class.getResourceAsStream(schemaPath)) {
             if (schemaStream == null) {
                 throw new IllegalArgumentException("Schema not found: " + schemaPath);
             }
+
             JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(json); // throws ValidationException if invalid
+
         } catch (Exception e) {
             throw new RuntimeException("Schema validation failed for schema: " + schemaPath, e);
         }
