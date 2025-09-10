@@ -5,11 +5,10 @@ import com.mobelite.e2e.api.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
-
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
+import static com.mobelite.e2e.shared.helpers.GenerateData.generateRandomBirthDate;
+
 
 @Slf4j
 public class AuthorFixtures {
@@ -18,8 +17,6 @@ public class AuthorFixtures {
     private static final String TEST_AUTHOR_PREFIX = "TEST_AUTHOR_";
     private static final Faker faker = new Faker();
 
-    // ---------------------- AUTHOR REQUEST FACTORY ---------------------- //
-
     @Step("Create author request")
     public AuthorRequest createAuthorRequest(String name, LocalDate birthDate, String nationality) {
         return AuthorRequest.builder()
@@ -27,14 +24,6 @@ public class AuthorFixtures {
                 .birthDate(birthDate)
                 .nationality(nationality)
                 .build();
-    }
-
-    private static LocalDate generateRandomBirthDate(int minAge, int maxAge) {
-        int currentYear = LocalDate.now().getYear();
-        int randomYear = ThreadLocalRandom.current().nextInt(currentYear - maxAge, currentYear - minAge + 1);
-        int month = ThreadLocalRandom.current().nextInt(1, 13);
-        int day = ThreadLocalRandom.current().nextInt(1, Month.of(month).length(false) + 1);
-        return LocalDate.of(randomYear, month, day);
     }
 
     @Step("Create valid author request with Faker")
@@ -59,8 +48,6 @@ public class AuthorFixtures {
         return createAuthorRequest(name, birthDate, nationality);
     }
 
-    // ---------------------- REUSE EXISTING AUTHOR ---------------------- //
-
     @Step("Create duplicate author request from existing Author")
     public AuthorRequest createDuplicateFromAuthor(Author existing) {
         return createAuthorRequest(
@@ -70,12 +57,4 @@ public class AuthorFixtures {
         );
     }
 
-    @Step("Create duplicate author request from existing AuthorRequest")
-    public AuthorRequest createDuplicateFromRequest(AuthorRequest existing) {
-        return createAuthorRequest(
-                existing.getName(),
-                existing.getBirthDate(),
-                existing.getNationality()
-        );
-    }
 }

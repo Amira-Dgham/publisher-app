@@ -1,26 +1,18 @@
 package com.mobelite.publisherManagementSystem.controller;
 
-// Jakarta/Javax imports
 import jakarta.validation.Valid;
 
-// Lombok imports
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-// Spring Framework imports
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-// Swagger/OpenAPI imports
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-// Application-specific imports
 import com.mobelite.publisherManagementSystem.dto.request.author.AuthorRequestDto;
 import com.mobelite.publisherManagementSystem.dto.response.ApiResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.author.AuthorResponseDto;

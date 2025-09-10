@@ -1,5 +1,5 @@
 package com.mobelite.e2e.shared.constants;
-public class TestIds {
+public class AuthorTestIds {
     public static class AUTHORS {
         public static final String AUTHORS_TABLE = "authors-table";
         public static final String AUTHORS_TABLE_HEADER = "authors-table-header";

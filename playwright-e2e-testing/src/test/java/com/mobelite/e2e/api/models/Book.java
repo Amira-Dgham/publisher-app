@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * Model representing a Book for E2E testing.
- * Mirrors the structure of the Spring service Book entity and DTOs.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

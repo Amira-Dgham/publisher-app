@@ -39,13 +39,9 @@ import static org.mockito.Mockito.*;
 @DisplayName("PublicationServiceImpl Unit Tests")
 class PublicationServiceImplTest {
 
-    // Concrete test implementation of the abstract Publication class
     private static class TestPublication extends Publication {
-        // No additional implementation needed for basic testing
     }
 
-    @Mock
-    private AuthorRepository authorRepository;
 
     @Mock
     private PublicationRepository publicationRepository;

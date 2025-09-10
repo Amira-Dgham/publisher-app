@@ -1,22 +1,17 @@
 package com.mobelite.e2e.api.tests;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.e2e.api.core.ApiAssertions;
-import com.mobelite.e2e.api.core.ApiClient;
-import com.mobelite.e2e.api.core.ApiRequestBuilder;
+import com.mobelite.e2e.api.endpoints.AuthorApiEndPoint;
+import com.mobelite.e2e.api.endpoints.BookApiEndPoint;
 import com.mobelite.e2e.api.fixtures.AuthorFixtures;
 import com.mobelite.e2e.api.fixtures.BookFixtures;
 import com.mobelite.e2e.api.models.*;
-import com.mobelite.e2e.api.models.request.BookRequest;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
-import com.mobelite.e2e.api.core.BaseApiEndPoint;
-import com.mobelite.e2e.shared.constants.HttpMethod;
+import com.mobelite.e2e.api.models.request.BookRequest;
+import com.mobelite.e2e.config.BaseTest;
 import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,148 +22,109 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Book API E2E Tests")
 @Slf4j
-public class BookE2ETest extends BaseApiEndPoint<Book, BookRequest> {
+public class BookE2ETest extends BaseTest {
 
+    private final BookApiEndPoint bookApi = new BookApiEndPoint();
+    private final AuthorApiEndPoint authorApi = new AuthorApiEndPoint();
     private final BookFixtures bookFixtures = new BookFixtures();
     private final AuthorFixtures authorFixtures = new AuthorFixtures();
-
-    private Author sharedAuthor; // shared author for all books
-
-    private final List<Long> booksToCleanup = new ArrayList<>();
-
-    // ---- Implement abstract methods ----
-    @Override protected String getEntityName() { return "Book"; }
-    @Override protected String getBaseEndpoint() { return BOOKS_BASE; }
-    @Override protected String getItemByIdEndpoint() { return BOOKS_BY_ID; }
-    @Override protected String getItemSchema() { return "/schemas/book-schema.json"; }
-    @Override protected BookRequest createSharedEntityRequest() { return null; } // skip shared book
-    @Override protected TypeReference<ApiResponse<Book>> getItemTypeReference() { return new TypeReference<>() {}; }
-    @Override protected TypeReference<ApiResponse<PageResponse<Book>>> getPageTypeReference() { return new TypeReference<>() {}; }
-
-    @Override
-    protected boolean shouldCreateSharedEntity() { return false; } // no shared book
+    private Author sharedAuthor;
 
     @BeforeAll
-    void setupSharedAuthor() {
-        // Ensure apiClient is initialized
-        if (this.apiClient == null) {
-            this.apiClient = new ApiClient(api);
-        }
+    void setUpAll() {
+        bookApi.init(api);
+        authorApi.init(api);
 
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
-        ApiResponse<Author> response =executeRequest(
-                new ApiRequestBuilder(apiClient, HttpMethod.POST, AUTHORS_BASE).body(request),
-                201,
-                new TypeReference<ApiResponse<Author>>() {}
-        );
+        sharedAuthor = authorApi.createAuthor(request);
+    }
 
-        sharedAuthor = response.getData();
-        log.info("Shared author created for books with ID: {}", sharedAuthor.getId());
+    @AfterEach
+    void tearDownEach() {
+        bookApi.cleanUpEach(BOOKS_BY_ID);
     }
 
     @AfterAll
-    void cleanupSharedAuthor() {
-        if (sharedAuthor != null && sharedAuthor.getId() != null) {
-            try {
-                ApiResponse<Void> response = executeRequest(
-                        new ApiRequestBuilder(apiClient, HttpMethod.DELETE, buildPath(AUTHOR_BY_ID, sharedAuthor.getId())),
-                        200,
-                        new TypeReference<ApiResponse<Void>>() {}
-                );
-                ApiAssertions.assertMessageContains(response, "deleted successfully");
-                log.info("Shared author deleted: {}", sharedAuthor.getId());
-            } catch (Exception e) {
-                log.warn("Failed to delete shared author {}: {}", sharedAuthor.getId(), e.getMessage());
-            }
+    void cleanupShared() {
+        try {
+            authorApi.deleteAuthor(sharedAuthor.getId());
+            log.info("Cleaned up SHARED AUTHOR {}", sharedAuthor.getId());
+        } catch (Exception e) {
+            log.warn("Failed to delete SHARED AUTHOR {}: {}", sharedAuthor.getId(), e.getMessage());
         }
     }
-
-    // -------- CREATE TESTS -------- //
 
     @Test
     @DisplayName("Create book with valid data")
     void createBookWithValidData() {
         BookRequest request = bookFixtures.createValidBookRequest(sharedAuthor.getId());
-        Book created = createAndValidate(request, getBaseEndpoint());
-        trackForCleanup(created.getId());
+        Book created = bookApi.createBook(request);
 
         assertNotNull(created.getId());
         assertEquals(request.getTitle(), created.getTitle());
         assertEquals(request.getPublicationDate(), created.getPublicationDate());
         assertEquals(request.getIsbn(), created.getIsbn());
         assertEquals(sharedAuthor.getId(), created.getAuthor().getId());
-
-        log.info("Book created successfully: {}", created.getId());
     }
 
     @Test
     @DisplayName("Create book with minimal data")
     void createBookWithMinimalData() {
         BookRequest request = bookFixtures.createMinimalBookRequest(sharedAuthor.getId());
-        Book created = createAndValidate(request, getBaseEndpoint());
-        trackForCleanup(created.getId());
+        Book created = bookApi.createBook(request);
 
         assertNotNull(created.getId());
         assertEquals(request.getTitle(), created.getTitle());
-
-        log.info("Minimal book created successfully: {}", created.getId());
     }
-
-    // -------- READ TESTS -------- //
 
     @Test
     @DisplayName("Retrieve book by ID")
     void getBookById() {
         BookRequest request = bookFixtures.createValidBookRequest(sharedAuthor.getId());
-        Book created = createAndValidate(request, getBaseEndpoint());
-        trackForCleanup(created.getId());
+        Book created = bookApi.createBook(request);
 
-        Book retrieved = getByIdAndValidate(created.getId(), getItemByIdEndpoint());
+        Book retrieved = bookApi.getBookById(created.getId());
         assertEquals(created.getId(), retrieved.getId());
-        assertEquals(created.getTitle(), retrieved.getTitle());
     }
 
     @Test
     @DisplayName("Retrieve books with pagination")
     void getAllBooks() {
         BookRequest request = bookFixtures.createValidBookRequest(sharedAuthor.getId());
-        Book created = createAndValidate(request, getBaseEndpoint());
-        trackForCleanup(created.getId());
+        Book created = bookApi.createBook(request);
 
-        PageResponse<Book> page = getAllAndValidate(getBaseEndpoint());
+        PageResponse<Book> page = bookApi.getAllBooks();
         assertNotNull(page);
         assertTrue(page.hasContent());
     }
-
-    // -------- DELETE TESTS -------- //
 
     @Test
     @DisplayName("Delete book successfully")
     void deleteBook() {
         BookRequest request = bookFixtures.createValidBookRequest(sharedAuthor.getId());
-        Book created = createAndValidate(request, getBaseEndpoint());
+        Book created = bookApi.createBook(request);
 
-        ApiResponse<Void> response = deleteAndValidate(created.getId(), getItemByIdEndpoint());
+        ApiResponse<Void> response = bookApi.deleteBook(created.getId());
         ApiAssertions.assertSuccess(response);
+    }
+
+    @Test
+    @DisplayName("Fail to create book with invalid ISBN")
+    void createBookWithInvalidISBN() {
+        BookRequest invalid = bookFixtures.createBookRequestWithInvalidISBN(sharedAuthor.getId());
+        ApiResponse<?> response = bookApi.createInvalidBook(invalid, 400);
+
+        assertFalse(response.isSuccess());
+        log.info("Book creation failed as expected due to invalid ISBN");
     }
 
     @Test
     @DisplayName("Fail to delete non-existent book")
     void deleteNonExistentBook() {
         Long nonExistentId = 999999L;
-        ApiResponse<?> response = executeErrorRequest(delete(buildPath(getItemByIdEndpoint(), nonExistentId)), 404);
-        assertFalse(response.isSuccess());
-    }
-
-    // -------- NEGATIVE TESTS -------- //
-
-    @Test
-    @DisplayName("Fail to create book with invalid ISBN")
-    void createBookWithInvalidISBN() {
-        BookRequest invalid = bookFixtures.createBookRequestWithInvalidISBN(sharedAuthor.getId());
-        ApiResponse<?> response = executeErrorRequest(post(getBaseEndpoint()).body(invalid), 400);
+        ApiResponse<?> response = bookApi.deleteNonExistentBook(nonExistentId, 404);
 
         assertFalse(response.isSuccess());
-        log.info("Invalid book creation failed as expected");
+        log.info("Delete non-existent book test passed as expected");
     }
 }

@@ -1,6 +1,7 @@
 services:
   
   spring-publisher-service:
+    restart: unless-stopped
     build:
       context: ./spring-publisher-service
       cache_from:
@@ -8,7 +9,7 @@ services:
         - eclipse-temurin:17-jre-alpine
     image: publisher-service:${ENV:-dev}-${BUILD_VERSION:-latest}
     container_name: spring-publisher-service-${ENV:-dev}
-
+  
     ports:
       - "${APP_PORT:-8080}:8080"
 
@@ -54,6 +55,7 @@ services:
       - publisher-network
 
   angular-publisher-service:
+      restart: unless-stopped
       build:
         context: ./angular-publisher-service 
         target: ${DOCKER_TARGET:-development}
@@ -63,7 +65,6 @@ services:
       
       image: angular-publisher-service:${ENV:-dev}-${BUILD_VERSION:-latest}
       container_name: angular-publisher-service-${ENV:-dev}
-      restart: unless-stopped
 
       ports:
         # For development: 4200, for production: 80
@@ -101,6 +102,7 @@ services:
         - publisher-network
     
   db-publisher-service:
+    restart: unless-stopped
     image: postgres:15-alpine
     container_name: publisher-db-${ENV:-dev}
 

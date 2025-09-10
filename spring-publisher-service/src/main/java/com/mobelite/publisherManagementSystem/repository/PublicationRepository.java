@@ -11,10 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-/**
- * Repository interface for Publication entity.
- * Provides CRUD operations and custom query methods.
- */
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
 

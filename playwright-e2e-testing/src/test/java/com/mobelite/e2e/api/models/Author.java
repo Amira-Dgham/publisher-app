@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Model representing an Author for E2E testing.
- * Mirrors the structure of the Spring service Author entity and DTOs.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

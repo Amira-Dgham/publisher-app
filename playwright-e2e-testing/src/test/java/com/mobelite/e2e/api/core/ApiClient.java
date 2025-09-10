@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.RequestOptions;
 import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.shared.helpers.PlaywrightSchemaValidator;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ApiClient {
 
     private final APIRequestContext api;
-
-    // Single ObjectMapper instance for all serialization/deserialization
     private final ObjectMapper mapper;
 
-    // Constructor with mapper initialization
     public ApiClient(APIRequestContext api) {
         this.api = api;
         this.mapper = new ObjectMapper();
@@ -29,6 +27,7 @@ public class ApiClient {
         this.mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
+    // ---- Execute HTTP requests ----
     public APIResponse execute(HttpMethod method, String endpoint, RequestOptions options) {
         log.info("Executing {} {}", method, endpoint);
 
@@ -41,37 +40,75 @@ public class ApiClient {
         };
     }
 
+    // ---- Serialize object to JSON ----
     public String toJson(Object obj) {
         try {
-            // Use the shared mapper, not a new one
             return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to serialize body to JSON", e);
         }
     }
 
+    // ---- Parse API response ----
     public <T> T parseResponse(APIResponse response, TypeReference<T> typeReference) {
+        String responseText = getResponseText(response);
         try {
-            String responseText = response.text();
             log.debug("Parsing response using TypeReference: {}", responseText);
             return mapper.readValue(responseText, typeReference);
         } catch (Exception e) {
-            log.error("Failed to parse API response using TypeReference: {}", e.getMessage());
+            log.error("Failed to parse API response using TypeReference: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to parse API response", e);
         }
     }
 
+    // ---- Parse error response safely ----
     public ApiResponse<?> parseErrorResponse(APIResponse response) {
+        String responseText = getResponseText(response);
         try {
-            String responseText = response.text();
-            log.debug("Parsing error response: {}", responseText);
             return mapper.readValue(responseText, new TypeReference<ApiResponse<?>>() {});
         } catch (Exception e) {
             log.warn("Failed to parse error response, falling back to raw text: {}", e.getMessage());
             ApiResponse<Object> errorResponse = new ApiResponse<>();
             errorResponse.setSuccess(false);
-            errorResponse.setMessage(response.text());
+            errorResponse.setMessage(responseText);
             return errorResponse;
+        }
+    }
+
+    // ---- Fluent execution + parse + schema validation ----
+    public <T> ApiResponse<T> executeAndValidate(
+            ApiRequestBuilder builder,
+            TypeReference<ApiResponse<T>> typeReference,
+            String responseSchemaPath,
+            String dataSchemaPath,
+            String contentSchemaPath
+    ) {
+        // Execute the request
+        APIResponse rawResponse = builder.execute();
+
+        // Parse the response safely
+        ApiResponse<T> parsedResponse = parseResponse(rawResponse, typeReference);
+
+        // Validate schema if provided
+        if (responseSchemaPath != null) {
+            PlaywrightSchemaValidator.validateResponseAndData(
+                    parsedResponse,
+                    responseSchemaPath,
+                    dataSchemaPath,
+                    contentSchemaPath
+            );
+        }
+
+        return parsedResponse;
+    }
+
+    // ---- Helper to safely get response text ----
+    private String getResponseText(APIResponse response) {
+        try {
+            return response.text();
+        } catch (Exception e) {
+            log.warn("Failed to read response text: {}", e.getMessage(), e);
+            return "";
         }
     }
 }

@@ -1,33 +1,22 @@
 package com.mobelite.publisherManagementSystem.controller;
 
-// Jakarta/Javax imports
 import jakarta.validation.Valid;
-
-// Lombok imports
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-// Spring Framework imports
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-// Swagger/OpenAPI documentation imports
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-// Application-specific DTO imports
 import com.mobelite.publisherManagementSystem.dto.request.book.BookCreateRequestDto;
 import com.mobelite.publisherManagementSystem.dto.request.book.BookUpdateRequestDto;
 import com.mobelite.publisherManagementSystem.dto.response.ApiResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.book.BookResponseDto;
 import com.mobelite.publisherManagementSystem.dto.response.book.BookSummaryResponseDto;
-
-// Application service imports
 import com.mobelite.publisherManagementSystem.service.BookService;
 
 /**
@@ -43,44 +32,41 @@ public class BookController {
 
     private final BookService bookService;
 
-    /**
-     * Create a new book.
-     *
-     * @param request The book creation request
-     * @return The created book response
-     */
     @PostMapping
     @Operation(summary = "Create a new book", description = "Creates a new book in the library system")
+    public ResponseEntity<ApiResponseDto<BookResponseDto>> createBook(
+            @Valid @RequestBody BookCreateRequestDto request) {
 
-    public ResponseEntity<ApiResponseDto<BookResponseDto>> createBook(@Valid @RequestBody BookCreateRequestDto request) {
-        BookResponseDto response = bookService.createBook(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponseDto.success(response,"Book created successfully"));
+        BookResponseDto createdBook = bookService.createBook(request);
+
+        ApiResponseDto<BookResponseDto> response = ApiResponseDto.<BookResponseDto>builder()
+                .success(true)
+                .message("Book created successfully")
+                .data(createdBook)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Update an existing book.
-     *
-     * @param id      The book ID
-     * @param request The book update request
-     * @return The updated book response
-     */
     @PutMapping("/{id}")
     @Operation(summary = "Update a book", description = "Updates an existing book by ID")
     public ResponseEntity<ApiResponseDto<BookResponseDto>> updateBook(
             @Parameter(description = "Book ID") @PathVariable Long id,
             @Valid @RequestBody BookUpdateRequestDto request) {
-        BookResponseDto response = bookService.updateBook(id, request);
-        return ResponseEntity.ok(ApiResponseDto.success( response,"Book updated successfully"));
+
+        BookResponseDto updatedBook = bookService.updateBook(id, request);
+
+        ApiResponseDto<BookResponseDto> response = ApiResponseDto.<BookResponseDto>builder()
+                .success(true)
+                .message("Book updated successfully")
+                .data(updatedBook)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get a book by ID.
-     * @param id The book ID
-     * @return The book response
-     */
-    @Operation(summary = "Get book by ID", description = "Retrieves an book by their unique identifier")
     @GetMapping("/{id}")
+    @Operation(summary = "Get book by ID", description = "Retrieves a book by its unique identifier")
     public ResponseEntity<ApiResponseDto<BookResponseDto>> getBookById(
             @Parameter(description = "Book ID") @PathVariable Long id) {
 
@@ -88,90 +74,91 @@ public class BookController {
 
         ApiResponseDto<BookResponseDto> response = ApiResponseDto.<BookResponseDto>builder()
                 .success(true)
-                .message("Author retrieved successfully")
+                .message("Book retrieved successfully")
                 .data(book)
                 .build();
 
         return ResponseEntity.ok(response);
-
     }
-    /**
-     * Get a book by ISBN.
-     *
-     * @param isbn The book ISBN
-     * @return The book response
-     */
+
     @GetMapping("/isbn/{isbn}")
     @Operation(summary = "Get book by ISBN", description = "Retrieves a book by its ISBN")
-    public ResponseEntity<ApiResponseDto<BookResponseDto>> getBookByIsbn(@Parameter(description = "Book ISBN") @PathVariable String isbn) {
-        BookResponseDto response = bookService.getBookByIsbn(isbn);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+    public ResponseEntity<ApiResponseDto<BookResponseDto>> getBookByIsbn(
+            @Parameter(description = "Book ISBN") @PathVariable String isbn) {
+
+        BookResponseDto book = bookService.getBookByIsbn(isbn);
+
+        ApiResponseDto<BookResponseDto> response = ApiResponseDto.<BookResponseDto>builder()
+                .success(true)
+                .message("Book retrieved successfully")
+                .data(book)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get all books with pagination.
-     *
-     * @param pageable Pagination information
-     * @return Page of book summaries
-     */
     @GetMapping
     @Operation(summary = "Get all books", description = "Retrieves all books with pagination")
     public ResponseEntity<ApiResponseDto<Page<BookResponseDto>>> getAllBooks(
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
-        Page<BookResponseDto> response = bookService.getAllBooks(pageable);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        Page<BookResponseDto> books = bookService.getAllBooks(pageable);
+
+        ApiResponseDto<Page<BookResponseDto>> response = ApiResponseDto.<Page<BookResponseDto>>builder()
+                .success(true)
+                .message("Books retrieved successfully")
+                .data(books)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get books by author ID.
-     *
-     * @param authorId The author ID
-     * @param pageable Pagination information
-     * @return Page of book summaries
-     */
     @GetMapping("/author/{authorId}")
     @Operation(summary = "Get books by author", description = "Retrieves books by author ID")
     public ResponseEntity<ApiResponseDto<Page<BookSummaryResponseDto>>> getBooksByAuthor(
             @Parameter(description = "Author ID") @PathVariable Long authorId,
             @PageableDefault(size = 20, sort = "title") Pageable pageable) {
-        Page<BookSummaryResponseDto> response = bookService.getBooksByAuthor(authorId, pageable);
-        return ResponseEntity.ok(ApiResponseDto.success(response));
+
+        Page<BookSummaryResponseDto> books = bookService.getBooksByAuthor(authorId, pageable);
+
+        ApiResponseDto<Page<BookSummaryResponseDto>> response = ApiResponseDto.<Page<BookSummaryResponseDto>>builder()
+                .success(true)
+                .message("Books by author retrieved successfully")
+                .data(books)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
-
-    /**
-     * Delete a book by ID.
-     * @param id The book ID
-     * @return No content response
-     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a book", description = "Deletes a book by its ID")
-    public ResponseEntity<ApiResponseDto<Void>> deleteBook(@Parameter(description = "Book ID") @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto<Void>> deleteBook(
+            @Parameter(description = "Book ID") @PathVariable Long id) {
 
         bookService.deleteBook(id);
 
-
         ApiResponseDto<Void> response = ApiResponseDto.<Void>builder()
                 .success(true)
-                .message("book deleted successfully")
+                .message("Book deleted successfully")
                 .data(null)
                 .build();
 
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Check if a book exists by ID.
-     *
-     * @param id The book ID
-     * @return Boolean response
-     */
     @GetMapping("/{id}/exists")
     @Operation(summary = "Check if book exists", description = "Checks if a book exists by its ID")
-    public ResponseEntity<ApiResponseDto<Boolean>> existsById(@Parameter(description = "Book ID") @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto<Boolean>> existsById(
+            @Parameter(description = "Book ID") @PathVariable Long id) {
+
         boolean exists = bookService.existsById(id);
-        return ResponseEntity.ok(ApiResponseDto.success(exists));
+
+        ApiResponseDto<Boolean> response = ApiResponseDto.<Boolean>builder()
+                .success(true)
+                .message("Existence check completed")
+                .data(exists)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
-
-
 }

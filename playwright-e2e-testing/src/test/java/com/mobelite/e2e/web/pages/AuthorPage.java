@@ -3,7 +3,7 @@ package com.mobelite.e2e.web.pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import com.mobelite.e2e.shared.constants.TestIds;
+import com.mobelite.e2e.shared.constants.AuthorTestIds;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -25,68 +25,68 @@ public class AuthorPage {
     // ============================
 
     public Locator table() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE + "']");
     }
 
     public Locator tableHeader() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE_HEADER + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE_HEADER + "']");
     }
 
     public Locator tableRows() {
         // use tr with data-testid instead of tbody
-        return page.locator("tr[data-testid='" + TestIds.AUTHORS.AUTHORS_TABLE_ROW + "']");
+        return page.locator("tr[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_TABLE_ROW + "']");
     }
 
     public Locator addAuthorButton() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.ADD_AUTHOR_BUTTON + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.ADD_AUTHOR_BUTTON + "']");
     }
 
     public Locator paginator() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHORS_PAGINATOR + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_PAGINATOR + "']");
     }
 
     public Locator dialog() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_DIALOG + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_DIALOG + "']");
     }
 
     public Locator nameInput() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NAME_INPUT + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_INPUT + "']");
     }
 
     public Locator birthDateInput() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_BIRTH_DATE_INPUT + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_BIRTH_DATE_INPUT + "']");
     }
 
     public Locator nationalityInput() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NATIONALITY_INPUT + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NATIONALITY_INPUT + "']");
     }
 
     public Locator saveButton() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_SAVE_BUTTON + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_SAVE_BUTTON + "']");
     }
 
     public Locator cancelButton() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_CANCEL_BUTTON + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_CANCEL_BUTTON + "']");
     }
 
     public Locator nameRequiredError() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NAME_REQUIRED_ERROR + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_REQUIRED_ERROR + "']");
     }
 
     public Locator nameMinLengthError() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NAME_MIN_LENGTH_ERROR + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_MIN_LENGTH_ERROR + "']");
     }
 
     public Locator nameMaxLengthError() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NAME_MAX_LENGTH_ERROR + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_MAX_LENGTH_ERROR + "']");
     }
 
     public Locator nationalityMaxLengthError() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_NATIONALITY_MAX_LENGTH_ERROR + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NATIONALITY_MAX_LENGTH_ERROR + "']");
     }
 
     public Locator deleteConfirm() {
-        return page.locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_DELETE_CONFIRM + "']");
+        return page.locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_DELETE_CONFIRM + "']");
     }
 
     // ============================
@@ -99,12 +99,12 @@ public class AuthorPage {
 
     public Locator editButtonForAuthor(String authorName) {
         return rowByAuthorName(authorName)
-                .locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_EDIT_BUTTON + "']");
+                .locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_EDIT_BUTTON + "']");
     }
 
     public Locator deleteButtonForAuthor(String authorName) {
         return rowByAuthorName(authorName)
-                .locator("[data-testid='" + TestIds.AUTHORS.AUTHOR_DELETE_BUTTON + "']");
+                .locator("[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_DELETE_BUTTON + "']");
     }
 
     // ============================
