@@ -36,11 +36,6 @@ public class PlaywrightManager {
         );
     }
 
-    /** Create fresh page */
-    public static Page createPage() {
-        return createContext().newPage();
-    }
-
     /** Create API request context */
     public static APIRequestContext createApiRequestContext(String baseUrl) {
         if (playwright == null) throw new IllegalStateException("Playwright not initialized.");

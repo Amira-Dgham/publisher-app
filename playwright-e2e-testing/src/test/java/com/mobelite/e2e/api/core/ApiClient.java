@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.RequestOptions;
-import com.mobelite.e2e.api.models.ApiResponse;
+import com.mobelite.e2e.api.models.response.ApiResponse;
 import com.mobelite.e2e.shared.helpers.PlaywrightSchemaValidator;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.mobelite.e2e.shared.helpers.ApiUtils.getResponseText;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -81,10 +83,13 @@ public class ApiClient {
             TypeReference<ApiResponse<T>> typeReference,
             String responseSchemaPath,
             String dataSchemaPath,
-            String contentSchemaPath
+            String contentSchemaPath,
+            int expectedStatus
     ) {
         // Execute the request
         APIResponse rawResponse = builder.execute();
+
+        ApiAssertions.assertStatus(rawResponse, expectedStatus);
 
         // Parse the response safely
         ApiResponse<T> parsedResponse = parseResponse(rawResponse, typeReference);
@@ -102,13 +107,4 @@ public class ApiClient {
         return parsedResponse;
     }
 
-    // ---- Helper to safely get response text ----
-    private String getResponseText(APIResponse response) {
-        try {
-            return response.text();
-        } catch (Exception e) {
-            log.warn("Failed to read response text: {}", e.getMessage(), e);
-            return "";
-        }
-    }
 }

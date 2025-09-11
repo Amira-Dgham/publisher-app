@@ -43,6 +43,7 @@ public class ApiRequestBuilder {
         return options;
     }
 
+    // construct a full url end point with a query parameters
     private String buildEndpointWithParams() {
         if (queryParams.isEmpty()) return endpoint;
         return endpoint + "?" + queryParams.entrySet().stream()

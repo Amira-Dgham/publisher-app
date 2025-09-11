@@ -8,6 +8,8 @@ import com.mobelite.e2e.api.fixtures.BookFixtures;
 import com.mobelite.e2e.api.models.*;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
 import com.mobelite.e2e.api.models.request.BookRequest;
+import com.mobelite.e2e.api.models.response.ApiResponse;
+import com.mobelite.e2e.api.models.response.PageResponse;
 import com.mobelite.e2e.config.BaseTest;
 import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;

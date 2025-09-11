@@ -3,21 +3,20 @@ package com.mobelite.e2e.api.tests;
 import com.mobelite.e2e.api.endpoints.AuthorApiEndPoint;
 import com.mobelite.e2e.api.fixtures.AuthorFixtures;
 import com.mobelite.e2e.api.models.Author;
-import com.mobelite.e2e.api.models.PageResponse;
+import com.mobelite.e2e.api.models.response.PageResponse;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
 import com.mobelite.e2e.config.BaseTest;
 import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
-
-import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHORS_BASE;
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.AUTHOR_BY_ID;
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("Author Management")
 @Feature("Author API")
 @Story("E2E Testing")
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Author API E2E Tests")
 @Slf4j
 public class AuthorE2ETest extends BaseTest {
@@ -38,7 +37,6 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Create author with valid data")
     void createAuthorWithValidData() {
-        log.info("1 amira");
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
         Author created = authorApi.createAuthor(request);
 
@@ -53,7 +51,6 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Create author with minimal data")
     void createAuthorWithMinimalData() {
-        log.info("2 amira");
         AuthorRequest request = authorFixtures.createMinimalAuthorRequest();
         Author created = authorApi.createAuthor(request);
 
@@ -66,8 +63,6 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Retrieve author by ID")
     void getAuthorById() {
-        log.info("3 amira");
-
         Author created = authorApi.createAuthor(authorFixtures.createValidAuthorRequest());
         Author retrieved = authorApi.getAuthorById(created.getId());
 
@@ -80,12 +75,10 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Retrieve author by name")
     void getAuthorByName() {
-        log.info("4 amira");
-
         AuthorRequest request = authorFixtures.createValidAuthorRequest();
         Author created = authorApi.createAuthor(request);
 
-        Author retrieved = authorApi.getByName(request.getName());
+        Author retrieved = authorApi.getByName(created.getName());
 
         assertNotNull(retrieved);
         assertEquals(created.getId(), retrieved.getId());
@@ -97,9 +90,7 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Retrieve authors with pagination")
     void getAllAuthorsWithPagination() {
-        log.info("5 amira");
-
-        PageResponse<Author> page = authorApi.getAllAndValidate(AUTHORS_BASE);
+        PageResponse<Author> page = authorApi.getAllAuthors();
         assertTrue(page.hasContent());
         log.info("Pagination test successful - found {} total authors", page.getTotalElements());
     }
@@ -107,8 +98,6 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Delete author successfully")
     void deleteAuthor() {
-        log.info("6 amira");
-
         Author created = authorApi.createAuthor(authorFixtures.createValidAuthorRequest(),false);
         authorApi.deleteAuthor(created.getId());
         log.info("Author deleted successfully: {}", created.getId());
@@ -118,10 +107,9 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Fail to create author with invalid data")
     void createAuthorWithInvalidData() {
-        log.info("7 amira");
 
         var invalidRequest = authorFixtures.createInvalidAuthorRequest();
-        var response = authorApi.createInvalidAuthor(invalidRequest, 400);
+        var response = authorApi.createInvalidAuthor(invalidRequest, STATUS_BAD_REQUEST);
 
         assertFalse(response.isSuccess());
         log.info("Invalid author creation test passed as expected");
@@ -130,10 +118,8 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Fail to delete non-existent author")
     void deleteNonExistentAuthor() {
-        log.info("8 amira");
-
         Long nonExistentId = 999999L;
-        var response = authorApi.deleteNonExistentAuthor(nonExistentId, 404);
+        var response = authorApi.deleteNonExistentAuthor(nonExistentId, STATUS_NOT_FOUND);
 
         assertFalse(response.isSuccess());
         log.info("Delete non-existent author test passed with expected error");
@@ -142,12 +128,10 @@ public class AuthorE2ETest extends BaseTest {
     @Test
     @DisplayName("Fail to create author with duplicate name")
     void createAuthorWithDuplicateName() {
-        log.info("9 amira");
-
         Author created = authorApi.createAuthor(authorFixtures.createValidAuthorRequest());
         var duplicateRequest = authorFixtures.createDuplicateFromAuthor(created);
 
-        var response = authorApi.createInvalidAuthor(duplicateRequest, 409);
+        var response = authorApi.createInvalidAuthor(duplicateRequest, STATUS_CONFLICT);
 
         assertFalse(response.isSuccess(), "Duplicate author creation should fail");
         log.info("Duplicate author creation failed as expected");

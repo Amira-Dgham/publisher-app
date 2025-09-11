@@ -4,9 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.e2e.api.core.BaseApiEndPoint;
 import com.mobelite.e2e.api.models.*;
 import com.mobelite.e2e.api.models.request.AuthorRequest;
+import com.mobelite.e2e.api.models.response.ApiResponse;
+import com.mobelite.e2e.api.models.response.PageResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.STATUS_CREATED;
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.STATUS_OK;
 
 @Slf4j
 public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
@@ -25,7 +29,7 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
 
     // -------- Convenience wrappers --------
     public PageResponse<Author> getAllAuthors() {
-        return getAllAndValidate(AUTHORS_BASE);
+        return getAllAndValidate(AUTHORS_BASE,STATUS_OK);
     }
 
     // Default method: tracks created author
@@ -35,7 +39,7 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
 
     // Overloaded method: optional tracking
     public Author createAuthor(AuthorRequest request, boolean trackForCleanup) {
-        Author author = createAndValidate(request, AUTHORS_BASE);
+        Author author = createAndValidate(request, AUTHORS_BASE,STATUS_CREATED);
         if (trackForCleanup) {
             trackForCleanup(author.getId());
         }
@@ -43,16 +47,16 @@ public class AuthorApiEndPoint extends BaseApiEndPoint<Author, AuthorRequest> {
     }
 
     public Author getAuthorById(Long id) {
-        return getByIdAndValidate(id, AUTHOR_BY_ID);
+        return getByIdAndValidate(id, AUTHOR_BY_ID,STATUS_OK);
     }
 
     public ApiResponse<Void> deleteAuthor(Long id) {
-        return deleteAndValidate(id, AUTHOR_BY_ID);
+        return deleteAndValidate(id, AUTHOR_BY_ID,STATUS_OK);
     }
 
     public Author getByName(String name) {
         String searchEndpoint = AUTHORS_BASE + "?name=" + name;
-        PageResponse<Author> page = getAllAndValidate(searchEndpoint);
+        PageResponse<Author> page = getAllAndValidate(searchEndpoint,STATUS_OK);
         if (page.getContent().isEmpty()) return null;
         return page.getContent().get(0);
     }

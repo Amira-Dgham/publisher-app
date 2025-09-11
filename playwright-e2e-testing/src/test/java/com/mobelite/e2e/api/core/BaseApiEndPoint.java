@@ -1,8 +1,8 @@
 package com.mobelite.e2e.api.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.mobelite.e2e.api.models.ApiResponse;
-import com.mobelite.e2e.api.models.PageResponse;
+import com.mobelite.e2e.api.models.response.ApiResponse;
+import com.mobelite.e2e.api.models.response.PageResponse;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import com.microsoft.playwright.APIRequestContext;
@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mobelite.e2e.shared.constants.HttpStatusCodes.STATUS_OK;
 import static com.mobelite.e2e.shared.helpers.ApiUtils.buildPath;
 
 @Slf4j
@@ -42,7 +43,7 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
         for (Long id : entitiesToCleanup) {
             try {
                 // Attempt deletion only
-                deleteAndValidate(id, cleanupUrl);
+                deleteAndValidate(id, cleanupUrl,STATUS_OK);
                 log.info("Cleaned up {} {}", getEntityName(), id);
             } catch (Exception e) {
                 log.warn("Failed to delete {} {}: {}", getEntityName(), id, e.getMessage());
@@ -53,43 +54,48 @@ public abstract class BaseApiEndPoint<T, R> extends BaseTest {
 
 
     // ---- Generic CRUD operations using ApiClient#executeAndValidate ----
-    public T createAndValidate(R request, String endpoint) {
+    public T createAndValidate(R request, String endpoint , int expectedStatus) {
         return apiClient.executeAndValidate(
                 new ApiRequestBuilder(apiClient, HttpMethod.POST, endpoint).body(request),
                 getItemTypeReference(),
                 getApiResponseSchema(),
                 getItemSchema(),
-                null
+                null,
+                expectedStatus
         ).getData();
     }
 
-    public T getByIdAndValidate(Long id, String endpoint) {
+    public T getByIdAndValidate(Long id, String endpoint, int expectedStatus) {
         return apiClient.executeAndValidate(
                 new ApiRequestBuilder(apiClient, HttpMethod.GET, buildPath(endpoint, id)),
                 getItemTypeReference(),
                 getApiResponseSchema(),
                 getItemSchema(),
-                null
+                null,
+                expectedStatus
         ).getData();
     }
 
-    public PageResponse<T> getAllAndValidate(String endpoint) {
+    public PageResponse<T> getAllAndValidate(String endpoint, int expectedStatus) {
         return apiClient.executeAndValidate(
                 new ApiRequestBuilder(apiClient, HttpMethod.GET, endpoint),
                 getPageTypeReference(),
                 getApiResponseSchema(),
                 getPageResponseSchema(),
-                getItemSchema()
+                getItemSchema(),
+                expectedStatus
         ).getData();
     }
 
-    public ApiResponse<Void> deleteAndValidate(Long id, String endpoint) {
+    public ApiResponse<Void> deleteAndValidate(Long id, String endpoint, int expectedStatus) {
         ApiResponse<Void> response = apiClient.executeAndValidate(
                 new ApiRequestBuilder(apiClient, HttpMethod.DELETE, buildPath(endpoint, id)),
                 new TypeReference<ApiResponse<Void>>() {},
                 getApiResponseSchema(),
                 null,
-                null
+                null,
+                expectedStatus
+
         );
         ApiAssertions.assertMessageContains(response, "deleted successfully");
         return response;

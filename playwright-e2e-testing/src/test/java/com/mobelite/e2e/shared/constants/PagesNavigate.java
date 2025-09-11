@@ -1,10 +1,6 @@
 package com.mobelite.e2e.shared.constants;
 
-public class PagesNavigate {
-
-    private PagesNavigate() {
-        // private constructor to prevent instantiation
-    }
+public final class  PagesNavigate {
 
     public static final String AUTHORS_NAVIGATE = "/authors";
     public static final String BOOKS_NAVIGATE = "/books";

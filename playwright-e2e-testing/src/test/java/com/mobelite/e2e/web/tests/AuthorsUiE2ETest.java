@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Author UI")
 @Story("E2E Testing")
 @DisplayName("Author UI E2E Tests")
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 public class AuthorsUiE2ETest extends BaseTest {
 
@@ -40,7 +40,6 @@ public class AuthorsUiE2ETest extends BaseTest {
 
     @AfterEach
     void tearDown() {
-        takeScreenshot("AuthorFormTest");
         authorApi.cleanUpEach(AUTHOR_BY_ID);
     }
 
