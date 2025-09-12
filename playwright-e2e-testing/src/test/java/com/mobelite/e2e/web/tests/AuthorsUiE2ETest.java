@@ -2,8 +2,8 @@ package com.mobelite.e2e.web.tests;
 
 import com.mobelite.e2e.api.endpoints.AuthorApiEndPoint;
 import com.mobelite.e2e.api.fixtures.AuthorFixtures;
-import com.mobelite.e2e.api.models.Author;
-import com.mobelite.e2e.api.models.request.AuthorRequest;
+import com.mobelite.e2e.models.Author;
+import com.mobelite.e2e.models.request.AuthorRequest;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.web.pages.actions.AuthorPageActions;
 import com.mobelite.e2e.web.pages.assertions.AuthorPageAssertions;

@@ -2,10 +2,10 @@ package com.mobelite.e2e.api.endpoints;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.e2e.api.core.BaseApiEndPoint;
-import com.mobelite.e2e.api.models.*;
-import com.mobelite.e2e.api.models.request.AuthorRequest;
-import com.mobelite.e2e.api.models.response.ApiResponse;
-import com.mobelite.e2e.api.models.response.PageResponse;
+import com.mobelite.e2e.models.Author;
+import com.mobelite.e2e.models.request.AuthorRequest;
+import com.mobelite.e2e.models.response.ApiResponse;
+import com.mobelite.e2e.models.response.PageResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.RequestOptions;
-import com.mobelite.e2e.api.models.response.ApiResponse;
+import com.mobelite.e2e.models.response.ApiResponse;
 import com.mobelite.e2e.shared.helpers.PlaywrightSchemaValidator;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import lombok.RequiredArgsConstructor;

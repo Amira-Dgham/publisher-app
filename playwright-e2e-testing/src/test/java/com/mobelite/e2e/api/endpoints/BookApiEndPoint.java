@@ -1,10 +1,10 @@
 package com.mobelite.e2e.api.endpoints;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.e2e.api.core.BaseApiEndPoint;
-import com.mobelite.e2e.api.models.*;
-import com.mobelite.e2e.api.models.request.BookRequest;
-import com.mobelite.e2e.api.models.response.ApiResponse;
-import com.mobelite.e2e.api.models.response.PageResponse;
+import com.mobelite.e2e.models.Book;
+import com.mobelite.e2e.models.request.BookRequest;
+import com.mobelite.e2e.models.response.ApiResponse;
+import com.mobelite.e2e.models.response.PageResponse;
 
 import static com.mobelite.e2e.shared.constants.ApiEndpoints.*;
 import static com.mobelite.e2e.shared.constants.HttpStatusCodes.STATUS_CREATED;

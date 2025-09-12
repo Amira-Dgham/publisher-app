@@ -2,9 +2,9 @@ package com.mobelite.e2e.api.tests;
 
 import com.mobelite.e2e.api.endpoints.AuthorApiEndPoint;
 import com.mobelite.e2e.api.fixtures.AuthorFixtures;
-import com.mobelite.e2e.api.models.Author;
-import com.mobelite.e2e.api.models.response.PageResponse;
-import com.mobelite.e2e.api.models.request.AuthorRequest;
+import com.mobelite.e2e.models.Author;
+import com.mobelite.e2e.models.response.PageResponse;
+import com.mobelite.e2e.models.request.AuthorRequest;
 import com.mobelite.e2e.config.BaseTest;
 import io.qameta.allure.*;
 import lombok.extern.slf4j.Slf4j;
