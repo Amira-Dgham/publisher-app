@@ -1,0 +1,26 @@
+2025-09-14 15:56:14 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-14 15:56:14 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":251,"name":"Mildred_1","birthDate":"2005-08-27","nationality":"Korea (Democratic People's Republic of)","books":[],"magazines":[]},"timestamp":null}
+2025-09-14 15:56:15 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-14 15:56:15 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-14 15:56:15 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}/251
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 500
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"An unexpected error occurred","data":null,"timestamp":"2025-09-14T14:56:15.820503094"}
+2025-09-14 15:57:46 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-14 15:57:46 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":252,"name":"Kip_1","birthDate":"1973-10-11","nationality":"Colombia","books":[],"magazines":[]},"timestamp":null}
+2025-09-14 15:57:48 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-14 15:57:48 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-14 15:57:48 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}/252
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 500
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"An unexpected error occurred","data":null,"timestamp":"2025-09-14T14:57:48.302218887"}

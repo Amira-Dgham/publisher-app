@@ -22,6 +22,8 @@
         <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
         <maven-surefire-plugin-version>3.5.3</maven-surefire-plugin-version>
         <maven-enforcer-version>3.6.1</maven-enforcer-version>
+        <logback-version>1.5.18</logback-version>
+        <slf4j-version> 2.0.17</slf4j-version>
         <suite-xml>test-suite/testng.xml</suite-xml>
     </properties>
 
@@ -40,13 +42,11 @@
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng-version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok-version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>net.datafaker</groupId>
@@ -64,6 +64,7 @@
                 <version>${jackson-version}</version>
 
             </dependency>
+
             <dependency>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-java-commons</artifactId>
@@ -73,7 +74,16 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-testng</artifactId>
                 <version>${allure-version}</version>
-                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-version}</version>
             </dependency>
         </dependencies>
 
@@ -88,6 +98,15 @@
                         <release>${maven.compiler.source}</release>
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        <annotationProcessorPaths>
+                            <!-- Lombok Annotation Processor -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok-version}</version>
+                            </path>
+
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 
