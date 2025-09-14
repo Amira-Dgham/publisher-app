@@ -40,12 +40,13 @@ public class ApiClient {
         };
 
         // Automatically update BaseTest's lastRequest/lastResponse
-        test.setLastRequest(String.format("%s %s%nRequest: %s", method, endpoint));
+        test.setLastRequest(String.format("%s %s", method, endpoint));
         try {
             test.setLastResponse(String.format("Status: %d%nBody: %s", response.status(), response.text()));
         } catch (Exception e) {
             test.setLastResponse("Failed to read response body");
         }
+        test.logResponse(response);
 
         return response;
     }

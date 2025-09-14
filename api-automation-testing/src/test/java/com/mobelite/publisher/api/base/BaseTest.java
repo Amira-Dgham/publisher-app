@@ -36,6 +36,7 @@ public class BaseTest {
 
     @BeforeClass
     public void setup() {
+        log.info("hellooo");
         createPlaywright();
         createAPIRequestContext();
     }
@@ -50,9 +51,9 @@ public class BaseTest {
         playwright = Playwright.create();
     }
 
-    public static void createAPIRequestContext() {
+    private void createAPIRequestContext() {
         if (playwright == null) throw new IllegalStateException("Playwright not initialized.");
-        playwright.request().newContext(new APIRequest.NewContextOptions()
+        this.request = playwright.request().newContext(new APIRequest.NewContextOptions()
                 .setBaseURL(BASE_API_URL)
                 .setExtraHTTPHeaders(Map.of(
                         "Content-Type", "application/json",
