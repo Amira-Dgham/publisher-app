@@ -28,6 +28,7 @@ public class ApiClient {
         this.config = ConfigManager.getInstance();
     }
 
+
     public APIResponse execute(HttpMethod method, String endpoint, RequestOptions options) {
         log.info("Executing {} {}", method, endpoint);
 

@@ -1,11 +1,14 @@
 package com.mobelite.publisher.api.tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.publisher.api.base.ApiAssertions;
 import com.mobelite.publisher.api.base.BaseTestApi;
 import com.mobelite.publisher.api.constants.HttpStatusCodes;
 import com.mobelite.publisher.api.factory.AuthorFactory;
 import com.mobelite.publisher.api.models.Author;
 import com.mobelite.publisher.api.models.request.AuthorRequest;
+import com.mobelite.publisher.api.models.response.ApiResponse;
+import com.mobelite.publisher.api.models.response.PageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -22,6 +25,11 @@ import static com.mobelite.publisher.api.constants.Schemas.AUTHOR_SCHEMA;
 public class AuthorApiTest extends BaseTestApi<Author,AuthorRequest> {
 
     private final AuthorFactory  authorFactory = new AuthorFactory();
+    @Override
+    protected TypeReference<ApiResponse<Author>> getItemTypeReference() { return new TypeReference<>() {}; }
+
+    @Override
+    protected TypeReference<ApiResponse<PageResponse<Author>>> getPageTypeReference() { return new TypeReference<>() {}; }
 
     @BeforeClass
     public void setUp() {
@@ -41,13 +49,15 @@ public class AuthorApiTest extends BaseTestApi<Author,AuthorRequest> {
         AuthorRequest authorRequest = authorFactory.createValidAuthorRequest();
         var response = create(authorRequest, AUTHORS_BASE); // endpoint can also be AUTHOR_BY_ID
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_CREATED);
-        Author createdAuthor = parseAndValidate(response,API_RESPONSE_SCHEMA,AUTHOR_SCHEMA);
-        log.info("parsedResponse"+createdAuthor);
-
+        ApiResponse<Author> parsed = parseAndValidate(response, API_RESPONSE_SCHEMA, AUTHOR_SCHEMA);
+        Author createdAuthor = parsed.getData();
+        ApiAssertions.assertHasData(parsed);
+        ApiAssertions.assertSuccess(parsed);
         Assert.assertNotNull(createdAuthor.getId());
         Assert.assertEquals(createdAuthor.getName(), authorRequest.getName());
         Assert.assertEquals(createdAuthor.getBirthDate(), authorRequest.getBirthDate());
         Assert.assertEquals(createdAuthor.getNationality(), authorRequest.getNationality());
         trackCreatedEntity(createdAuthor.getId());
     }
+
 }
