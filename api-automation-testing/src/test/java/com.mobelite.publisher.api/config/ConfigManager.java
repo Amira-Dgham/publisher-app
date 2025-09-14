@@ -17,7 +17,10 @@ public final class ConfigManager {
     private static volatile ConfigManager instance;
 
     private final String apiBaseUrl;
+    // headless = true  → runs browser in background (faster, good for CI/CD)
+    // headless = false → shows browser window (useful for debugging)
     private final boolean headless;
+    // JSON parser and generator for Java ( Serialization / Deserialization)
     private final ObjectMapper objectMapper;
 
     private ConfigManager() {
@@ -56,9 +59,9 @@ public final class ConfigManager {
 
     private ObjectMapper createObjectMapper() {
         return new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
-                .configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+                .registerModule(new JavaTimeModule()) // support LocalDate, LocalDateTime
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) // ignore unknown JSON fields
+                .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false) // read timestamps as milliseconds
+                .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // write dates as ISO, not timestamps
     }
 }

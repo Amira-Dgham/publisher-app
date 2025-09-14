@@ -7,8 +7,11 @@ import com.microsoft.playwright.options.RequestOptions;
 import com.mobelite.publisher.api.config.ConfigManager;
 
 import com.mobelite.publisher.api.constants.HttpMethod;
+import com.mobelite.publisher.api.models.response.ApiResponse;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.mobelite.publisher.api.utils.ApiUtils.getResponseText;
 
 @Slf4j
 @Getter
@@ -28,9 +31,6 @@ public class ApiClient {
     public APIResponse execute(HttpMethod method, String endpoint, RequestOptions options) {
         log.info("Executing {} {}", method, endpoint);
 
-        // Build request info
-        String requestBody = options != null && options.data() != null ? options.data().toString() : "{}";
-
         APIResponse response = switch (method) {
             case GET -> api.get(endpoint, options);
             case POST -> api.post(endpoint, options);
@@ -40,7 +40,7 @@ public class ApiClient {
         };
 
         // Automatically update BaseTest's lastRequest/lastResponse
-        test.setLastRequest(String.format("%s %s%nBody: %s", method, endpoint, requestBody));
+        test.setLastRequest(String.format("%s %s%nRequest: %s", method, endpoint));
         try {
             test.setLastResponse(String.format("Status: %d%nBody: %s", response.status(), response.text()));
         } catch (Exception e) {
@@ -59,27 +59,24 @@ public class ApiClient {
     }
 
     public <T> T parseResponse(APIResponse response, TypeReference<T> typeReference) {
+        String responseText = getResponseText(response);
         try {
-            String body = response.text();
-            return config.getObjectMapper().readValue(body, typeReference);
+            return config.getObjectMapper().readValue(responseText, typeReference);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse API response", e);
         }
     }
 
-    public <T> T executeAndValidate(
-            HttpMethod method,
-            String endpoint,
-            RequestOptions options,
-            TypeReference<T> typeReference,
-            String responseSchemaPath
-    ) {
-        APIResponse response = execute(method, endpoint, options);
-
-        if (responseSchemaPath != null) {
-            PlaywrightSchemaValidator.validate(response.text(), responseSchemaPath);
+    public ApiResponse<?> parseErrorResponse(APIResponse response) {
+        String responseText = getResponseText(response);
+        try {
+            return config.getObjectMapper().readValue(responseText, new TypeReference<ApiResponse<?>>() {});
+        } catch (Exception e) {
+            log.warn("Failed to parse error response, falling back to raw text: {}", e.getMessage());
+            ApiResponse<Object> errorResponse = new ApiResponse<>();
+            errorResponse.setSuccess(false);
+            errorResponse.setMessage(responseText);
+            return errorResponse;
         }
-
-        return parseResponse(response, typeReference);
     }
 }

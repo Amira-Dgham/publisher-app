@@ -1,3 +1,3 @@
-package com.mobelite.e2e.shared.constants;
+package com.mobelite.publisher.api.constants;
 
 public enum HttpMethod { GET, POST, PUT, PATCH, DELETE }

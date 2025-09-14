@@ -1,4 +1,4 @@
-package com.mobelite.e2e.shared.helpers;
+package com.mobelite.publisher.api.utils;
 
 
 import com.microsoft.playwright.APIResponse;

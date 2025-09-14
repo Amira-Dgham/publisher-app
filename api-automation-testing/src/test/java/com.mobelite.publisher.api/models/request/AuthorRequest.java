@@ -1,4 +1,4 @@
-package com.mobelite.e2e.models.request;
+package com.mobelite.publisher.api.models.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
