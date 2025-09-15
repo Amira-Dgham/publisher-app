@@ -520,3 +520,223 @@
 2025-09-15 10:50:02 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}
 2025-09-15 10:50:02 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
 2025-09-15 10:50:02 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Invalid value '{id}' for parameter 'id'. Expected type: Long","data":null,"timestamp":"2025-09-15T09:50:02.656559089"}
+2025-09-15 10:55:48 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":302,"name":"Holley_1","birthDate":"2002-03-01","nationality":"Ghana","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:49 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:49 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 409
+2025-09-15 10:55:49 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author with name 'Holley_1' already exists","data":null,"timestamp":"2025-09-15T09:55:49.995987847"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"nationality":"Nationality must not exceed 50 characters","name":"Author name must be between 2 and 100 characters","birthDate":"Birth date must be in the past"},"timestamp":"2025-09-15T09:55:50.030213722"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":303,"name":"TEST_AUTHOR_Efren_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":304,"name":"Jeremy_3","birthDate":"1965-01-14","nationality":"France","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":305,"name":"Daren_4","birthDate":"1986-07-04","nationality":"Brazil","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/305
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/999999
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author not found with ID: 999999","data":null,"timestamp":"2025-09-15T09:55:50.098619264"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors?sort=DESC&size=5&page=0
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Operation successful","data":{"content":[{"id":302,"name":"Holley_1","birthDate":"2002-03-01","nationality":"Ghana","books":[],"magazines":[]},{"id":304,"name":"Jeremy_3","birthDate":"1965-01-14","nationality":"France","books":[],"magazines":[]},{"id":303,"name":"TEST_AUTHOR_Efren_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},{"id":1,"name":"miraa","birthDate":"1998-08-21","nationality":"tunisienne","books":[{"id":1,"title":"what we found","publicationDate":"2025-07-09","type":null,"isbn":"isbn-data2025","authorName":"miraa"}],"magazines":[]}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalElements":4,"totalPages":1,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":4,"empty":false},"timestamp":"2025-09-15T09:55:50.113187764"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":306,"name":"Donny_5","birthDate":"1986-06-16","nationality":"Afghanistan","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors/306
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author retrieved successfully","data":{"id":306,"name":"Donny_5","birthDate":"1986-06-16","nationality":"Afghanistan","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/302
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/303
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/304
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/306
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":307,"name":"Lino_6","birthDate":"1989-03-05","nationality":"Nigeria","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"isbn":"ISBN must be between 10 and 20 characters"},"timestamp":"2025-09-15T09:55:50.348476847"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":140,"title":"TEST_BOOK_2","publicationDate":"1900-01-01","isbn":"1234567890","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":141,"title":"Now Sleeps the Crimson Petal_3","publicationDate":"2000-07-14","isbn":"3392370121427","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":142,"title":"A Glass of Blessings_4","publicationDate":"2000-06-25","isbn":"3476130010984","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/142
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/999999
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Book with ID 999999 not found","data":null,"timestamp":"2025-09-15T09:55:50.426003472"}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/books?sort=DESC&size=5&page=0
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Books retrieved successfully","data":{"content":[{"id":141,"title":"Now Sleeps the Crimson Petal_3","publicationDate":"2000-07-14","isbn":"3392370121427","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},{"id":140,"title":"TEST_BOOK_2","publicationDate":"1900-01-01","isbn":"1234567890","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},{"id":1,"title":"what we found","publicationDate":"2025-07-09","isbn":"isbn-data2025","author":{"id":1,"name":"miraa","nationality":"tunisienne","birthDate":"1998-08-21"}}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalElements":3,"totalPages":1,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":3,"empty":false},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":143,"title":"The Golden Apples of the Sun_5","publicationDate":"2000-04-07","isbn":"5390364275887","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/books/143
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book retrieved successfully","data":{"id":143,"title":"The Golden Apples of the Sun_5","publicationDate":"2000-04-07","isbn":"5390364275887","author":{"id":307,"name":"Lino_6","nationality":"Nigeria","birthDate":"1989-03-05"}},"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/140
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/141
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/143
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 10:55:50 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Invalid value '{id}' for parameter 'id'. Expected type: Long","data":null,"timestamp":"2025-09-15T09:55:50.485560597"}
+2025-09-15 10:57:54 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":308,"name":"Daniel_1","birthDate":"1999-02-20","nationality":"Chile","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 409
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author with name 'Daniel_1' already exists","data":null,"timestamp":"2025-09-15T09:57:56.135215002"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"nationality":"Nationality must not exceed 50 characters","name":"Author name is required","birthDate":"Birth date must be in the past"},"timestamp":"2025-09-15T09:57:56.174215252"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":309,"name":"TEST_AUTHOR_Keshia_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":310,"name":"Hue_3","birthDate":"1969-11-10","nationality":"Venezuela (Bolivarian Republic of)","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":311,"name":"Jayme_4","birthDate":"1974-03-18","nationality":"Korea (Democratic People's Republic of)","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/311
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/999999
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author not found with ID: 999999","data":null,"timestamp":"2025-09-15T09:57:56.245072169"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors?page=0&sort=DESC&size=5
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Operation successful","data":{"content":[{"id":308,"name":"Daniel_1","birthDate":"1999-02-20","nationality":"Chile","books":[],"magazines":[]},{"id":310,"name":"Hue_3","birthDate":"1969-11-10","nationality":"Venezuela (Bolivarian Republic of)","books":[],"magazines":[]},{"id":309,"name":"TEST_AUTHOR_Keshia_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},{"id":1,"name":"miraa","birthDate":"1998-08-21","nationality":"tunisienne","books":[{"id":1,"title":"what we found","publicationDate":"2025-07-09","type":null,"isbn":"isbn-data2025","authorName":"miraa"}],"magazines":[]}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalElements":4,"totalPages":1,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":4,"empty":false},"timestamp":"2025-09-15T09:57:56.266108586"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":312,"name":"Signe_5","birthDate":"1963-02-17","nationality":"Antigua and Barbuda","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors/312
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author retrieved successfully","data":{"id":312,"name":"Signe_5","birthDate":"1963-02-17","nationality":"Antigua and Barbuda","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/308
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/309
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/310
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/312
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":313,"name":"Elfreda_6","birthDate":"1961-02-22","nationality":"Togo","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"isbn":"ISBN must be between 10 and 20 characters"},"timestamp":"2025-09-15T09:57:56.509049627"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":144,"title":"TEST_BOOK_2","publicationDate":"1900-01-01","isbn":"1234567890","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":145,"title":"Nine Coaches Waiting_3","publicationDate":"2000-11-22","isbn":"2579189565844","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":146,"title":"Surprised by Joy_4","publicationDate":"2000-10-01","isbn":"5879504711420","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/146
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/999999
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Book with ID 999999 not found","data":null,"timestamp":"2025-09-15T09:57:56.575301502"}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/books?page=0&sort=DESC&size=5
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Books retrieved successfully","data":{"content":[{"id":145,"title":"Nine Coaches Waiting_3","publicationDate":"2000-11-22","isbn":"2579189565844","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},{"id":144,"title":"TEST_BOOK_2","publicationDate":"1900-01-01","isbn":"1234567890","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},{"id":1,"title":"what we found","publicationDate":"2025-07-09","isbn":"isbn-data2025","author":{"id":1,"name":"miraa","nationality":"tunisienne","birthDate":"1998-08-21"}}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalElements":3,"totalPages":1,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":3,"empty":false},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/books
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book created successfully","data":{"id":147,"title":"The World, the Flesh and the Devil_5","publicationDate":"2000-05-09","isbn":"2334358079030","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/books/147
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book retrieved successfully","data":{"id":147,"title":"The World, the Flesh and the Devil_5","publicationDate":"2000-05-09","isbn":"2334358079030","author":{"id":313,"name":"Elfreda_6","nationality":"Togo","birthDate":"1961-02-22"}},"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/book-schema.json
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/144
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/145
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/books/147
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Book deleted successfully","data":null,"timestamp":null}
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/313
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 10:57:56 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}

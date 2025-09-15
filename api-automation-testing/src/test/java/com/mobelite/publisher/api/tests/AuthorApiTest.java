@@ -28,8 +28,6 @@ import static com.mobelite.publisher.api.constants.Schemas.AUTHOR_SCHEMA;
 @Feature("E2E Author Management")
 public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
 
-    private final AuthorFactory authorFactory = new AuthorFactory();
-
     @Override
     protected TypeReference<ApiResponse<Author>> getItemTypeReference() {
         return new TypeReference<>() {};
@@ -53,7 +51,7 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Create author with valid data")
     @Story("Create author")
     public void createAuthorWithValidData() {
-        AuthorRequest req = authorFactory.createValidAuthorRequest();
+        AuthorRequest req = AuthorFactory.createValidAuthorRequest();
         var response = create(req, AUTHORS_BASE);
 
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_CREATED);
@@ -68,7 +66,7 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Create author with minimal data")
     @Story("Create author")
     public void createAuthorWithMinimalData() {
-        AuthorRequest req = authorFactory.createMinimalAuthorRequest();
+        AuthorRequest req = AuthorFactory.createMinimalAuthorRequest();
         var response = create(req, AUTHORS_BASE);
 
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_CREATED);
@@ -81,7 +79,7 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Retrieve author by ID")
     @Story("Retrieve author")
     public void getAuthorById() {
-        AuthorRequest req = authorFactory.createValidAuthorRequest();
+        AuthorRequest req = AuthorFactory.createValidAuthorRequest();
         var createResp = create(req, AUTHORS_BASE);
         ApiResponse<Author> created = parseAndValidate(createResp, API_RESPONSE_SCHEMA, AUTHOR_SCHEMA);
         trackCreatedEntity(created.getData().getId());
@@ -114,7 +112,7 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Delete author successfully")
     @Story("Delete author")
     public void deleteAuthor() {
-        AuthorRequest req = authorFactory.createValidAuthorRequest();
+        AuthorRequest req = AuthorFactory.createValidAuthorRequest();
         var createResp = create(req, AUTHORS_BASE);
         ApiResponse<Author> created = parseAndValidate(createResp, API_RESPONSE_SCHEMA, AUTHOR_SCHEMA);
 
@@ -125,7 +123,7 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Fail to create author with invalid data")
     @Story("Validation errors")
     public void createAuthorWithInvalidData() {
-        AuthorRequest req = authorFactory.createInvalidAuthorRequest();
+        AuthorRequest req = AuthorFactory.createInvalidAuthorRequest();
         var response = create(req, AUTHORS_BASE);
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_BAD_REQUEST);
     }
@@ -140,12 +138,12 @@ public class AuthorApiTest extends BaseTestApi<Author, AuthorRequest> {
     @Test(description = "Fail to create author with duplicate name")
     @Story("Validation errors")
     public void createAuthorWithDuplicateName() {
-        AuthorRequest req = authorFactory.createValidAuthorRequest();
+        AuthorRequest req = AuthorFactory.createValidAuthorRequest();
         var first = create(req, AUTHORS_BASE);
         ApiResponse<Author> created = parseAndValidate(first, API_RESPONSE_SCHEMA, AUTHOR_SCHEMA);
         trackCreatedEntity(created.getData().getId());
 
-        var duplicateReq = authorFactory.createDuplicateFromAuthor(created.getData());
+        var duplicateReq = AuthorFactory.createDuplicateFromAuthor(created.getData());
         var duplicateResp = create(duplicateReq, AUTHORS_BASE);
         ApiAssertions.assertStatus(duplicateResp, HttpStatusCodes.STATUS_CONFLICT);
     }

@@ -12,12 +12,12 @@ import static com.mobelite.publisher.api.utils.GenerateDataUtils.generateRandomB
 
 
 public class AuthorFactory {
-    private final AtomicLong authorCounter = new AtomicLong(1);
+    private static final AtomicLong authorCounter = new AtomicLong(1);
     private static final String TEST_AUTHOR_PREFIX = "TEST_AUTHOR_";
     private static final Faker faker = new Faker();
 
     @Step("Create author request")
-    public AuthorRequest createAuthorRequest(String name, LocalDate birthDate, String nationality) {
+    public static  AuthorRequest createAuthorRequest(String name, LocalDate birthDate, String nationality) {
         return AuthorRequest.builder()
                 .name(name)
                 .birthDate(birthDate)
@@ -26,7 +26,7 @@ public class AuthorFactory {
     }
 
     @Step("Create valid author request with Faker")
-    public AuthorRequest createValidAuthorRequest() {
+    public static  AuthorRequest createValidAuthorRequest() {
         String name = faker.name().firstName() + "_" + authorCounter.getAndIncrement();
         LocalDate birthDate = generateRandomBirthDate(20, 70);
         String nationality = faker.country().name();
@@ -34,13 +34,13 @@ public class AuthorFactory {
     }
 
     @Step("Create minimal author request with Faker")
-    public AuthorRequest createMinimalAuthorRequest() {
+    public static  AuthorRequest createMinimalAuthorRequest() {
         String name = TEST_AUTHOR_PREFIX + faker.name().firstName() + "_" + authorCounter.getAndIncrement();
         return createAuthorRequest(name, null, null);
     }
 
     @Step("Create invalid author request with Faker")
-    public AuthorRequest createInvalidAuthorRequest() {
+    public static  AuthorRequest createInvalidAuthorRequest() {
         String name = "";
         LocalDate birthDate = LocalDate.now().plusDays(1);
         String nationality = faker.lorem().characters(60);
@@ -48,7 +48,7 @@ public class AuthorFactory {
     }
 
     @Step("Create duplicate author request from existing Author")
-    public AuthorRequest createDuplicateFromAuthor(Author existing) {
+    public static  AuthorRequest createDuplicateFromAuthor(Author existing) {
         return createAuthorRequest(
                 existing.getName(),
                 existing.getBirthDate(),

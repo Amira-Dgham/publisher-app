@@ -78,7 +78,7 @@ public class ApiUtils {
      * Delete any entity by ID
      */
     public static void deleteSharedAuthor(ApiClient apiClient, Long id, String endpoint) {
-        apiClient.execute(HttpMethod.DELETE, buildPath(endpoint), null);
+        apiClient.execute(HttpMethod.DELETE, buildPath(endpoint,id), null);
     }
 
 }

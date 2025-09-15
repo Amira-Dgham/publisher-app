@@ -31,8 +31,6 @@ import static com.mobelite.publisher.api.constants.Schemas.BOOK_SCHEMA;
 @Feature("E2E Book Management")
 public class BookApiTest extends BaseTestApi<Book, BookRequest> {
 
-    private final BookFactory bookFactory = new BookFactory();
-    private final AuthorFactory authorFactory = new AuthorFactory();
     private Long authorId; // will hold a valid author ID for books
 
     @Override
@@ -48,7 +46,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @BeforeClass
     public void setUp() {
         init(request);
-        AuthorRequest authorRequest = authorFactory.createValidAuthorRequest();
+        AuthorRequest authorRequest = AuthorFactory.createValidAuthorRequest();
         authorId = ApiUtils.createAuthorEntity(apiClient, authorRequest, AUTHORS_BASE);
     }
 
@@ -61,7 +59,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @Test(description = "Create book with valid data")
     @Story("Create Book")
     public void createBookWithValidData() {
-        BookRequest bookRequest = bookFactory.createValidBook(authorId);
+        BookRequest bookRequest = BookFactory.createValidBook(authorId);
         var response = create(bookRequest, BOOKS_BASE);
 
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_CREATED);
@@ -77,7 +75,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @Test(description = "Create book with minimal data")
     @Story("Create Book")
     public void createBookWithMinimalData() {
-        BookRequest minimalRequest = bookFactory.createMinimalBook(authorId);
+        BookRequest minimalRequest = BookFactory.createMinimalBook(authorId);
         var response = create(minimalRequest, BOOKS_BASE);
 
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_CREATED);
@@ -92,7 +90,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @Test(description = "Retrieve book by ID")
     @Story("Retrieve Book")
     public void getBookById() {
-        BookRequest bookRequest = bookFactory.createValidBook(authorId);
+        BookRequest bookRequest = BookFactory.createValidBook(authorId);
         var createResponse = create(bookRequest, BOOKS_BASE);
         ApiResponse<Book> createdParsed = parseAndValidate(createResponse, API_RESPONSE_SCHEMA, BOOK_SCHEMA);
         Book created = createdParsed.getData();
@@ -125,7 +123,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @Test(description = "Delete book successfully")
     @Story("Delete Book")
     public void deleteBook() {
-        BookRequest bookRequest = bookFactory.createValidBook(authorId);
+        BookRequest bookRequest = BookFactory.createValidBook(authorId);
         var createResponse = create(bookRequest, BOOKS_BASE);
         ApiResponse<Book> createdParsed = parseAndValidate(createResponse, API_RESPONSE_SCHEMA, BOOK_SCHEMA);
         Book created = createdParsed.getData();
@@ -137,7 +135,7 @@ public class BookApiTest extends BaseTestApi<Book, BookRequest> {
     @Test(description = "Fail to create book with invalid data")
     @Story("Create Book")
     public void createBookWithInvalidData() {
-        BookRequest invalidRequest = bookFactory.createWithInvalidISBN(authorId);
+        BookRequest invalidRequest = BookFactory.createWithInvalidISBN(authorId);
         var response = create(invalidRequest, BOOKS_BASE);
 
         ApiAssertions.assertStatus(response, HttpStatusCodes.STATUS_BAD_REQUEST);
