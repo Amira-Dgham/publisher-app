@@ -1,288 +1,233 @@
-2025-09-14 15:56:14 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 15:56:14 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":251,"name":"Mildred_1","birthDate":"2005-08-27","nationality":"Korea (Democratic People's Republic of)","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 15:56:15 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 15:56:15 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 15:56:15 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}/251
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 500
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 15:56:15 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"An unexpected error occurred","data":null,"timestamp":"2025-09-14T14:56:15.820503094"}
-2025-09-14 15:57:46 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 15:57:46 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":252,"name":"Kip_1","birthDate":"1973-10-11","nationality":"Colombia","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 15:57:48 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 15:57:48 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 15:57:48 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/{id}/252
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 500
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 15:57:48 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"An unexpected error occurred","data":null,"timestamp":"2025-09-14T14:57:48.302218887"}
-2025-09-14 17:29:21 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:29:21 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":253,"name":"Laura_1","birthDate":"1969-04-01","nationality":"Paraguay","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 17:29:22 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 17:29:22 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 17:29:22 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/253
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:29:22 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
-2025-09-14 17:42:21 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:42:21 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:42:23 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:42:23 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
-2025-09-14 17:42:23 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:42:23 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Invalid JSON format","data":null,"timestamp":"2025-09-14T16:42:23.63774625"}
-2025-09-14 17:42:23 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:42:23 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:42:23 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:43:05 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:43:05 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:43:06 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:43:06 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
-2025-09-14 17:43:06 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:43:06 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Invalid JSON format","data":null,"timestamp":"2025-09-14T16:43:06.940811131"}
-2025-09-14 17:43:06 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:43:06 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:43:06 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:43:23 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:43:23 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+2025-09-15 09:14:50 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-15 09:14:50 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
   /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
 
-2025-09-14 17:43:23 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:43:25 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:43:25 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
-2025-09-14 17:43:25 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:43:25 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Invalid JSON format","data":null,"timestamp":"2025-09-14T16:43:25.643201918"}
-2025-09-14 17:43:25 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:43:25 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:43:25 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:48:30 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:48:51 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:48:51 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":254,"name":"Jerrod_1","birthDate":"2003-07-25","nationality":"Somalia","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 17:48:53 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 17:48:53 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 17:48:53 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/254
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:48:53 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
-2025-09-14 17:57:27 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:57:27 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+2025-09-15 09:14:50 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":274,"name":"Orlando_1","birthDate":"1998-09-22","nationality":"Azerbaijan","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 409
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author with name 'Orlando_1' already exists","data":null,"timestamp":"2025-09-15T08:14:52.772203714"}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"nationality":"Nationality must not exceed 50 characters","name":"Author name is required","birthDate":"Birth date must be in the past"},"timestamp":"2025-09-15T08:14:52.819288339"}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":275,"name":"TEST_AUTHOR_Johnathon_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":276,"name":"Jayne_3","birthDate":"1977-12-30","nationality":"Luxembourg","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":277,"name":"Charity_4","birthDate":"2001-06-07","nationality":"Israel","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/277
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:14:52 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
+2025-09-15 09:14:52 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/999999
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author not found with ID: 999999","data":null,"timestamp":"2025-09-15T08:14:52.904781255"}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors?page=0&sort=DESC&size=5
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Operation successful","data":{"content":[{"id":268,"name":"Dottie_1","birthDate":"1996-07-27","nationality":"Ecuador","books":[],"magazines":[]},{"id":259,"name":"Elisha_1","birthDate":"1964-12-29","nationality":"Guinea","books":[],"magazines":[]},{"id":257,"name":"Elmer_1","birthDate":"1989-11-06","nationality":"Kenya","books":[],"magazines":[]},{"id":264,"name":"Faustino_1","birthDate":"1964-06-30","nationality":"Rwanda","books":[],"magazines":[]},{"id":258,"name":"Herschel_1","birthDate":"1978-02-18","nationality":"Marshall Islands","books":[],"magazines":[]}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":false,"totalElements":20,"totalPages":4,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":5,"empty":false},"timestamp":"2025-09-15T08:14:52.925267505"}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":278,"name":"Joselyn_5","birthDate":"1999-09-09","nationality":"Iran (Islamic Republic of)","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors/278
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author retrieved successfully","data":{"id":278,"name":"Joselyn_5","birthDate":"1999-09-09","nationality":"Iran (Islamic Republic of)","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/274
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/275
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/276
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:14:52 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/278
+2025-09-15 09:14:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:14:53 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:14:53 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:19 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-15 09:15:19 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
   /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
 
-2025-09-14 17:57:27 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:57:29 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:57:29 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 17:57:29 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:57:29 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":255,"name":"Linnea_1","birthDate":"1965-06-19","nationality":"Bulgaria","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 17:57:29 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 17:57:29 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 17:57:29 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:57:29 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:57:29 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:58:08 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:58:08 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+2025-09-15 09:15:19 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":279,"name":"Gayla_1","birthDate":"2002-07-02","nationality":"Ireland","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 409
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author with name 'Gayla_1' already exists","data":null,"timestamp":"2025-09-15T08:15:21.573801255"}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"nationality":"Nationality must not exceed 50 characters","name":"Author name must be between 2 and 100 characters","birthDate":"Birth date must be in the past"},"timestamp":"2025-09-15T08:15:21.61529638"}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":280,"name":"TEST_AUTHOR_Jame_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":281,"name":"Renaldo_3","birthDate":"1995-09-15","nationality":"Costa Rica","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":282,"name":"Tomika_4","birthDate":"1957-11-30","nationality":"Panama","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/282
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/999999
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author not found with ID: 999999","data":null,"timestamp":"2025-09-15T08:15:21.705574297"}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors?page=0&size=5&sort=DESC
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Operation successful","data":{"content":[{"id":268,"name":"Dottie_1","birthDate":"1996-07-27","nationality":"Ecuador","books":[],"magazines":[]},{"id":259,"name":"Elisha_1","birthDate":"1964-12-29","nationality":"Guinea","books":[],"magazines":[]},{"id":257,"name":"Elmer_1","birthDate":"1989-11-06","nationality":"Kenya","books":[],"magazines":[]},{"id":264,"name":"Faustino_1","birthDate":"1964-06-30","nationality":"Rwanda","books":[],"magazines":[]},{"id":279,"name":"Gayla_1","birthDate":"2002-07-02","nationality":"Ireland","books":[],"magazines":[]}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":false,"totalElements":20,"totalPages":4,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":5,"empty":false},"timestamp":"2025-09-15T08:15:21.730338672"}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":283,"name":"Kurtis_5","birthDate":"1962-03-12","nationality":"Ethiopia","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors/283
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author retrieved successfully","data":{"id":283,"name":"Kurtis_5","birthDate":"1962-03-12","nationality":"Ethiopia","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/279
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/280
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/281
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/283
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:21 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:40 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-15 09:15:41 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
   /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
 
-2025-09-14 17:58:08 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:58:10 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:58:10 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 17:58:10 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:58:10 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":256,"name":"Maryellen_1","birthDate":"1969-07-20","nationality":"Tonga","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 17:58:10 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 17:58:10 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 17:58:10 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:58:10 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:58:10 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 17:58:39 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 17:58:39 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 17:58:41 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 17:58:41 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 17:58:41 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 17:58:41 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":257,"name":"Elmer_1","birthDate":"1989-11-06","nationality":"Kenya","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 17:58:41 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 17:58:41 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 17:58:41 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:58:41 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 17:58:41 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:03:39 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:03:39 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:03:41 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:03:41 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:03:41 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:03:41 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":258,"name":"Herschel_1","birthDate":"1978-02-18","nationality":"Marshall Islands","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:03:41 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:04:06 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:04:06 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:04:08 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:04:08 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:04:08 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:04:08 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":259,"name":"Elisha_1","birthDate":"1964-12-29","nationality":"Guinea","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:04:08 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:04:08 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:04:08 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:04:08 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:04:08 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:05:32 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:05:32 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:05:34 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:05:34 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:05:34 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:05:34 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":260,"name":"Lakita_1","birthDate":"1990-02-27","nationality":"Bangladesh","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:05:34 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:05:34 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:05:34 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:07:07 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:07:07 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:07:09 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:07:09 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:07:09 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:07:09 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":261,"name":"Johnny_1","birthDate":"1998-06-22","nationality":"Panama","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:07:09 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:07:09 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:07:09 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:07:09 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:07:09 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:08:06 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:08:06 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:08:07 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:08:07 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:08:07 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:08:08 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":262,"name":"Rudolph_1","birthDate":"2000-09-22","nationality":"Brunei Darussalam","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:08:08 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:08:08 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:08:08 [main] INFO  c.m.p.api.tests.AuthorApiTest - parsedResponseApiResponse(success=true, message=Author created successfully, data={id=262, name=Rudolph_1, birthDate=2000-09-22, nationality=Brunei Darussalam, books=[], magazines=[]}, timestamp=null, error=null, code=null)
-2025-09-14 18:08:08 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:08:08 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:08:08 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:08:37 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:08:37 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:08:39 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:08:39 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:08:39 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:08:39 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":263,"name":"Jayson_1","birthDate":"1978-12-23","nationality":"Brunei Darussalam","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:08:39 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:08:39 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:08:39 [main] INFO  c.m.p.api.tests.AuthorApiTest - parsedResponseApiResponse(success=true, message=Author created successfully, data={id=263, name=Jayson_1, birthDate=1978-12-23, nationality=Brunei Darussalam, books=[], magazines=[]}, timestamp=null, error=null, code=null)
-2025-09-14 18:08:39 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:09:23 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:09:23 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:09:25 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:09:25 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:09:25 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:09:25 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":264,"name":"Faustino_1","birthDate":"1964-06-30","nationality":"Rwanda","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:09:25 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:09:25 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:09:25 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:09:25 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:09:25 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:10:09 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:10:09 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:10:11 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:10:11 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:10:11 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:10:11 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":265,"name":"Lynwood_1","birthDate":"1998-05-30","nationality":"Papua New Guinea","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:10:11 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:10:11 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:10:11 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:10:11 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:10:11 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:11:24 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:11:24 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:11:26 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:11:26 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:11:26 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:11:26 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":266,"name":"Karon_1","birthDate":"1998-08-21","nationality":"Croatia","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:11:26 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:11:26 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:11:26 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:11:26 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:11:26 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:11:57 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:11:57 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:11:59 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:11:59 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:11:59 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:11:59 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":267,"name":"Zack_1","birthDate":"2003-11-09","nationality":"Sierra Leone","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:11:59 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:11:59 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:11:59 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:11:59 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:11:59 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:18:14 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:18:14 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:18:16 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:18:16 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:18:16 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:18:16 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":268,"name":"Dottie_1","birthDate":"1996-07-27","nationality":"Ecuador","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:18:16 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:18:16 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:18:16 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:20:08 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:20:08 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:20:10 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:20:10 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:20:10 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:20:10 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":269,"name":"Marietta_1","birthDate":"1977-12-10","nationality":"Japan","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:20:10 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:20:10 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:20:10 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:20:10 [main] ERROR io.qameta.allure.AllureLifecycle - Could not add attachment: no test is running
-2025-09-14 18:20:10 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:27:34 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:27:34 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":271,"name":"Emilia_1","birthDate":"1975-07-30","nationality":"San Marino","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:27:36 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:27:36 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:27:36 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/271
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:27:36 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
-2025-09-14 18:29:01 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:29:01 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":272,"name":"Claude_1","birthDate":"1966-01-15","nationality":"Nigeria","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:29:04 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:29:04 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:29:04 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/272
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:29:04 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
-2025-09-14 18:29:12 [main] INFO  c.m.p.api.config.ConfigManager - Loaded configuration for environment: dev
-2025-09-14 18:29:12 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
-  /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
-
-2025-09-14 18:29:12 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":273,"name":"Sona_1","birthDate":"1970-08-11","nationality":"Angola","books":[],"magazines":[]},"timestamp":null}
-2025-09-14 18:29:14 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
-2025-09-14 18:29:14 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
-2025-09-14 18:29:14 [main] INFO  c.m.p.api.tests.AuthorApiTest - hellooo
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/273
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
-2025-09-14 18:29:14 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:41 [main] INFO  c.m.publisher.api.base.BaseTest - hellooo
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":284,"name":"Lenny_1","birthDate":"1992-04-01","nationality":"Tonga","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 409
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author with name 'Lenny_1' already exists","data":null,"timestamp":"2025-09-15T08:15:42.869470542"}
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 400
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Validation failed","data":{"nationality":"Nationality must not exceed 50 characters","name":"Author name is required","birthDate":"Birth date must be in the past"},"timestamp":"2025-09-15T08:15:42.910557209"}
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":285,"name":"TEST_AUTHOR_Manuela_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":286,"name":"Ashton_3","birthDate":"1971-04-20","nationality":"Mauritius","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":287,"name":"Margarito_4","birthDate":"1999-06-26","nationality":"Kiribati","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/287
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/999999
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 404
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:42 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":false,"message":"Author not found with ID: 999999","data":null,"timestamp":"2025-09-15T08:15:42.991605334"}
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors?page=0&sort=DESC&size=5
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Operation successful","data":{"content":[{"id":286,"name":"Ashton_3","birthDate":"1971-04-20","nationality":"Mauritius","books":[],"magazines":[]},{"id":284,"name":"Lenny_1","birthDate":"1992-04-01","nationality":"Tonga","books":[],"magazines":[]},{"id":285,"name":"TEST_AUTHOR_Manuela_2","birthDate":null,"nationality":null,"books":[],"magazines":[]},{"id":1,"name":"miraa","birthDate":"1998-08-21","nationality":"tunisienne","books":[{"id":1,"title":"what we found","publicationDate":"2025-07-09","type":null,"isbn":"isbn-data2025","authorName":"miraa"}],"magazines":[]}],"pageable":{"pageNumber":0,"pageSize":5,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"last":true,"totalElements":4,"totalPages":1,"size":5,"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"first":true,"numberOfElements":4,"empty":false},"timestamp":"2025-09-15T08:15:43.024468209"}
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing POST /api/v1/authors
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 201
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author created successfully","data":{"id":288,"name":"Theodore_5","birthDate":"2005-10-16","nationality":"Saint Kitts and Nevis","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:43 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:43 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing GET /api/v1/authors/288
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author retrieved successfully","data":{"id":288,"name":"Theodore_5","birthDate":"2005-10-16","nationality":"Saint Kitts and Nevis","books":[],"magazines":[]},"timestamp":null}
+2025-09-15 09:15:43 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Wrapper schema validation passed: /schemas/api-response-schema.json
+2025-09-15 09:15:43 [main] INFO  c.m.p.a.u.PlaywrightSchemaValidatorUtils - Validating 'data' object against schema: /schemas/author-schema.json
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/284
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/285
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/286
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.ApiClient - Executing DELETE /api/v1/authors/288
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status: 200
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Status Text: 
+2025-09-15 09:15:43 [main] INFO  c.m.publisher.api.base.BaseTest - Body: {"success":true,"message":"Author deleted successfully","data":null,"timestamp":null}

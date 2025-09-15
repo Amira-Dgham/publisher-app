@@ -56,6 +56,9 @@ public abstract class BaseTestApi<T, R> extends BaseTest {
     public APIResponse getAll(String endpoint) {
         return getAll(endpoint, null, null);
     }
+    public APIResponse getAll(String endpoint, Map<String, String> queryParams) {
+        return getAll(endpoint, queryParams, null);
+    }
 
     public APIResponse getAll(String endpoint, Map<String, String> queryParams, Map<String, String> headers) {
         String url = ApiUtils.buildEndpointWithParams(endpoint, queryParams);
