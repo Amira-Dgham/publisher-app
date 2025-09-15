@@ -1,8 +1,8 @@
 package com.mobelite.e2e.api.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.mobelite.e2e.api.models.response.ApiResponse;
-import com.mobelite.e2e.api.models.response.PageResponse;
+import com.mobelite.e2e.models.response.ApiResponse;
+import com.mobelite.e2e.models.response.PageResponse;
 import com.mobelite.e2e.config.BaseTest;
 import com.mobelite.e2e.shared.constants.HttpMethod;
 import com.microsoft.playwright.APIRequestContext;

@@ -3,7 +3,7 @@ package com.mobelite.e2e.api.core;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.microsoft.playwright.APIResponse;
-import com.mobelite.e2e.api.models.response.ApiResponse;
+import com.mobelite.e2e.models.response.ApiResponse;
 import io.qameta.allure.Step;
 
 public class ApiAssertions {

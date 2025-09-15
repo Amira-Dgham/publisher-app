@@ -1,7 +1,7 @@
 package com.mobelite.e2e.api.fixtures;
 
-import com.mobelite.e2e.api.models.Author;
-import com.mobelite.e2e.api.models.request.AuthorRequest;
+import com.mobelite.e2e.models.Author;
+import com.mobelite.e2e.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;

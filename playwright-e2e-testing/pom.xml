@@ -22,7 +22,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <playwright.version>1.48.0</playwright.version>
         <allure.version>2.29.0</allure.version>
     </properties>
