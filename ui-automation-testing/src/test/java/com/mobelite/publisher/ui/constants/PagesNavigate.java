@@ -1,4 +1,4 @@
-package com.mobelite.e2e.shared.constants;
+package com.mobelite.publisher.ui.constants;
 
 public final class  PagesNavigate {
 

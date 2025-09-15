@@ -1,8 +1,7 @@
-package com.mobelite.publisher.api.config;
+package com.mobelite.publisher.ui.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,18 +15,15 @@ public final class ConfigManager {
 
     private static volatile ConfigManager instance;
 
-    private final String apiBaseUrl;
+    private final String uiBaseUrl;
     // headless = true  → runs browser in background (faster, good for CI/CD)
     // headless = false → shows browser window (useful for debugging)
     private final boolean headless;
-    // JSON parser and generator for Java ( Serialization / Deserialization)
-    private final ObjectMapper objectMapper;
 
     private ConfigManager() {
         Properties props = loadProperties();
-        this.apiBaseUrl = props.getProperty("api.base.url");
+        this.uiBaseUrl = props.getProperty("ui.base.url");
         this.headless = Boolean.parseBoolean(props.getProperty("browser.headless", "true"));
-        this.objectMapper = createObjectMapper();
     }
 
     public static ConfigManager getInstance() {
@@ -57,11 +53,5 @@ public final class ConfigManager {
         return properties;
     }
 
-    private ObjectMapper createObjectMapper() {
-        return new ObjectMapper()
-                .registerModule(new JavaTimeModule()) // support LocalDate, LocalDateTime
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) // ignore unknown JSON fields
-                .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false) // read timestamps as milliseconds
-                .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // write dates as ISO, not timestamps
-    }
+
 }
