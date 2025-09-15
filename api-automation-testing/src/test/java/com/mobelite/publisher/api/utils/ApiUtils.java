@@ -1,7 +1,13 @@
 package com.mobelite.publisher.api.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.options.RequestOptions;
 import com.mobelite.publisher.api.base.ApiClient;
+import com.mobelite.publisher.api.constants.HttpMethod;
+import com.mobelite.publisher.api.models.Author;
+import com.mobelite.publisher.api.models.request.AuthorRequest;
+import com.mobelite.publisher.api.models.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
@@ -56,4 +62,23 @@ public class ApiUtils {
                         + URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
                 .collect(Collectors.joining("&"));
     }
+
+    /**
+     * Create an author and return its ID
+     */
+    public static Long createAuthorEntity(ApiClient apiClient, AuthorRequest request, String endpoint) {
+        RequestOptions options = ApiUtils.buildRequestOptions(request, null, apiClient);
+        APIResponse response = apiClient.execute(HttpMethod.POST, endpoint, options);
+        com.mobelite.publisher.api.models.response.ApiResponse<Author> parsed = apiClient.parseResponse(response,
+                new TypeReference<ApiResponse<Author>>() {});
+        return parsed.getData().getId();
+    }
+
+    /**
+     * Delete any entity by ID
+     */
+    public static void deleteSharedAuthor(ApiClient apiClient, Long id, String endpoint) {
+        apiClient.execute(HttpMethod.DELETE, buildPath(endpoint), null);
+    }
+
 }

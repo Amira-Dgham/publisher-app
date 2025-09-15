@@ -36,7 +36,6 @@ public class BaseTest {
 
     @BeforeClass
     public void setup() {
-        log.info("hellooo");
         createPlaywright();
         createAPIRequestContext();
     }
@@ -79,8 +78,6 @@ public class BaseTest {
 
     protected void logResponse(final APIResponse response) {
         log.info("Status: {}", response.status());
-        log.info("Status Text: {}", response.statusText());
-
         try {
             log.info("Body: {}", response.text()); // Logs response body as string
         } catch (Exception e) {
