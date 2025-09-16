@@ -4,8 +4,7 @@
 
     <test name="Author API Tests">
         <classes>
-            <class name="com.mobelite.publisher.api.tests.AuthorApiTest"/>
-            <class name="com.mobelite.publisher.api.tests.BookApiTest"/>
+            <class name="com.mobelite.publisher.ui.tests.AuthorUiTest"/>
         </classes>
     </test>
 

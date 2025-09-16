@@ -6,9 +6,7 @@ import com.mobelite.publisher.ui.config.ConfigManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -16,35 +14,29 @@ import java.util.Map;
 @Slf4j
 @Getter
 public class BaseTest {
-    protected Page page;
+    protected static Playwright playwright;
+    protected static Browser browser;
     protected BrowserContext context;
-    private static Playwright playwright;
-    private static Browser browser;
+    protected Page page;
     protected static ConfigManager config = ConfigManager.getInstance();
 
     @BeforeClass
-    public void setup() {
+    public void setupClass() {
         createPlaywrightAndBrowser();
-    }
 
-    @BeforeMethod
-    public void setupTest() {
         context = browser.newContext(new Browser.NewContextOptions()
                 .setViewportSize(1920, 1080)
                 .setAcceptDownloads(true)
                 .setExtraHTTPHeaders(Map.of("User-Agent", "E2E-Web-Client/1.0"))
         );
-        page = context.newPage();
-    }
 
-    @AfterMethod
-    public void tearDownTest() {
-        if (page != null) page.close();
-        if (context != null) context.close();
+        page = context.newPage();
     }
 
     @AfterClass
     public void tearDownClass() {
+        if (page != null) page.close();
+        if (context != null) context.close();
         if (browser != null) browser.close();
         if (playwright != null) playwright.close();
     }
@@ -64,5 +56,4 @@ public class BaseTest {
         page.navigate(config.getUiBaseUrl() + relativePath);
         page.waitForLoadState(LoadState.NETWORKIDLE);
     }
-
 }

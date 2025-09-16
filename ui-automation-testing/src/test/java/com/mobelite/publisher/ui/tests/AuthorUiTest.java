@@ -5,9 +5,11 @@ import com.mobelite.publisher.ui.factory.AuthorFactory;
 import com.mobelite.publisher.ui.models.AuthorRequest;
 import com.mobelite.publisher.ui.pages.AuthorPage;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE;
@@ -15,11 +17,22 @@ import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE
 public class AuthorUiTest extends BaseTest {
 
     private AuthorPage authorPage;
+    private List<String> createdAuthors = new ArrayList<>();
 
-    @BeforeMethod
+    @BeforeClass
     public void initPage() {
         navigateTo(AUTHORS_NAVIGATE);// open authors page
         authorPage = new AuthorPage(page);
+    }
+    @AfterMethod
+    public void cleanup() {
+        for (String name : createdAuthors) {
+            if (authorPage.isAuthorInTable(name, "", "")) {
+                authorPage.deleteAuthor(name);
+                authorPage.confirmDelete();
+            }
+        }
+        createdAuthors.clear();
     }
 
     @Test
@@ -52,20 +65,38 @@ public class AuthorUiTest extends BaseTest {
         authorPage.openAddAuthorDialog();
         authorPage.fillAuthorForm(name, birthDate, nationality);
         authorPage.saveAuthor();
-
+        authorPage.waitForDialogToClose();
+        authorPage.waitForTableToLoad();
+        createdAuthors.add(name);
         Assert.assertTrue(authorPage.isAuthorInTable(name ,birthDate, nationality));
+
     }
 
     @Test
     void deleteAuthor() {
-        authorPage.deleteAuthor("John Doe");
+        AuthorRequest request = AuthorFactory.createValidAuthorRequest();
+        String name =  request.getName();
+        String birthDate = request.getBirthDate() != null ? request.getBirthDate().toString() : "";
+        String nationality = request.getNationality();
 
+        authorPage.openAddAuthorDialog();
+        authorPage.fillAuthorForm(name, birthDate, nationality);
+        authorPage.saveAuthor();
+        authorPage.waitForDialogToClose();
+        authorPage.waitForTableToLoad();
+        Assert.assertTrue(authorPage.isAuthorInTable(name, birthDate, nationality));
+
+        authorPage.deleteAuthor(name);
+        authorPage.confirmDelete();
+        authorPage.waitForDialogToClose();
+        authorPage.waitForTableToLoad();
+        Assert.assertFalse(authorPage.isAuthorInTable(name, birthDate, nationality));
     }
 
     @Test
     void validateFormErrors() {
         authorPage.openAddAuthorDialog();
-        authorPage.saveAuthor(); // save without filling
+        authorPage.saveAuthor();
 
         Assert.assertTrue(authorPage.isNameRequiredErrorVisible(),
                 "Name required error should be visible");
