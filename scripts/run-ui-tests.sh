@@ -6,8 +6,11 @@ ACTION=${1:-test}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-TEST_RESULTS_DIR="$PROJECT_ROOT/playwright-e2e-testing/target"
+TEST_RESULTS_DIR="$PROJECT_ROOT/ui-automation-testing/target"
 
+ALLURE_CONTAINER_NAME="allure-server-ui"
+ALLURE_PORT=8082
+ALLURE_RESULTS="$TEST_RESULTS_DIR/allure-results"
 
 mkdir -p "$TEST_RESULTS_DIR"
 
@@ -16,31 +19,30 @@ success() { echo -e "[SUCCESS] $1"; }
 error()   { echo -e "[ERROR] $1"; }
 
 run_tests_in_container() {
-    info "running E2E container..."
-    # Stop existing allure container if running
-    docker stop allure-server >/dev/null 2>&1 || true
+    info "Running UI E2E container..."
+    docker stop "$ALLURE_CONTAINER_NAME" >/dev/null 2>&1 || true
 
     docker compose run --rm \
         -e TEST_ENV="$ENV" \
-        e2e-publisher-service \
+        ui-automation-testing \
         bash -c "cd /e2e && mvn clean test -Dmaven.test.failure.ignore=true allure:report -P$ENV -Dtest.env=$ENV"
 
-    success "Tests completed!"
+    success "UI Tests completed!"
     info "Allure report available in: $TEST_RESULTS_DIR/site/allure-maven-plugin/index.html"
 
-    info "Starting Allure server at http://localhost:8082"
-    docker run --rm -d \
-      --name allure-server \
-      -p 8082:4040 \
-      -v $TEST_RESULTS_DIR/allure-results:/app/allure-results \
-      frankescobar/allure-docker-service
+    info "Starting Allure server at http://localhost:$ALLURE_PORT"
+    docker run -d --rm \
+        --name "$ALLURE_CONTAINER_NAME" \
+        -p "$ALLURE_PORT":4040 \
+        -v "$ALLURE_RESULTS":/app/allure-results \
+        frankescobar/allure-docker-service
 }
 
 case "$ACTION" in
     test|report) run_tests_in_container ;;
-    start) docker compose up -d e2e-publisher-service ;;
-    stop)  docker compose stop e2e-publisher-service ;;
-    logs)  docker compose logs -f e2e-publisher-service ;;
+    start) docker compose up -d ui-automation-testing ;;
+    stop)  docker compose stop ui-automation-testing ;;
+    logs)  docker compose logs -f ui-automation-testing ;;
     clean) docker compose down --remove-orphans --volumes ;;
     help|-h|--help)
         echo "Usage: $0 [COMMAND] [ENV]"
