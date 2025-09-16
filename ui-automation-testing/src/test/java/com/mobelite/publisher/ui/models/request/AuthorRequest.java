@@ -1,4 +1,4 @@
-package com.mobelite.publisher.ui.models;
+package com.mobelite.publisher.ui.models.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

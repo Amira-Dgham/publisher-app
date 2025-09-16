@@ -1,11 +1,8 @@
-package com.mobelite.publisher.ui.models.response;
+package com.mobelite.publisher.ui.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
  * Model representing a Magazine for E2E testing.
  * Mirrors the structure of the Spring service Magazine entity and DTOs.
  */
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

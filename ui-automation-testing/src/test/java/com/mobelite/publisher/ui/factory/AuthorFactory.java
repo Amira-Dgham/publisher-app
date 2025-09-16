@@ -1,6 +1,6 @@
 package com.mobelite.publisher.ui.factory;
 
-import com.mobelite.publisher.ui.models.AuthorRequest;
+import com.mobelite.publisher.ui.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import net.datafaker.Faker;
 

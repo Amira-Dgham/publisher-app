@@ -19,6 +19,7 @@ public class BaseTest {
     protected BrowserContext context;
     protected Page page;
     protected static ConfigManager config = ConfigManager.getInstance();
+    protected APIRequestContext api;
 
     @BeforeClass
     public void setupClass() {
@@ -31,12 +32,22 @@ public class BaseTest {
         );
 
         page = context.newPage();
+
+        api = playwright.request().newContext(new APIRequest.NewContextOptions()
+                .setBaseURL(config.getApiBaseUrl())
+                .setExtraHTTPHeaders(Map.of(
+                        "Content-Type", "application/json",
+                        "Accept", "application/json",
+                        "User-Agent", "E2E-API-Client/1.0"
+                ))
+        );
     }
 
     @AfterClass
     public void tearDownClass() {
         if (page != null) page.close();
         if (context != null) context.close();
+        if (api != null) api.dispose();
         if (browser != null) browser.close();
         if (playwright != null) playwright.close();
     }

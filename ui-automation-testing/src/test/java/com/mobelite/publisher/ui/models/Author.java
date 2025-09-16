@@ -1,4 +1,4 @@
-package com.mobelite.publisher.ui.models.response;
+package com.mobelite.publisher.ui.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

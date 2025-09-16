@@ -1,9 +1,13 @@
 package com.mobelite.publisher.ui.tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mobelite.publisher.ui.base.BaseTest;
 import com.mobelite.publisher.ui.factory.AuthorFactory;
-import com.mobelite.publisher.ui.models.AuthorRequest;
+import com.mobelite.publisher.ui.models.request.AuthorRequest;
+import com.mobelite.publisher.ui.models.response.ApiResponse;
+import com.mobelite.publisher.ui.models.response.AuthorDataWrapper;
 import com.mobelite.publisher.ui.pages.AuthorPage;
+import com.mobelite.publisher.ui.utils.ApiUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -15,21 +19,29 @@ import java.util.List;
 import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE;
 
 public class AuthorUiTest extends BaseTest {
-
+    TypeReference<ApiResponse<AuthorDataWrapper>> typeRef = new TypeReference<>() {};
     private AuthorPage authorPage;
     private List<String> createdAuthors = new ArrayList<>();
+    private ApiUtils apiUtils;
 
     @BeforeClass
     public void initPage() {
         navigateTo(AUTHORS_NAVIGATE);// open authors page
         authorPage = new AuthorPage(page);
+        apiUtils = new ApiUtils(api);
     }
     @AfterMethod
     public void cleanup() {
         for (String name : createdAuthors) {
             if (authorPage.isAuthorInTable(name, "", "")) {
-                authorPage.deleteAuthor(name);
-                authorPage.confirmDelete();
+                Long authorId = apiUtils.getIdByName(
+                        "/api/v1/authors",
+                        name,
+                        typeRef,
+                        AuthorDataWrapper::getContent,  // Extract List<Author>
+                        author -> author.getId()        // Extract ID
+                );
+                apiUtils.deleteById("/api/v1/authors", authorId);
             }
         }
         createdAuthors.clear();
