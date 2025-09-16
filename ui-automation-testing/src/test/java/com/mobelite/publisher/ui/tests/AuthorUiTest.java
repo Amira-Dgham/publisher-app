@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mobelite.publisher.ui.constants.ApiEndpoints.AUTHORS_BASE;
 import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE;
 
 public class AuthorUiTest extends BaseTest {
@@ -26,7 +27,7 @@ public class AuthorUiTest extends BaseTest {
 
     @BeforeClass
     public void initPage() {
-        navigateTo(AUTHORS_NAVIGATE);// open authors page
+        navigateTo(AUTHORS_NAVIGATE);
         authorPage = new AuthorPage(page);
         apiUtils = new ApiUtils(api);
     }
@@ -35,13 +36,13 @@ public class AuthorUiTest extends BaseTest {
         for (String name : createdAuthors) {
             if (authorPage.isAuthorInTable(name, "", "")) {
                 Long authorId = apiUtils.getIdByName(
-                        "/api/v1/authors",
+                        AUTHORS_BASE,
                         name,
                         typeRef,
-                        AuthorDataWrapper::getContent,  // Extract List<Author>
-                        author -> author.getId()        // Extract ID
+                        AuthorDataWrapper::getContent,
+                        author -> author.getId()
                 );
-                apiUtils.deleteById("/api/v1/authors", authorId);
+                apiUtils.deleteById(AUTHORS_BASE, authorId);
             }
         }
         createdAuthors.clear();

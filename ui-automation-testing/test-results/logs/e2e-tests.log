@@ -72,3 +72,12 @@
 2025-09-16 10:08:40 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
   /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
 
+2025-09-16 10:14:07 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 10:14:07 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+  /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
+
+2025-09-16 10:31:50 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 10:31:50 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+  /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
+
+2025-09-16 10:32:17 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
