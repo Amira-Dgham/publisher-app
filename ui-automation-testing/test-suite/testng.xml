@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API Test Automation with Playwright">
+<suite name="UI Test Automation for Publisher APP with Playwright + TESTNG + Cucumber" >
     <listeners>
         <listener class-name="com.mobelite.publisher.ui.base.AllureScreenshotListener"/>
     </listeners>
-    <test name="Author API Tests">
+    <test name="Author UI Tests">
         <classes>
             <class name="com.mobelite.publisher.ui.tests.AuthorUiTest"/>
         </classes>

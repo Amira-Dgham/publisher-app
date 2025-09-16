@@ -6,7 +6,6 @@ import com.mobelite.publisher.api.base.BaseTestApi;
 import com.mobelite.publisher.api.constants.HttpStatusCodes;
 import com.mobelite.publisher.api.factory.AuthorFactory;
 import com.mobelite.publisher.api.factory.BookFactory;
-import com.mobelite.publisher.api.models.Author;
 import com.mobelite.publisher.api.models.Book;
 import com.mobelite.publisher.api.models.request.AuthorRequest;
 import com.mobelite.publisher.api.models.request.BookRequest;
