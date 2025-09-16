@@ -81,3 +81,24 @@
   /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
 
 2025-09-16 10:32:17 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:02:18 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:04:07 [main] INFO  org.testng.internal.Utils - [TestNG] Running:
+  /Users/amiradgham/Library/Caches/JetBrains/IdeaIC2025.1/temp-testng-customsuite.xml
+
+2025-09-16 11:04:12 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:05:21 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:07:11 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:17:15 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:19:35 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:21:32 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 11:25:07 [main] WARN  org.testng.internal.Utils - The test method 'io.cucumber.testng.AbstractTestNGCucumberTests.runScenario' will be skipped since its data provider 'scenarios' returned an empty array or iterator. 
+2025-09-16 11:37:21 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:12:55 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 13:52:15 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:25:36 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:34:04 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:39:07 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:43:39 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:45:18 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:47:25 [main] INFO  c.m.p.ui.config.ConfigManager - Loaded configuration for environment: dev
+2025-09-16 14:48:50 [main] INFO  c.m.p.u.b.AllureScreenshotListener - 📸 Screenshot captured for failed test: addNewAuthor

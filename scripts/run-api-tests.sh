@@ -1,0 +1,51 @@
+#!/bin/bash
+set -euo pipefail
+
+ENV=${2:-dev}
+ACTION=${1:-test}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+TEST_RESULTS_DIR="$PROJECT_ROOT/api-automation-testing/target"
+
+
+mkdir -p "$TEST_RESULTS_DIR"
+
+info()    { echo -e "[INFO] $1"; }
+success() { echo -e "[SUCCESS] $1"; }
+error()   { echo -e "[ERROR] $1"; }
+
+run_tests_in_container() {
+    info "running E2E container..."
+    # Stop existing allure container if running
+    docker stop allure-server >/dev/null 2>&1 || true
+
+    docker compose run --rm \
+        -e TEST_ENV="$ENV" \
+        api-automation-testing \
+        bash -c "cd /e2e && mvn clean test -Dmaven.test.failure.ignore=true allure:report -P$ENV -Dtest.env=$ENV"
+
+    success "Tests completed!"
+    info "Allure report available in: $TEST_RESULTS_DIR/site/allure-maven-plugin/index.html"
+
+    info "Starting Allure server at http://localhost:8082"
+    docker run --rm -d \
+      --name allure-server \
+      -p 8082:4040 \
+      -v $TEST_RESULTS_DIR/allure-results:/app/allure-results \
+      frankescobar/allure-docker-service
+}
+
+case "$ACTION" in
+    test|report) run_tests_in_container ;;
+    start) docker compose up -d api-automation-testing ;;
+    stop)  docker compose stop api-automation-testing ;;
+    logs)  docker compose logs -f api-automation-testing ;;
+    clean) docker compose down --remove-orphans --volumes ;;
+    help|-h|--help)
+        echo "Usage: $0 [COMMAND] [ENV]"
+        echo "Commands: test|report, start, stop, logs, clean"
+        echo "Environments: dev, staging, prod (default: dev)"
+        ;;
+    *) error "Unknown command: $ACTION"; exit 1 ;;
+esac

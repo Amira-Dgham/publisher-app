@@ -134,11 +134,33 @@ services:
 
     shm_size: 256M
 
-  e2e-publisher-service:
+  api-automation-testing:
+    restart: unless-stopped
     build:
-      context: ./playwright-e2e-testing
+      context: ./api-automation-testing
       dockerfile: Dockerfile
-    image: e2e-publisher-service:latest
+    image: api-automation-testing:latest
+
+    depends_on:
+      - spring-publisher-service
+
+    environment:
+      TEST_ENV: ${ENV:-dev}
+
+    volumes:
+      - ./api-automation-testing:/e2e:cached
+      - ${HOME}/.m2:/root/.m2
+
+
+    networks:
+      - publisher-network
+
+  ui-automation-testing:
+    restart: unless-stopped
+    build:
+      context: ./ui-automation-testing
+      dockerfile: Dockerfile
+    image: ui-automation-testing:latest
 
     depends_on:
       - spring-publisher-service
@@ -148,14 +170,12 @@ services:
       TEST_ENV: ${ENV:-dev}
 
     volumes:
-      - ./playwright-e2e-testing:/e2e:cached
+      - ./ui-automation-testing:/e2e:cached
       - ${HOME}/.m2:/root/.m2
-
 
     networks:
       - publisher-network
       
-
 networks:
   publisher-network:
     driver: bridge

@@ -1,7 +1,7 @@
 # playwright-e2e-testing/Dockerfile
 FROM mcr.microsoft.com/playwright/java:v1.53.0-jammy
 
-WORKDIR /playwright-e2e-testing
+WORKDIR /api-automation-testing
 
 # Copy everything into /playwright-e2e-testing
 COPY . .

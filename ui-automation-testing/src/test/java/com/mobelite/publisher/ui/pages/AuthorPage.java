@@ -3,8 +3,8 @@ package com.mobelite.publisher.ui.pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import com.mobelite.publisher.ui.config.ConfigManager;
 import com.mobelite.publisher.ui.constants.AuthorTestIds;
-
 import java.util.ArrayList;
 import java.util.List;
 
