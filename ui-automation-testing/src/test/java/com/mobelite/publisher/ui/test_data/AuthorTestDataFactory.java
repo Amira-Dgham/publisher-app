@@ -1,13 +1,13 @@
-package com.mobelite.publisher.ui.factory;
+package com.mobelite.publisher.ui.test_data;
 
-import com.mobelite.publisher.ui.models.request.AuthorRequest;
+import com.mobelite.models.request.AuthorRequest;
 import io.qameta.allure.Step;
 import net.datafaker.Faker;
 
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.mobelite.publisher.ui.utils.generateDataUtils.generateRandomBirthDate;
+import static com.mobelite.utils.generateDataUtils.generateRandomBirthDate;
 
 public class AuthorFactory {
     private static final AtomicLong authorCounter = new AtomicLong(1);

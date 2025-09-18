@@ -3,7 +3,7 @@ package com.mobelite.publisher.ui.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
-import com.mobelite.publisher.ui.config.ConfigManager;
+import com.mobelite.config.ConfigManager;
 import com.mobelite.publisher.ui.models.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
