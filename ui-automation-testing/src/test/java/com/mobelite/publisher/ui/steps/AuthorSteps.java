@@ -15,11 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE;
+
 public class AuthorSteps {
 
     private AuthorPage authorPage;
     private List<String> createdAuthors = new ArrayList<>();
 
+    /**
+     * Ensure the AuthorPage is initialized and navigated
+     */
     private void ensureAuthorPage() {
         if (authorPage == null) {
             authorPage = new AuthorPage(PlaywrightFactory.getPage());
@@ -36,8 +40,8 @@ public class AuthorSteps {
     public void iShouldSeeTheAuthorsTableWithColumns(int columns) {
         ensureAuthorPage();
         authorPage.waitForTableToLoad();
-        Assert.assertTrue(authorPage.isTableVisible());
-        Assert.assertEquals(authorPage.getTableHeaders().size(), columns);
+        Assert.assertTrue(authorPage.isTableVisible(), "Authors table should be visible");
+        Assert.assertEquals(authorPage.getTableHeaders().size(), columns, "Table column count mismatch");
     }
 
     @Given("I open the add author dialog")
@@ -63,7 +67,7 @@ public class AuthorSteps {
     public void iShouldSeeTheAuthorInTheTable(String name) {
         ensureAuthorPage();
         authorPage.waitForTableToLoad();
-        Assert.assertTrue(authorPage.isAuthorInTable(name, "", ""));
+        Assert.assertTrue(authorPage.isAuthorInTable(name, "", ""), "Author should be visible in table");
         createdAuthors.add(name);
     }
 
@@ -102,7 +106,20 @@ public class AuthorSteps {
     @Then("the author {string} should not be visible in the table")
     public void theAuthorShouldNotBeVisibleInTheTable(String name) {
         ensureAuthorPage();
-        Assert.assertFalse(authorPage.isAuthorInTable(name, "", ""));
+        Assert.assertFalse(authorPage.isAuthorInTable(name, "", ""), "Author should not be visible in table");
         createdAuthors.remove(name);
+    }
+
+    @When("I save the author without filling fields")
+    public void iSaveTheAuthorWithoutFillingFields() {
+        ensureAuthorPage();
+        authorPage.saveAuthor();
+    }
+
+    @Then("I should see name required error")
+    public void iShouldSeeNameRequiredError() {
+        ensureAuthorPage();
+        Assert.assertTrue(authorPage.isNameRequiredErrorVisible(), "Name required error should be visible");
+        authorPage.waitForDialogToClose();
     }
 }

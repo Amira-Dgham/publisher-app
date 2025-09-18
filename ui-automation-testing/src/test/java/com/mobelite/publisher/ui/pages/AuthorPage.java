@@ -4,10 +4,12 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import com.mobelite.publisher.ui.constants.AuthorTestIds;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class AuthorPage {
 
     private final Page page;
@@ -140,6 +142,12 @@ public class AuthorPage {
 
     public boolean isNameMinLengthErrorVisible() {
         return page.locator(NAME_MIN_LENGTH_ERROR).isVisible();
+    }
+    public boolean isSaveButtonDisabled() {
+        saveButton.waitFor(new Locator.WaitForOptions()
+                .setState(WaitForSelectorState.VISIBLE)
+                .setTimeout(5000));
+        return saveButton.isDisabled();
     }
 
     // --- Helper ---
