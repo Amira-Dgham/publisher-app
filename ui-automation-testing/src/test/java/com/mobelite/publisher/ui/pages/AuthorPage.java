@@ -3,11 +3,14 @@ package com.mobelite.publisher.ui.pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import com.mobelite.config.ConfigManager;
 import com.mobelite.publisher.ui.constants.AuthorTestIds;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mobelite.publisher.ui.constants.PagesNavigate.AUTHORS_NAVIGATE;
 
 @Slf4j
 public class AuthorPage {
@@ -28,6 +31,8 @@ public class AuthorPage {
     private static final String DELETE_CONFIRM = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_DELETE_CONFIRM + "']";
     private static final String NAME_REQUIRED_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_REQUIRED_ERROR + "']";
     private static final String NAME_MIN_LENGTH_ERROR = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHOR_NAME_MIN_LENGTH_ERROR + "']";
+    private static final String PAGINATOR_NEXT_BUTTON = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_PAGINATOR + "'] .p-paginator-next";
+    private static final String PAGINATOR_PAGE_BUTTONS = "[data-testid='" + AuthorTestIds.AUTHORS.AUTHORS_PAGINATOR + "'] .p-paginator-page";
 
     // --- Core locators (frequently used) ---
     private final Locator table;
@@ -50,6 +55,11 @@ public class AuthorPage {
     }
 
     // --- Actions ---
+    // Navigation
+    public void navigateToAuthorsPage() {
+        page.navigate(ConfigManager.getInstance().getUiBaseUrl() +AUTHORS_NAVIGATE);
+    }
+
 
     public void waitForTableToLoad() {
         table.waitFor(new Locator.WaitForOptions()
@@ -97,6 +107,29 @@ public class AuthorPage {
                 .setTimeout(5000));
     }
 
+    public void goToNextPage() {
+        page.locator(PAGINATOR_NEXT_BUTTON).click();
+        page.waitForTimeout(1000); // wait for table to refresh, or replace with waitForTableToLoad()
+    }
+
+    public boolean isOnPage(int pageNumber) {
+        Locator pageButtons = page.locator(PAGINATOR_PAGE_BUTTONS);
+        long count = pageButtons.count();
+
+        for (int i = 0; i < count; i++) {
+            Locator button = pageButtons.nth(i);
+            String text = button.textContent().trim();
+            String classes = button.getAttribute("class");
+
+            if (text.equals(String.valueOf(pageNumber))) {
+                return classes != null &&
+                        (classes.contains("p-highlight") || classes.contains("p-paginator-page-selected"));
+            }
+        }
+
+        System.out.println("DEBUG: No paginator button found for page " + pageNumber);
+        return false;
+    }
     // --- Queries / Verification helpers (no asserts here) ---
 
     public boolean isTableVisible() {

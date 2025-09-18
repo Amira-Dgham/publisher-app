@@ -3,9 +3,7 @@ package com.mobelite.publisher.ui.hooks;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Tracing;
 import com.mobelite.factory.PlaywrightFactory;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
+import io.cucumber.java.*;
 import io.qameta.allure.Allure;
 
 import java.io.ByteArrayInputStream;
@@ -17,22 +15,22 @@ public class Hooks {
 
     private Page page;
 
+    /** Launch browser once before all scenarios */
+    @BeforeAll
+    public static void beforeAll() {
+        PlaywrightFactory.launchBrowserOnce();
+    }
+
+    /** Create context & page per scenario */
     @Before
-    public void launchBrowser() {
-        PlaywrightFactory.init();
+    public void beforeScenario() {
+        PlaywrightFactory.initContextAndPage();
         page = PlaywrightFactory.getPage();
     }
 
-    @After(order = 1)
-    public void quitBrowser() {
-        if (page != null) {
-            page.close();
-        }
-        PlaywrightFactory.cleanup();
-    }
-
-    @After(order = 0) // run BEFORE quitBrowser to capture screenshots/traces
-    public void takeScreenshotAndTrace(Scenario scenario) {
+    /** Take screenshot & trace on failure */
+    @After(order = 0)
+    public void afterScenarioCapture(Scenario scenario) {
         if (scenario.isFailed() && page != null) {
             String scenarioName = scenario.getName().replaceAll(" ", "_");
             try {
@@ -42,18 +40,27 @@ public class Hooks {
 
                 // Trace
                 Path tracePath = Paths.get("target/" + scenarioName + ".zip");
-                PlaywrightFactory.getContext().tracing().stop(
-                        new Tracing.StopOptions().setPath(tracePath)
-                );
+                PlaywrightFactory.getContext().tracing().stop(new Tracing.StopOptions().setPath(tracePath));
 
                 if (Files.exists(tracePath)) {
                     Allure.addAttachment(scenarioName + "_trace", "application/zip",
                             new ByteArrayInputStream(Files.readAllBytes(tracePath)), ".zip");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /** Cleanup context & page after each scenario */
+    @After(order = 1)
+    public void afterScenarioCleanup() {
+        PlaywrightFactory.cleanupScenario();
+    }
+
+    /** Close browser once after all scenarios */
+    @AfterAll
+    public static void afterAll() {
+        PlaywrightFactory.closeBrowser();
     }
 }
