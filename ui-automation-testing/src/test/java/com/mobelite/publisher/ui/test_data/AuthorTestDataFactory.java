@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.mobelite.utils.generateDataUtils.generateRandomBirthDate;
 
-public class AuthorFactory {
+public class AuthorTestDataFactory {
     private static final AtomicLong authorCounter = new AtomicLong(1);
     private static final Faker faker = new Faker();
 

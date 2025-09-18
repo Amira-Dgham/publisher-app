@@ -6,7 +6,11 @@ import com.mobelite.factory.PlaywrightFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
+import io.qameta.allure.Allure;
 
+import java.io.ByteArrayInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Hooks {
@@ -19,8 +23,7 @@ public class Hooks {
         page = PlaywrightFactory.getPage();
     }
 
-    // After runs in reverse order; order=0 runs first
-    @After(order = 0)
+    @After(order = 1)
     public void quitBrowser() {
         if (page != null) {
             page.close();
@@ -28,18 +31,26 @@ public class Hooks {
         PlaywrightFactory.cleanup();
     }
 
-    @After(order = 1)
+    @After(order = 0) // run BEFORE quitBrowser to capture screenshots/traces
     public void takeScreenshotAndTrace(Scenario scenario) {
         if (scenario.isFailed() && page != null) {
-            String screenshotName = scenario.getName().replaceAll(" ", "_");
-            byte[] screenshot = page.screenshot();
-            scenario.attach(screenshot, "image/png", screenshotName);
-
+            String scenarioName = scenario.getName().replaceAll(" ", "_");
             try {
+                // Screenshot
+                byte[] screenshot = page.screenshot();
+                Allure.addAttachment(scenarioName + "_screenshot", new ByteArrayInputStream(screenshot));
+
+                // Trace
+                Path tracePath = Paths.get("target/" + scenarioName + ".zip");
                 PlaywrightFactory.getContext().tracing().stop(
-                        new Tracing.StopOptions()
-                                .setPath(Paths.get("target/" + screenshotName + ".zip"))
+                        new Tracing.StopOptions().setPath(tracePath)
                 );
+
+                if (Files.exists(tracePath)) {
+                    Allure.addAttachment(scenarioName + "_trace", "application/zip",
+                            new ByteArrayInputStream(Files.readAllBytes(tracePath)), ".zip");
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

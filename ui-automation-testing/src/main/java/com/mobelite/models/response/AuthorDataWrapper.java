@@ -1,8 +1,8 @@
-package com.mobelite.publisher.ui.models.response;
+package com.mobelite.models.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mobelite.publisher.ui.models.Author;
+import com.mobelite.models.Author;
 import lombok.Data;
 
 import java.util.List;

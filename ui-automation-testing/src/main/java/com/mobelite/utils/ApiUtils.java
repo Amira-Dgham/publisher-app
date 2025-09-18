@@ -1,10 +1,10 @@
-package com.mobelite.publisher.ui.utils;
+package com.mobelite.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.mobelite.config.ConfigManager;
-import com.mobelite.publisher.ui.models.response.ApiResponse;
+import com.mobelite.models.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

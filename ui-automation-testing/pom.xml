@@ -25,6 +25,7 @@
         <logback-version>1.5.18</logback-version>
         <slf4j-version>2.0.17</slf4j-version>
         <jackson-version>2.20.0</jackson-version>
+        <allure-cucumber-version>2.30.0</allure-cucumber-version>
         <suite-xml>test-suite/testng.xml</suite-xml>
     </properties>
 
@@ -69,7 +70,11 @@
             <artifactId>allure-testng</artifactId>
             <version>${allure-version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>${allure-cucumber-version}</version>
+        </dependency>
         <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -95,6 +100,7 @@
             <scope>compile</scope>
         </dependency>
 
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -105,6 +111,7 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson-version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
