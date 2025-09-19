@@ -66,22 +66,41 @@ public class Hooks {
     }
 
     /** Capture screenshot and trace on failure */
-    @After
-    public void captureScreenshotOnFailure(Scenario scenario) {
-        if (scenario.isFailed()) {
-            byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
+    @After(order = 0)
+    public void afterScenarioCapture(Scenario scenario) {
+        if (scenario.isFailed() && page != null) {
+            String scenarioName = scenario.getName().replaceAll(" ", "_");
 
-            // Attach to Allure
-            Allure.addAttachment(
-                    scenario.getName(),
-                    "image/png",
-                    new ByteArrayInputStream(screenshot),
-                    ".png"
-            );
+            try {
+                // --- Screenshot ---
+                byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
+                saveScreenshotLocally(scenarioName, screenshot);
+                Allure.addAttachment(scenarioName + "_screenshot",
+                        "image/png",
+                        new ByteArrayInputStream(screenshot),
+                        ".png");
+
+                // --- Tracing ---
+                Path tracePath = Paths.get("target/traces/" + scenarioName + ".zip");
+                Files.createDirectories(tracePath.getParent());
+                PlaywrightFactory.getContext().tracing().stop(
+                        new Tracing.StopOptions().setPath(tracePath)
+                );
+
+                if (Files.exists(tracePath)) {
+                    Allure.addAttachment(scenarioName + "_trace",
+                            "application/zip",
+                            new ByteArrayInputStream(Files.readAllBytes(tracePath)),
+                            ".zip");
+                }
+
+            } catch (Exception e) {
+                System.err.println("Failed to capture failure artifacts for scenario: " + scenarioName);
+                e.printStackTrace();
+            }
         }
     }
 
-    /** Cleanup context & page after each scenario */
     @After(order = 1)
     public void afterScenarioCleanup() {
         PlaywrightFactory.cleanupScenario();
