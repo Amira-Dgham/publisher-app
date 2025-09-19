@@ -28,12 +28,14 @@ A comprehensive publishing management system built with a microservices architec
 publisher-app/
 ├── angular-publisher-service/    # Frontend Angular application
 ├── spring-publisher-service/     # Backend Spring Boot service
-├── playwright-e2e-testing/      # E2E testing suite
+├── ui-automation-testing/       # UI automation (Cucumber + Playwright + TestNG)
+├── api-automation-testing/      # API automation (Playwright + TestNG)
 ├── scripts/                     # Deployment and run scripts
 │   ├── run-all.sh              # Run entire stack
 │   ├── run-angular.sh          # Run frontend only
 │   ├── run-spring.sh           # Run backend only
-│   └── run-e2e.sh             # Run E2E tests
+│   ├── run-ui-tests.sh         # Run UI automation tests
+│   ├── run-api-tests.sh        # Run API automation tests
 ├── docker-compose.yml          # Docker composition
 └── README.md                   # This file
 ```
@@ -51,11 +53,20 @@ publisher-app/
 - PostgreSQL
 - Docker container
 
-### Testing
-- Playwright
-- Java
+
+### Testing & Automation
+#### UI Automation
+- Playwright (UI automation)
+- Cucumber (Gherkin BDD)
+- TestNG (runner)
+- Allure Reporting
+- Java 17
+
+#### API Automation
+- Playwright (API automation)
 - TestNG
 - Allure Reporting
+- Java 17
 
 ### Infrastructure
 - Docker
@@ -88,7 +99,7 @@ This will:
 - Initialize the database
 - Start the Spring Boot backend
 - Launch the Angular frontend
-- Setup the E2E testing environment
+- Prepare the UI and API automation environments
 
 ### Individual Component Setup
 
@@ -102,9 +113,15 @@ This will:
 ./scripts/run-angular.sh dev start
 ```
 
-#### E2E Tests
+
+#### UI Automation (Cucumber + Playwright)
 ```bash
-./scripts/run-e2e.sh
+./scripts/run-ui-tests.sh test dev
+```
+
+#### API Automation
+```bash
+./scripts/run-api-tests.sh test dev
 ```
 
 ## Docker Configuration
@@ -135,10 +152,16 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
 
-  e2e:
-    build: ./playwright-e2e-testing
+  # Automation containers (if needed)
+  ui-automation-testing:
+    build: ./ui-automation-testing
     depends_on:
       - frontend
+      - backend
+
+  api-automation-testing:
+    build: ./api-automation-testing
+    depends_on:
       - backend
 ```
 
@@ -174,19 +197,37 @@ docker-compose logs -f
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - API Docs: http://localhost:8080/v3/api-docs
 
-## Testing
 
-### E2E Tests
+## Testing & Automation
+
+### UI Automation (Cucumber + Playwright)
+- Gherkin feature files in `ui-automation-testing/src/test/resources/features/`
+- Step definitions in `ui-automation-testing/src/test/java/com/mobelite/publisher/ui/steps/`
+- Test runner: Cucumber + TestNG (`TestRunner.java`)
+- Allure reports generated after each run
+
+Run all UI tests:
 ```bash
-# Run all E2E tests
-./scripts/run-e2e.sh
-
-# Run specific test suite
-./scripts/run-e2e.sh --suite=publishers
+./scripts/run-ui-tests.sh test dev
 ```
+Allure report: `ui-automation-testing/target/site/allure-maven-plugin/index.html`
 
-Test reports are available at:
-- Allure Report: `playwright-e2e-testing/target/allure-results`
+### API Automation
+- Test classes in `api-automation-testing/src/test/java/com/mobelite/publisher/api/tests/`
+- TestNG-based, Playwright-powered API tests
+- Allure reports generated after each run
+
+Run all API tests:
+```bash
+./scripts/run-api-tests.sh test dev
+```
+Allure report: `api-automation-testing/target/site/allure-maven-plugin/index.html`
+
+### Run All Tests (UI + API)
+```bash
+./scripts/run-all.sh test e2e
+```
+This will run both UI and API automation suites and generate Allure reports for each.
 
 ## Monitoring & Logging
 
@@ -194,10 +235,12 @@ Test reports are available at:
 - Spring Actuator: http://localhost:8080/actuator
 - Angular Performance: http://localhost:4200/metrics
 
+
 ### Logs
 - Backend Logs: `spring-publisher-service/logs/`
 - Frontend Logs: `angular-publisher-service/logs/`
-- E2E Test Logs: `playwright-e2e-testing/logs/`
+- UI Automation Logs: `ui-automation-testing/logs/`
+- API Automation Logs: `api-automation-testing/logs/`
 
 ## Contributing
 
@@ -207,10 +250,12 @@ Test reports are available at:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+
 ## Additional Documentation
 - [Spring Service Documentation](spring-publisher-service/README.md)
 - [Angular Service Documentation](angular-publisher-service/README.md)
-- [E2E Testing Documentation](playwright-e2e-testing/README.md)
+- [UI Automation Documentation](ui-automation-testing/README.md)
+- [API Automation Documentation](api-automation-testing/README.md)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
