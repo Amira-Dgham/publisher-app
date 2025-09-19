@@ -11,6 +11,7 @@ import io.cucumber.testng.CucumberOptions;
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm" // Allure plugin
         },
         monochrome = true
+
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
     // No extra code needed, TestNG handles execution

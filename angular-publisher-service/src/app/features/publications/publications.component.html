@@ -27,7 +27,6 @@
   [attr.data-testid]="'publications-paginator'">
 </p-paginator>
 
-<button pButton label="Add Publication" icon="pi pi-plus" (click)="openNew()" [attr.data-testid]="'add-publication-button'"></button>
 
 <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [header]="isEdit ? 'Edit Publication' : 'Add Publication'" [attr.data-testid]="'publication-dialog'">
   <form (ngSubmit)="save()" #publicationForm="ngForm">

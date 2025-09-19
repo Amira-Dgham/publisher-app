@@ -22,7 +22,7 @@ public class Hooks {
     }
 
     /** Create context & page per scenario */
-    @Before
+    @Before(order = 0)
     public void beforeScenario() {
         PlaywrightFactory.initContextAndPage();
         page = PlaywrightFactory.getPage();
