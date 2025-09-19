@@ -1,16 +1,26 @@
-<p-table [value]="magazines" [loading]="loading" dataKey="id" [attr.data-testid]="'magazines-table'">
-  <ng-template pTemplate="header" [attr.data-testid]="'magazines-table-header'">
+<p-table 
+  [value]="magazines" 
+  [loading]="loading" 
+  dataKey="id" 
+  [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE">
+
+  <ng-template 
+    pTemplate="header" 
+    [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_HEADER">
     <tr>
-      <th [attr.data-testid]="'magazines-table-title-column'">Title</th>
-      <th [attr.data-testid]="'magazines-table-issue-number-column'">Issue #</th>
-      <th [attr.data-testid]="'magazines-table-publication-date-column'">Publication Date</th>
-      <th [attr.data-testid]="'magazines-table-authors-column'">Authors</th>
-      <th [attr.data-testid]="'magazines-table-actions-column'">Actions</th>
+      <th [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_TITLE_COLUMN">Title</th>
+      <th [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_ISSUE_NUMBER_COLUMN">Issue #</th>
+      <th [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_PUBLICATION_DATE_COLUMN">Publication Date</th>
+      <th [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_AUTHORS_COLUMN">Authors</th>
+      <th [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_ACTIONS_COLUMN">Actions</th>
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-magazine [attr.data-testid]="'magazines-table-body'">
-    <tr [attr.data-testid]="'magazines-table-row'">
+  <ng-template 
+    pTemplate="body" 
+    let-magazine 
+    [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_BODY">
+    <tr [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_TABLE_ROW">
       <td>{{ magazine.title }}</td>
       <td>{{ magazine.issueNumber }}</td>
       <td>{{ magazine.publicationDate }}</td>
@@ -20,8 +30,20 @@
         </ng-container>
       </td>
       <td>
-        <button pButton icon="pi pi-pencil" (click)="openEdit(magazine)" class="p-button-text" [attr.data-testid]="'edit-magazine-button'"></button>
-        <button pButton icon="pi pi-trash" (click)="confirmDeleteMagazine(magazine)" class="p-button-text p-button-danger" [attr.data-testid]="'delete-magazine-button'"></button>
+        <button 
+          pButton 
+          icon="pi pi-pencil" 
+          (click)="openEdit(magazine)" 
+          class="p-button-text" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.EDIT_MAGAZINE_BUTTON">
+        </button>
+        <button 
+          pButton 
+          icon="pi pi-trash" 
+          (click)="confirmDeleteMagazine(magazine)" 
+          class="p-button-text p-button-danger" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.DELETE_MAGAZINE_BUTTON">
+        </button>
       </td>
     </tr>
   </ng-template>
@@ -32,58 +54,135 @@
   [totalRecords]="totalRecords"
   [first]="page * pageSize"
   (onPageChange)="onPageChange($event)"
-  [attr.data-testid]="'magazines-paginator'">
+  [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINES_PAGINATOR">
 </p-paginator>
 
-<button pButton label="Add Magazine" icon="pi pi-plus" (click)="openNew()" [attr.data-testid]="'add-magazine-button'"></button>
+<button 
+  pButton 
+  label="Add Magazine" 
+  icon="pi pi-plus" 
+  (click)="openNew()" 
+  [attr.data-testid]="TEST_IDS.MAGAZINES.ADD_MAGAZINE_BUTTON">
+</button>
 
-<p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [header]="isEdit ? 'Edit Magazine' : 'Add Magazine'" [attr.data-testid]="'magazine-dialog'">
-  <form (ngSubmit)="save()" #magazineForm="ngForm">
+<p-dialog 
+  [(visible)]="displayDialog" 
+  [modal]="true" 
+  [closable]="false" 
+  [header]="isEdit ? 'Edit Magazine' : 'Add Magazine'" 
+  [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_DIALOG">
+
+  <form #magazineForm="ngForm" (ngSubmit)="save()">
     <div class="p-fluid">
+      <!-- Title Field -->
       <div class="p-field">
         <label for="title">Title</label>
-        <input id="title" type="text" pInputText [(ngModel)]="form.title" name="title" required minlength="2" maxlength="200" #title="ngModel" [attr.data-testid]="'magazine-title-input'" />
-        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="p-error" [attr.data-testid]="'magazine-title-error'">
-          <div *ngIf="title.errors?.['required']" [attr.data-testid]="'magazine-title-required-error'">Title is required.</div>
-          <div *ngIf="title.errors?.['minlength']" [attr.data-testid]="'magazine-title-min-length-error'">Title must be at least 2 characters.</div>
-          <div *ngIf="title.errors?.['maxlength']" [attr.data-testid]="'magazine-title-max-length-error'">Title cannot exceed 200 characters.</div>
+        <input 
+          id="title" 
+          type="text" 
+          pInputText 
+          [(ngModel)]="form.title" 
+          name="title" 
+          required 
+          minlength="2" 
+          maxlength="200" 
+          #title="ngModel" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_TITLE_INPUT" />
+        
+        <div 
+          *ngIf="title.invalid && (title.dirty || title.touched)" 
+          class="p-error" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_TITLE_ERROR">
+          <div *ngIf="title.errors?.['required']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_TITLE_REQUIRED_ERROR">Title is required.</div>
+          <div *ngIf="title.errors?.['minlength']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_TITLE_MIN_LENGTH_ERROR">Title must be at least 2 characters.</div>
+          <div *ngIf="title.errors?.['maxlength']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_TITLE_MAX_LENGTH_ERROR">Title cannot exceed 200 characters.</div>
         </div>
       </div>
 
+      <!-- Issue Number Field -->
       <div class="p-field">
         <label for="issueNumber">Issue Number</label>
-        <input id="issueNumber" type="number" pInputText [(ngModel)]="form.issueNumber" name="issueNumber" required min="1" max="99999" #issueNumber="ngModel" [attr.data-testid]="'magazine-issue-number-input'" />
-        <div *ngIf="issueNumber.invalid && (issueNumber.dirty || issueNumber.touched)" class="p-error" [attr.data-testid]="'magazine-issue-number-error'">
-          <div *ngIf="issueNumber.errors?.['required']" [attr.data-testid]="'magazine-issue-number-required-error'">Issue number is required.</div>
-          <div *ngIf="issueNumber.errors?.['min']" [attr.data-testid]="'magazine-issue-number-min-error'">Minimum is 1.</div>
-          <div *ngIf="issueNumber.errors?.['max']" [attr.data-testid]="'magazine-issue-number-max-error'">Maximum is 99999.</div>
+        <input 
+     id="issueNumber"
+    type="number"
+    pInputText
+    [(ngModel)]="form.issueNumber"
+    name="issueNumber"
+    required
+    min="1"
+    #issueNumber="ngModel"
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_ISSUE_NUMBER_INPUT" />
+        
+        <div 
+          *ngIf="issueNumber.invalid && (issueNumber.dirty || issueNumber.touched)" 
+          class="p-error" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_ISSUE_NUMBER_ERROR">
+          <div *ngIf="issueNumber.errors?.['required']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_ISSUE_NUMBER_REQUIRED_ERROR">Issue number is required.</div>
+          <div *ngIf="issueNumber.errors?.['min']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_ISSUE_NUMBER_MIN_ERROR">Issue number must be at least 1.</div>
         </div>
       </div>
 
+      <!-- Publication Date Field -->
       <div class="p-field">
         <label for="publicationDate">Publication Date</label>
-        <input id="publicationDate" type="date" pInputText [(ngModel)]="form.publicationDate" name="publicationDate" required #publicationDate="ngModel" [attr.data-testid]="'magazine-publication-date-input'" />
-        <div *ngIf="publicationDate.invalid && (publicationDate.dirty || publicationDate.touched)" class="p-error" [attr.data-testid]="'magazine-publication-date-error'">
-          <div *ngIf="publicationDate.errors?.['required']" [attr.data-testid]="'magazine-publication-date-required-error'">Publication date is required.</div>
+        <input 
+          id="publicationDate" 
+          type="date" 
+          pInputText 
+          [(ngModel)]="form.publicationDate" 
+          name="publicationDate" 
+          required 
+          #publicationDate="ngModel" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_PUBLICATION_DATE_INPUT" />
+        
+        <div 
+          *ngIf="publicationDate.invalid && (publicationDate.dirty || publicationDate.touched)" 
+          class="p-error" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_PUBLICATION_DATE_ERROR">
+          <div *ngIf="publicationDate.errors?.['required']" [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_PUBLICATION_DATE_REQUIRED_ERROR">Publication date is required.</div>
         </div>
       </div>
 
+      <!-- Author IDs Field -->
       <div class="p-field">
-        <label for="authorIds">Author IDs (comma separated)</label>
-        <input id="authorIds" type="text" pInputText [(ngModel)]="form.authorIds" name="authorIds" required pattern="^([0-9]+,)*[0-9]+$" #authorIds="ngModel" [attr.data-testid]="'magazine-author-ids-input'" />
-        <small>Enter author IDs separated by commas (e.g. 1,2,3)</small>
-        <div *ngIf="authorIds.invalid && (authorIds.dirty || authorIds.touched)" class="p-error" [attr.data-testid]="'magazine-author-ids-error'">
-          <div *ngIf="authorIds.errors?.['required']" [attr.data-testid]="'magazine-author-ids-required-error'">Author IDs are required.</div>
-          <div *ngIf="authorIds.errors?.['pattern']" [attr.data-testid]="'magazine-author-ids-pattern-error'">Format: 1,2,3</div>
-        </div>
+        <label for="authorIds">Author IDs (comma-separated)</label>
+        <input 
+          id="authorIds" 
+          type="text" 
+          pInputText 
+          [(ngModel)]="form.authorIds" 
+          name="authorIds" 
+          placeholder="e.g., 1,2,3"
+          #authorIds="ngModel" 
+          [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_AUTHOR_IDS_INPUT" />
+        
+        <small class="p-text-secondary">Enter author IDs separated by commas (optional)</small>
       </div>
     </div>
 
     <div class="p-d-flex p-jc-end">
-      <button pButton type="submit" label="Save" [disabled]="magazineForm.invalid" [attr.data-testid]="'magazine-save-button'"></button>
-      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="displayDialog = false" [attr.data-testid]="'magazine-cancel-button'"></button>
+      <button 
+        pButton 
+        type="submit" 
+        label="Save" 
+        [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_SAVE_BUTTON">
+      </button>
+      <button 
+        pButton 
+        type="button" 
+        label="Cancel" 
+        class="p-button-secondary" 
+        (click)="closeDialog()" 
+        [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_CANCEL_BUTTON">
+      </button>
     </div>
   </form>
 </p-dialog>
 
-<app-confirm-dialog [visible]="confirmDelete" message="Are you sure you want to delete this magazine?" (accept)="deleteMagazine()" (reject)="confirmDelete = false" [attr.data-testid]="'magazine-delete-confirm'"></app-confirm-dialog>
+<app-confirm-dialog 
+  [visible]="confirmDelete" 
+  message="Are you sure you want to delete this magazine?" 
+  (accept)="deleteMagazine()" 
+  (reject)="confirmDelete = false" 
+  [attr.data-testid]="TEST_IDS.MAGAZINES.MAGAZINE_DELETE_CONFIRM">
+</app-confirm-dialog>

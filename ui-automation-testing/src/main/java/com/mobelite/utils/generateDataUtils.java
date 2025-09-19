@@ -1,4 +1,4 @@
-package com.mobelite.publisher.ui.utils;
+package com.mobelite.utils;
 
 import java.time.LocalDate;
 import java.time.Month;

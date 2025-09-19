@@ -1,4 +1,4 @@
-package com.mobelite.publisher.ui.config;
+package com.mobelite.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +21,8 @@ public final class ConfigManager {
     // headless = true  → runs browser in background (faster, good for CI/CD)
     // headless = false → shows browser window (useful for debugging)
     private final boolean headless;
+    private final String browserName;
+
     // JSON parser and generator for Java ( Serialization / Deserialization)
     private final ObjectMapper objectMapper;
 
@@ -29,6 +31,7 @@ public final class ConfigManager {
         this.uiBaseUrl = props.getProperty("ui.base.url");
         this.apiBaseUrl = props.getProperty("api.base.url");
         this.headless = Boolean.parseBoolean(props.getProperty("browser.headless", "true"));
+        this.browserName = props.getProperty("browser.name");
         this.objectMapper = createObjectMapper();
     }
 
