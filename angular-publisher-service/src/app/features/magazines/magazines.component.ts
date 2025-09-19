@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Magazine, MagazineCreateRequest } from '../../core/models/magazine.model';
 import { MagazineService } from '../../core/services/magazine.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { MagazinePageData } from '../../core/types/magazine-page.model';
+import { TEST_IDS } from '../../core/constants/test-ids.constants';
 
 @Component({
   selector: 'app-magazines',
@@ -30,6 +31,7 @@ import { MagazinePageData } from '../../core/types/magazine-page.model';
   styleUrls: ['./magazines.component.css'],
 })
 export class MagazinesComponent implements OnInit {
+    @ViewChild('magazineForm') magazineForm!: NgForm;
   magazines: Magazine[] = [];
   selectedMagazine: Magazine | null = null;
   displayDialog = false;
@@ -41,6 +43,7 @@ export class MagazinesComponent implements OnInit {
   pageSize = 10;
   totalRecords = 0;
   sort: 'ASC' | 'DESC' = 'DESC';
+  TEST_IDS = TEST_IDS;
 
   form: MagazineCreateRequest = { title: '', publicationDate: '', issueNumber: 0, authorIds: [] };
 
@@ -72,28 +75,30 @@ export class MagazinesComponent implements OnInit {
     this.form = { title: magazine.title, publicationDate: magazine.publicationDate, issueNumber: magazine.issueNumber, authorIds: magazine.authors.map(a => a.id) };
     this.displayDialog = true;
   }
+save() {
 
-  save() {
-    // Convert authorIds to array of numbers if it's a string
-    let formToSend = { ...this.form };
-    if (formToSend.authorIds && typeof formToSend.authorIds === 'string') {
-      formToSend.authorIds = (formToSend.authorIds as string)
-        .split(',')
-        .map((id: string) => Number(id.trim()))
-        .filter((id: number) => !isNaN(id));
-    }
-    if (this.isEdit && this.selectedMagazine) {
-      this.magazineService.update(this.selectedMagazine.id, formToSend).then(() => {
-        this.loadMagazines();
-        this.displayDialog = false;
-      });
-    } else {
-      this.magazineService.create(formToSend).then(() => {
-        this.loadMagazines();
-        this.displayDialog = false;
-      });
-    }
+
+  let formToSend = { ...this.form };
+
+  if (formToSend.authorIds && typeof formToSend.authorIds === 'string') {
+    formToSend.authorIds = (formToSend.authorIds as string)
+      .split(',')
+      .map((id: string) => Number(id.trim()))
+      .filter((id: number) => !isNaN(id));
   }
+
+  if (this.isEdit && this.selectedMagazine) {
+    this.magazineService.update(this.selectedMagazine.id, formToSend).then(() => {
+      this.loadMagazines();
+      this.displayDialog = false;
+    });
+  } else {
+    this.magazineService.create(formToSend).then(() => {
+      this.loadMagazines();
+      this.displayDialog = false;
+    });
+  }
+}
 
   confirmDeleteMagazine(magazine: Magazine) {
     this.magazineToDelete = magazine;

@@ -19,5 +19,5 @@ public class MagazineRequest {
     private String title;
     private int issueNumber;
     private String publicationDate; // Use String for simplicity in E2E tests
-    private List<Integer> authorIds;
+    private List<Long> authorIds;
 }

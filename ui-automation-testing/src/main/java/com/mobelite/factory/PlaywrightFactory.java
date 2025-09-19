@@ -48,6 +48,8 @@ public class PlaywrightFactory {
         }
     }
 
+
+
     /** Create new context & page per scenario */
     public static void initContextAndPage() {
         BrowserContext context = browser.newContext();

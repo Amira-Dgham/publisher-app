@@ -9,9 +9,6 @@ import { MagazinesComponent } from './features/magazines/magazines.component';
 import { AuthorsComponent } from './features/authors/authors.component';
 import { BooksComponent } from './features/books/books.component';
 import { MessageService } from 'primeng/api';
-import { GlobalErrorHandler } from './core/handlers/global-error.handler';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 @NgModule({
   imports: [
@@ -29,13 +26,8 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
     MessageService,   // PrimeNG MessageService
     {
       provide: ErrorHandler,
-      useClass: GlobalErrorHandler
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true
-    }
+   
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -72,7 +72,7 @@ public class MagazinePage {
         addButton.click();
     }
 
-    public void fillMagazineForm(String title, int issueNumber, String publicationDate, List<Integer> authorIds) {
+    public void fillMagazineForm(String title, int issueNumber, String publicationDate, List<Long> authorIds) {
         titleInput.fill(title);
         issueNumberInput.fill(String.valueOf(issueNumber));
         publicationDateInput.fill(publicationDate);
@@ -101,7 +101,7 @@ public class MagazinePage {
     }
 
     public void confirmDelete() {
-        page.locator(DELETE_CONFIRM).locator("button[label='Yes']").click(); // adjust label if needed
+        page.locator(DELETE_CONFIRM).locator("button[label='Confirm']").click(); // adjust label if needed
         page.waitForTimeout(500); // wait for table refresh
     }
 
@@ -149,10 +149,15 @@ public class MagazinePage {
     }
 
     public boolean isMagazineInTable(String title) {
-        Locator row = page.locator(rowByTitle(title));
-        return row.isVisible();
-    }
+        String selector = rowByTitle(title);
+        System.out.println("Checking magazine row with selector: " + selector);
 
+        Locator row = page.locator(selector);
+        boolean visible = row.isVisible();
+
+        System.out.println("Row visible? " + visible);
+        return visible;
+    }
     // --- Validation ---
     public boolean isTitleRequiredErrorVisible() {
         return page.locator(TITLE_REQUIRED_ERROR).isVisible();

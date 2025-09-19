@@ -19,17 +19,17 @@ Feature: Manage magazines in UI
   Scenario: Delete a dynamically created magazine
     Given a magazine is created using the data factory
     When I select to delete that magazine
-    And I confirm delete
+    And I confirm delete of the magazine
     Then the magazine should not be visible in the table
-#
-#  @regression
-#  Scenario: Validate form errors
-#    And I open the add magazine dialog
-#    When I save the magazine without filling fields
-#    Then I should see required errors
-#
-#  @regression
-#  Scenario: Navigate through magazine pages
-#    Given there are more magazines than fit on one page
-#    When the user clicks to go to the next page
-#    Then the next set of magazines should be displayed
+
+  @regression
+  Scenario: Validate form errors
+    And I open the add magazine dialog
+    When I save the magazine without filling fields
+    Then I should see required errors
+
+   @regression
+   Scenario: Navigate through magazine pages
+     Given there are more magazines than fit on one page
+     When the user clicks to go to the next page
+     Then the next set of magazines should be displayed
