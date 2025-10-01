@@ -60,50 +60,82 @@ public class Hooks {
 
     /** Create context & page per scenario */
     @Before(order = 0)
-    public void beforeScenario() {
+    public void beforeScenario(Scenario scenario) {
         PlaywrightFactory.initContextAndPage();
         page = PlaywrightFactory.getPage();
+        // Tracing is already started in PlaywrightFactory.initContextAndPage()
     }
 
-    /** Capture screenshot and trace on failure */
-    @After(order = 0)
+    /** Capture screenshot and trace on failure - MUST run before cleanup */
+    @After(order = 1)
     public void afterScenarioCapture(Scenario scenario) {
         if (scenario.isFailed() && page != null) {
             String scenarioName = scenario.getName().replaceAll(" ", "_");
 
             try {
                 // --- Screenshot ---
-                byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
+                byte[] screenshot = page.screenshot(
+                        new Page.ScreenshotOptions()
+                                .setFullPage(true)
+                                .setType(com.microsoft.playwright.options.ScreenshotType.PNG)
+                );
+
+                // Save locally
                 saveScreenshotLocally(scenarioName, screenshot);
-                Allure.addAttachment(scenarioName + "_screenshot",
+
+                // Attach to Allure
+                Allure.addAttachment(
+                        scenarioName + "_screenshot",
                         "image/png",
                         new ByteArrayInputStream(screenshot),
-                        ".png");
+                        ".png"
+                );
 
-                // --- Tracing ---
+                System.out.println("Screenshot captured for failed scenario: " + scenarioName);
+
+            } catch (Exception e) {
+                System.err.println("Failed to capture screenshot for scenario: " + scenarioName);
+                e.printStackTrace();
+            }
+
+            // --- Tracing ---
+            try {
                 Path tracePath = Paths.get("target/traces/" + scenarioName + ".zip");
                 Files.createDirectories(tracePath.getParent());
+
                 PlaywrightFactory.getContext().tracing().stop(
                         new Tracing.StopOptions().setPath(tracePath)
                 );
 
                 if (Files.exists(tracePath)) {
-                    Allure.addAttachment(scenarioName + "_trace",
+                    byte[] traceBytes = Files.readAllBytes(tracePath);
+                    Allure.addAttachment(
+                            scenarioName + "_trace",
                             "application/zip",
-                            new ByteArrayInputStream(Files.readAllBytes(tracePath)),
-                            ".zip");
+                            new ByteArrayInputStream(traceBytes),
+                            ".zip"
+                    );
+                    System.out.println("Trace captured for failed scenario: " + scenarioName);
                 }
-
             } catch (Exception e) {
-                System.err.println("Failed to capture failure artifacts for scenario: " + scenarioName);
+                System.err.println("Failed to capture trace for scenario: " + scenarioName);
                 e.printStackTrace();
+            }
+        } else {
+            // Stop tracing even if scenario passed (to clean up)
+            try {
+                PlaywrightFactory.getContext().tracing().stop();
+            } catch (Exception e) {
+                // Ignore if tracing wasn't started
             }
         }
     }
 
-    @After(order = 1)
+    /** Cleanup page and context - MUST run after screenshot capture */
+    @After(order = 0)
     public void afterScenarioCleanup() {
         PlaywrightFactory.cleanupScenario();
+        page = null;
     }
 
     /** Delete all dynamically created authors once after all scenarios */
@@ -118,7 +150,7 @@ public class Hooks {
                     System.out.printf("[%s] Deleted author (ID: %d)%n",
                             java.time.LocalDateTime.now(), id);
                 } else {
-                    System.out.printf("[%s]  Author ID is null, cannot delete%n",
+                    System.out.printf("[%s] Author ID is null, cannot delete%n",
                             java.time.LocalDateTime.now());
                 }
             } catch (Exception e) {
@@ -140,7 +172,8 @@ public class Hooks {
         try {
             Path path = Paths.get("target/screenshots/" + scenarioName + ".png");
             Files.createDirectories(path.getParent());
-            Files.write(path, screenshot);
+            Files.write(path, screenshot, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            System.out.println("Screenshot saved locally: " + path);
         } catch (IOException e) {
             System.err.println("Failed to save screenshot locally for scenario: " + scenarioName);
             e.printStackTrace();
